@@ -15,7 +15,7 @@ component extends="testbox.system.BaseSpec" {
 				_implFactory = CreateEmptyMock( "cfflow.models.implementation.WorkflowImplementationFactory" );
 				_engine  = CreateMock( object=new cfflow.models.WorkflowEngine() );
 				_wfId     = CreateUUId();
-				_instance = CreateMock( "tests.resources.WorkflowInstance" );
+				_instance = CreateMock( "cfflow.models.instances.WorkflowInstance" );
 				_wf       = CreateStub();
 				_steps    = [];
 
