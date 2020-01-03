@@ -1,0 +1,126 @@
+version: 1.0.0
+workflow:
+  id: test-workflow
+  title: Test workflow
+  class: pixl8.webflow
+  initialActions:
+  - id: action-1
+    title: Action 1
+    defaultResult:
+      id: start
+      title: Start
+      type: step
+      transitions:
+      - step: step-1
+        status: active
+  steps:
+  - id: "step-1"
+    title: "Step 1"
+    description: "Step 1 description"
+    autoActionTimers:
+    - interval: 10m
+      count: 100
+    actions:
+    - id: action-1
+      title: Action 1
+      condition:
+        handler: action1.condition.handler
+      isAutomatic: true
+      defaultResult:
+        id: result-1
+        title: Result 1
+        type: step
+        transitions:
+        - step: step-1
+          status: complete
+        - step: step-2
+          status: active
+        functions:
+          pre:
+          - id: function-1
+            title: Function 1
+            handler: handler-1
+            args:
+              test: true
+              cool: really
+            condition:
+              handler: function1.condition.handler
+              args:
+                test: blah
+          - id: function-2
+            title: Function 2
+            handler: handler-2
+            condition:
+              handler: function2conditionid
+          post:
+          - id: function-1
+            title: Function 1
+            handler: handler-1
+            condition:
+              handler: function1.condition.handler
+          - id: function-2
+            title: Function 2
+            handler: handler-2
+            condition:
+              handler: function2conditionid
+      conditionalResults:
+      - id: result-2
+        title: Result 2
+        type: split
+        condition:
+          handler: result2.condition.handler
+        transitions:
+        - step: step-1
+          status: complete
+        - step: step-2
+          status: skipped
+        functions:
+          pre:
+          - id: function-1
+            title: Function 1
+            handler: handler-1
+            condition:
+              handler: function1.condition.handler
+          - id: function-2
+            title: Function 2
+            handler: handler-2
+            condition:
+              handler: function2conditionid
+      - id: result-3
+        title: Result 3
+        type: step
+        condition:
+          handler: result3ConditionId
+        transitions:
+        - step: step-1
+          status: complete
+        - step: step-2
+          status: active
+        functions:
+          post:
+          - id: function-1
+            title: Function 1
+            handler: handler-1
+            condition:
+              handler: function1.condition.handler
+          - id: function-2
+            title: Function 2
+            handler: handler-2
+            condition:
+              handler: function2conditionid
+    - id: action-2
+      title: Action 2
+      condition:
+        handler: action2.condition
+      defaultResult:
+        id: result-1
+        title: Result 1
+        type: step
+        transitions:
+        - step: step-1
+          status: complete
+        - step: step-2
+          status: active
+  - id: "step-2"
+    title: "Step 2"
+    description: "Step 2 description"

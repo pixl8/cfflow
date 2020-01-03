@@ -1,0 +1,28 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "resource:/schema/v1/action#",
+    "type": "object",
+    "required":[ "id", "title", "defaultResult" ],
+    "additionalProperties": false,
+    "properties":{
+        "id":{ "type":"string"},
+        "title":{ "type":"string"},
+        "isAutomatic":{"type":"boolean"},
+        "condition":{
+            "type":"object",
+            "$ref":"condition.json"
+        },
+        "defaultResult":{
+            "type":"object",
+            "$ref":"defaultResult.json"
+        },
+        "conditionalResults":{
+            "type":"array",
+            "minItems":0,
+            "items":{
+            	"type":"object",
+            	"$ref":"conditionalResult.json"
+			}
+        }
+    }
+}

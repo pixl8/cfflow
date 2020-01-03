@@ -1,0 +1,11 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "resource:/schema/v1/timer#",
+    "type": "object",
+    "required":[ "interval" ],
+    "additionalProperties": false,
+    "properties":{
+        "interval":{ "type":"string"},
+        "count":{ "type":"integer"}
+    }
+}

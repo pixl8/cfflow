@@ -1,0 +1,17 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "resource:/schema/v1/function#",
+    "type": "object",
+    "additionalProperties": false,
+    "required":["id", "title", "handler"],
+    "properties":{
+        "id":{ "type":"string"},
+        "title":{ "type":"string"},
+        "handler":{ "type":"string"},
+        "args":{"type":"object"},
+        "condition":{
+            "type":"object",
+            "$ref":"condition.json"
+        }
+    }
+}

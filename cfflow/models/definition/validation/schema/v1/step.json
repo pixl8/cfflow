@@ -1,0 +1,27 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "resource:/schema/v1/step#",
+    "type": "object",
+    "required":[ "id", "title" ],
+    "additionalProperties": false,
+    "properties":{
+        "id":{ "type":"string" },
+        "title":{ "type":"string" },
+        "description":{ "type":"string" },
+        "autoActionTimers":{
+            "type":"array",
+            "items":{
+                "type":"object",
+                "$ref":"timer.json"
+            }
+        },
+        "actions":{
+            "type":"array",
+            "minItems": 0,
+            "items":{
+                "type":"object",
+                "$ref":"action.json"
+            }
+        }
+    }
+}

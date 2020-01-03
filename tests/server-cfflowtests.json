@@ -1,0 +1,11 @@
+{
+    "name":"cfflowtests",
+    "openbrowser":false,
+    "trayEnable":false,
+    "web":{
+        "http":{
+            "port":"6543"
+        },
+        "webroot":"/"
+    }
+}

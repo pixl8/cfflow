@@ -1,0 +1,11 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "resource:/schema/v1/condition#",
+    "type": "object",
+    "additionalProperties": false,
+    "required":[ "handler"],
+    "properties":{
+        "handler":{"type":"string"},
+        "args":{"type":"object"}
+    }
+}
