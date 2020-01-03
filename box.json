@@ -1,0 +1,31 @@
+{
+    "name":"CFFlow",
+    "type":"",
+    "version":"VERSION_NUMBER",
+    "private":false,
+    "author":"Pixl8 Group",
+    "repository":{
+        "type":"git",
+        "URL":"https://github.com/pixl8/cfflow"
+    },
+    "slug":"cfflow",
+    "projectURL":"https://github.com/pixl8/cfflow",
+    "keywords":[ "workflow" ],
+    "ignore":[
+        ".git/*",
+        ".gitignore",
+        ".travis.yml",
+        ".twgit_features_subject",
+        "tests/*",
+        "runtests.sh"
+    ],
+    "devDependencies":{
+        "testbox":"2.2.0"
+    },
+    "installPaths":{
+        "testbox":"tests/testbox/"
+    },
+    "testbox":{
+        "runner":"http://127.0.0.1:6543/runtests.cfm"
+    }
+}
