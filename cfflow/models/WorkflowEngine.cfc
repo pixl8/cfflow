@@ -1,23 +1,64 @@
+/**
+ * The workflow engine is the entry point for all cfflow
+ * implementation programmers to interact with workflow
+ * definitions and instances.
+ */
 component singleton {
 
-	/**
-	 * @workflowLibrary.inject workflowLibary@cfflow
-	 * @implementationFactory.inject workflowImplementationFactory@cfflow
-	 *
-	 */
-	public any function init( required any workflowLibrary, required any implementationFactory ) {
-		_setWorkflowLibrary( arguments.workflowLibrary );
-		_setImplementationFactory( arguments.implementationFactory );
+	public any function init() {
+		_setWorkflowLibrary( new definition.WorkflowLibrary() );
+		_setImplementationFactory( new implementation.WorkflowImplementationFactory() );
 
 		return this;
 	}
 
-// PUBLIC API
-	public IWorkflowImplementation function getImplementation( required Workflow wf ) {
-		return _getImplementationFactory().getImplementation( wf.getClass() );
+// LIBRARY PROXIES
+	public void function registerWorkflow( required Workflow wf ) {
+		_getWorkflowLibrary().registerWorkflow( argumentCollection=arguments );
 	}
 
-	public IWorkflowImplementation function getImplementationForInstance( required WorkflowInstance wfInstance ) {
+// IMPLEMENTATION PROXIES
+	public void function registerWorkflowClass(
+		  required string className
+		, required string storageClass
+		, required string functionExecutor
+		, required string conditionEvaluator
+		, required string scheduler
+	) {
+		_getImplementationFactory().registerWorkflowClass( argumentCollection=arguments );
+	}
+	public void function registerStorageClass(
+		  required string                   className
+		, required IWorkflowInstanceStorage implementation
+	) {
+		_getImplementationFactory().registerStorageClass( argumentCollection=arguments );
+	}
+	public void function registerFunctionExecutor(
+		  required string                    className
+		, required IWorkflowFunctionExecutor implementation
+	) {
+		_getImplementationFactory().registerFunctionExecutor( argumentCollection=arguments );
+	}
+	public void function registerConditionEvaluator(
+		  required string                       className
+		, required IWorkflowConditionEvaluator implementation
+	) {
+		_getImplementationFactory().registerConditionEvaluator( argumentCollection=arguments );
+	}
+	public void function registerScheduler(
+		  required string             className
+		, required IWorkflowScheduler implementation
+	) {
+		_getImplementationFactory().registerScheduler( argumentCollection=arguments );
+	}
+
+
+// PUBLIC API
+	public WorkflowImplementation function getImplementation( required Workflow wf ) {
+		return _getImplementationFactory().getWorkflowImplementation( wf.getClass() );
+	}
+
+	public WorkflowImplementation function getImplementationForInstance( required WorkflowInstance wfInstance ) {
 		return getImplementation( _getWorkflowLibrary().getWorkflow( arguments.wfInstance.getWorkflowId() ) );
 	}
 
@@ -26,11 +67,11 @@ component singleton {
 		var impl = getImplementation( wf );
 		var wfInstance = impl.getInstance( instanceArgs=instanceArgs );
 
-		if ( IsNull( local.wfInstance ) || isInstanceOf( wfInstance, "IWorkflowInstance" ) ) {
+		if ( IsNull( local.wfInstance ) || isInstanceOf( wfInstance, "WorkflowInstance" ) ) {
 			return local.wfInstance ?: NullValue();
 		}
 
-		throw( "The workflow implementation, [#wf.getClass()#], returned an invalid workflow instance. Returned instances must be an object that implements the IWorkflowInstance interface.", "cfflow.invalid.instance" );
+		throw( "The workflow implementation, [#wf.getClass()#], returned an invalid workflow instance. Returned instances must be an object that implements the WorkflowInstance interface.", "cfflow.invalid.instance" );
 	}
 
 	public any function createInstance( required string workflowId, struct instanceArgs={}, struct initialState={}, string initialActionId ) {
@@ -88,7 +129,7 @@ component singleton {
 	}
 
 
-	public array function getActiveSteps( required IWorkflowInstance wfInstance ) {
+	public array function getActiveSteps( required WorkflowInstance wfInstance ) {
 		var activeSteps = [];
 
 		for( var step in _getFlowStepsForInstance( arguments.wfInstance ) ) {
@@ -100,7 +141,7 @@ component singleton {
 		return activeSteps;
 	}
 
-	public boolean function isComplete( required iWorkflowInstance wfInstance ) {
+	public boolean function isComplete( required WorkflowInstance wfInstance ) {
 		for( var step in _getFlowStepsForInstance( arguments.wfInstance ) ) {
 			if ( _isStepActive( arguments.wfInstance, step ) ) {
 				if ( ArrayLen( step.getActions() ) ) {
@@ -112,14 +153,14 @@ component singleton {
 		return true;
 	}
 
-	public void function doAction( required iWorkflowInstance wfInstance, required WorkflowAction wfAction ) {
+	public void function doAction( required WorkflowInstance wfInstance, required WorkflowAction wfAction ) {
 		doResult(
 			  wfInstance = arguments.wfInstance
 			, wfResult   = getResultToExecute( arguments.wfInstance, arguments.wfAction )
 		);
 	}
 
-	public void function doResult( required iWorkflowInstance wfInstance, required WorkflowResult wfResult ) {
+	public void function doResult( required WorkflowInstance wfInstance, required WorkflowResult wfResult ) {
 		var preFunctions  = filterFunctionsToExecute( arguments.wfInstance, arguments.wfResult.getPreFunctions() );
 		var postFunctions = filterFunctionsToExecute( arguments.wfInstance, arguments.wfResult.getPostFunctions() );
 		var transitions   = arguments.wfResult.getTransitions();
@@ -138,7 +179,7 @@ component singleton {
 	}
 
 	public void function doTransition(
-		  required iWorkflowInstance  wfInstance
+		  required WorkflowInstance  wfInstance
 		, required WorkflowTransition wfTransition
 	) {
 		arguments.wfInstance.setStatus(
@@ -159,7 +200,7 @@ component singleton {
 		}
 	}
 
-	public WorkflowResult function getResultToExecute( required iWorkflowInstance wfInstance, required WorkflowAction wfAction ) {
+	public WorkflowResult function getResultToExecute( required WorkflowInstance wfInstance, required WorkflowAction wfAction ) {
 		var conditionalResults = arguments.wfAction.getConditionalResults();
 
 		for( var result in conditionalResults ) {
@@ -171,19 +212,19 @@ component singleton {
 		return arguments.wfAction.getDefaultResult();
 	}
 
-	public boolean function evaluateCondition( required  WorkflowCondition wfCondition, required IWorkflowInstance wfInstance ) {
+	public boolean function evaluateCondition( required  WorkflowCondition wfCondition, required WorkflowInstance wfInstance ) {
 		var impl = getImplementationForInstance( arguments.wfInstance );
 
 		return impl.evaluateCondition( arguments.wfCondition, arguments.wfInstance );
 	}
 
-	public void function doFunction( required IWorkflowInstance wfInstance, required WorkflowFunction wfFunction ) {
+	public void function doFunction( required WorkflowInstance wfInstance, required WorkflowFunction wfFunction ) {
 		var impl = getImplementationForInstance( arguments.wfInstance );
 
 		impl.executeFunction( wfInstance=arguments.wfInstance, wfFunction=arguments.wfFunction );
 	}
 
-	public array function filterFunctionsToExecute( required IWorkflowInstance wfInstance, required array functions ) {
+	public array function filterFunctionsToExecute( required WorkflowInstance wfInstance, required array functions ) {
 		var filtered = [];
 
 		for( var fn in arguments.functions ) {
@@ -195,7 +236,7 @@ component singleton {
 		return filtered;
 	}
 
-	public WorkflowStep function getStepForInstance( required IWorkflowInstance wfInstance, required string stepId ) {
+	public WorkflowStep function getStepForInstance( required WorkflowInstance wfInstance, required string stepId ) {
 		var steps = _getWorkflowLibrary().getWorkflow( arguments.wfInstance.getWorkflowId() ).getSteps();
 
 		for( var step in steps ) {
@@ -205,7 +246,7 @@ component singleton {
 		}
 	}
 
-	public void function scheduleAutoActions( required IWorkflowInstance wfInstance, required string stepId ) {
+	public void function scheduleAutoActions( required WorkflowInstance wfInstance, required string stepId ) {
 		var wfStep = getStepForInstance( wfInstance=arguments.wfInstance, stepId=arguments.stepId );
 
 		if ( wfStep.hasAutoActions() ) {
@@ -236,7 +277,7 @@ component singleton {
 	}
 
 	public boolean function doAutoActions(
-		  required IWorkflowInstance wfInstance
+		  required WorkflowInstance wfInstance
 		,          string            stepId = ""
 		,          WorkflowStep      wfStep = getStepForInstance( arguments.wfInstance, arguments.stepId )
 	) {

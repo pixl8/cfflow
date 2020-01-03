@@ -5,7 +5,7 @@ component extends="testbox.system.BaseSpec" {
 			var _library = "";
 
 			beforeEach( function(){
-				_library = CreateMock( object=new cfflow.models.WorkflowLibrary() );
+				_library = CreateMock( object=new cfflow.models.definition.WorkflowLibrary() );
 			} );
 
 			describe( "workflowExists()", function(){

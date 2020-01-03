@@ -1,7 +1,5 @@
-component extends="cfflow.models.implementation.AbstractColdboxWorkflowImpl" implements="cfflow.models.implementation.IWorkflowImplementation" {
-
+component extends="cfflow.models.implementation.WorkflowImplementation" {
 	public boolean function isTestWfImplementation() {
 		return true;
 	}
-
 }

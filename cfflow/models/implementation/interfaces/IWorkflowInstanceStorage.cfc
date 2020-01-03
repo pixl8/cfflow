@@ -7,5 +7,6 @@ interface {
 	public void    function appendState( required struct instanceArgs, required struct state );
 	public string  function getStepStatus( required struct instanceArgs, required string step );
 	public void    function setStepStatus( required struct instanceArgs, required string step, required string status );
+	public struct  function getAllStepStatuses( required struct instanceArgs );
 
 }
