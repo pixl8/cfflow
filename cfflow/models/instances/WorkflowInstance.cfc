@@ -70,6 +70,10 @@ component accessors=true {
 		return true;
 	}
 
+	public boolean function isSplit() {
+		return ArrayLen( getActiveSteps() ) > 1;
+	}
+
 // STEP PROXIES
 	public array function getSteps() {
 		var steps = [];

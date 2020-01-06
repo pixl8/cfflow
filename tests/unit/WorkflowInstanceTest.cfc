@@ -172,6 +172,26 @@ component extends="testbox.system.BaseSpec" {
 						expect( _instance.isComplete() ).toBe( false );
 					} );
 				} );
+
+				describe( "isSplit()", function(){
+					it( "should return true when there are two or more active steps ", function(){
+						_instance.$( "getActiveSteps", [ "step-1", "step-2" ] );
+
+						expect( _instance.isSplit() ).toBe( true );
+					} );
+
+					it( "should return false when there are no active steps", function(){
+						_instance.$( "getActiveSteps", [] );
+
+						expect( _instance.isSplit() ).toBe( false );
+					} );
+
+					it( "should return false when there is one active step", function(){
+						_instance.$( "getActiveSteps", [ "step-3" ] );
+
+						expect( _instance.isSplit() ).toBe( false );
+					} );
+				} );
 			} );
 
 			describe( "Step proxies", function(){
