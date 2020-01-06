@@ -279,6 +279,107 @@ component extends="testbox.system.BaseSpec" {
 						expect( callLog[ 1 ].wfInstance ).toBe( _instance );
 					} );
 				} );
+
+				describe( "doAction( actionId, stepId )", function(){
+					it( "should proxy to the engine with action + instance objects based on the input arguments", function(){
+						var mockStep = CreateStub();
+						var stepId   = "step-2";
+						var actionId = "action-3";
+						var actions  = [];
+
+						for( var i=1; i<=5; i++ ) {
+							var action = CreateStub();
+							action.$( "getId", "action-#i#" );
+							actions.append( action );
+						}
+
+						mockStep.$( "getActions", actions );
+						_instance.$( "getActiveSteps", [ "step-2" ] );
+						_instance.$( "_getStep" ).$args( "step-2" ).$results( mockStep );
+						_instance.$( "getManualActions" ).$args( "step-2" ).$results( [ "action-1", "action-3" ] );
+						_engine.$( "doAction" );
+
+						_instance.doAction( actionId=actionId, stepId=stepId );
+
+						var callLog = _engine.$callLog().doAction;
+						expect( callLog.len() ).toBe( 1 );
+						expect( callLog[ 1 ].wfAction ).toBe( actions[ 3 ] );
+						expect( callLog[ 1 ].wfInstance ).toBe( _instance );
+					} );
+
+					it( "should use the currently active step when no action passed", function(){
+						var mockStep = CreateStub();
+						var stepId   = "step-2";
+						var actionId = "action-3";
+						var actions  = [];
+
+						for( var i=1; i<=5; i++ ) {
+							var action = CreateStub();
+							action.$( "getId", "action-#i#" );
+							actions.append( action );
+						}
+
+						mockStep.$( "getActions", actions );
+						_instance.$( "getActiveStep", "step-2" );
+						_instance.$( "getActiveSteps", [ "step-2" ] );
+						_instance.$( "_getStep" ).$args( "step-2" ).$results( mockStep );
+						_instance.$( "getManualActions" ).$args( "step-2" ).$results( [ "action-1", "action-3" ] );
+						_engine.$( "doAction" );
+
+						_instance.doAction( actionId=actionId );
+
+						var callLog = _engine.$callLog().doAction;
+						expect( callLog.len() ).toBe( 1 );
+						expect( callLog[ 1 ].wfAction ).toBe( actions[ 3 ] );
+						expect( callLog[ 1 ].wfInstance ).toBe( _instance );
+					} );
+
+					it( "should raise an error when the passed step is not active", function(){
+						var mockStep = CreateStub();
+						var stepId   = "step-2";
+						var actionId = "action-3";
+						var actions  = [];
+
+						for( var i=1; i<=5; i++ ) {
+							var action = CreateStub();
+							action.$( "getId", "action-#i#" );
+							actions.append( action );
+						}
+
+						mockStep.$( "getActions", actions );
+						_instance.$( "getActiveSteps", [ "step-3", "step-4" ] );
+						_instance.$( "_getStep" ).$args( "step-2" ).$results( mockStep );
+						_instance.$( "getManualActions" ).$args( "step-2" ).$results( [ "action-1", "action-3" ] );
+						_engine.$( "doAction" );
+
+						expect( function(){
+							_instance.doAction( actionId=actionId, stepId=stepId );
+						} ).toThrow( "cfflow.step.not.active" );
+					} );
+
+					it( "should raise an error when the passed action is not a valid manual action", function(){
+						var mockStep = CreateStub();
+						var stepId   = "step-2";
+						var actionId = "action-3";
+						var actions  = [];
+
+						for( var i=1; i<=5; i++ ) {
+							var action = CreateStub();
+							action.$( "getId", "action-#i#" );
+							actions.append( action );
+						}
+
+						mockStep.$( "getActions", actions );
+						_instance.$( "getActiveSteps", [ "step-2" ] );
+						_instance.$( "_getStep" ).$args( "step-2" ).$results( mockStep );
+						_instance.$( "getManualActions" ).$args( "step-2" ).$results( [ "action-1", "action-2" ] );
+						_engine.$( "doAction" );
+
+						expect( function(){
+							_instance.doAction( actionId=actionId, stepId=stepId );
+						} ).toThrow( "cfflow.invalid.manual.action" );
+					} );
+				} );
 			} );
 		});
 	}

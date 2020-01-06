@@ -110,6 +110,26 @@ component accessors=true {
 		return manualActions;
 	}
 
+	public void function doAction( required string actionId, string stepId=getActiveStep() ) {
+		if ( !ArrayFindNoCase( getActiveSteps(), arguments.stepId ) ) {
+			throw( "Cannot perform action [#arguments.actionId#] on step [#arguments.stepId#] because the step is not currently active", "cfflow.step.not.active" );
+		}
+		if ( !ArrayFindNoCase( getManualActions( arguments.stepId ), arguments.actionId ) ) {
+			throw( "Cannot perform action [#arguments.actionId#] on step [#arguments.stepId#] because the action is either not valid for this step, or the action's condition has failed.", "cfflow.invalid.manual.action" );
+		}
+
+		var step = _getStep( arguments.stepId );
+		for( var action in step.getActions() ) {
+			if ( action.getId() == arguments.actionId ) {
+				getWorkflowEngine().doAction(
+					  wfInstance = this
+					, wfAction   = action
+				);
+				return;
+			}
+		}
+	}
+
 // PRIVATE HELPERS
 	public any function _getStep( required string stepId ) {
 		for( var step in getWorkflowDefinition().getSteps() ) {

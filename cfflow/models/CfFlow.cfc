@@ -76,10 +76,6 @@ component singleton {
 		return wfInstance;
 	}
 
-	public void function doAction( required WorkflowInstance wfInstance, required WorkflowAction wfAction ) {
-		return _getWorkflowEngine().doAction( argumentCollection=arguments );
-	}
-
 // LIBRARY PROXIES
 	public void function registerWorkflow( required any wf ) {
 		var lib = _getWorkflowLibrary();
