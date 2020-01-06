@@ -44,7 +44,8 @@ workflow:
         functions:
           pre:
           - id: function-1
-            title: Function 1
+            meta:
+              title: Function 1
             handler: handler-1
             args:
               test: true
@@ -54,18 +55,21 @@ workflow:
               args:
                 test: blah
           - id: function-2
-            title: Function 2
+            meta:
+              title: Function 2
             handler: handler-2
             condition:
               handler: function2conditionid
           post:
           - id: function-1
-            title: Function 1
+            meta:
+              title: Function 1
             handler: handler-1
             condition:
               handler: function1.condition.handler
           - id: function-2
-            title: Function 2
+            meta:
+              title: Function 2
             handler: handler-2
             condition:
               handler: function2conditionid
@@ -84,12 +88,14 @@ workflow:
         functions:
           pre:
           - id: function-1
-            title: Function 1
+            meta:
+              title: Function 1
             handler: handler-1
             condition:
               handler: function1.condition.handler
           - id: function-2
-            title: Function 2
+            meta:
+              title: Function 2
             handler: handler-2
             condition:
               handler: function2conditionid
@@ -107,12 +113,14 @@ workflow:
         functions:
           post:
           - id: function-1
-            title: Function 1
+            meta:
+              title: Function 1
             handler: handler-1
             condition:
               handler: function1.condition.handler
           - id: function-2
-            title: Function 2
+            meta:
+              title: Function 2
             handler: handler-2
             condition:
               handler: function2conditionid

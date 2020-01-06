@@ -6,6 +6,7 @@
     "properties":{
         "pre":{
             "type":"array",
+            "description":"Array of functions that will execute before the parent result is actioned.",
             "items":{
                 "type":"object",
                 "$ref":"function.json"
@@ -13,6 +14,7 @@
         },
         "post":{
             "type":"array",
+            "description":"Array of functions that will execute after the parent result is actioned.",
             "items":{
                 "type":"object",
                 "$ref":"function.json"

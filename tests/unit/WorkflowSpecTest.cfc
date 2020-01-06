@@ -514,14 +514,14 @@ component extends="testbox.system.BaseSpec" {
 				it( "should register and create a new pre function with the supplied arguments", function(){
 					var newPreFunction = _workflowResult.addPreFunction(
 						  id        = "test-id"
-						, title     = "test-title"
+						, meta      = { title="test-title" }
 						, handler   = "test-functionId"
 						, condition = _getCondition()
 					);
 
 					expect( _workflowResult.getPreFunctions() ).toBe( [ newPreFunction ] );
 					expect( newPreFunction.getId() ).toBe( "test-id" );
-					expect( newPreFunction.getTitle() ).toBe( "test-title" );
+					expect( newPreFunction.getMeta() ).toBe( {title="test-title"} );
 					expect( newPreFunction.getPreOrPost() ).toBe( "pre" );
 					expect( newPreFunction.getHandler() ).toBe( "test-functionId" );
 					expect( newPreFunction.getCondition().getHandler() ).toBe( conditionHandler );
@@ -532,14 +532,14 @@ component extends="testbox.system.BaseSpec" {
 				it( "should register and create a new Post function with the supplied arguments", function(){
 					var newPostFunction = _workflowResult.addPostFunction(
 						  id        = "test-id"
-						, title     = "test-title"
+						, meta      = { title="test-title" }
 						, handler   = "test-functionId"
 						, condition = _getCondition()
 					);
 
 					expect( _workflowResult.getPostFunctions() ).toBe( [ newPostFunction ] );
 					expect( newPostFunction.getId() ).toBe( "test-id" );
-					expect( newPostFunction.getTitle() ).toBe( "test-title" );
+					expect( newPostFunction.getMeta() ).toBe( {title="test-title"} );
 					expect( newPostFunction.getPreOrPost() ).toBe( "post" );
 					expect( newPostFunction.getHandler() ).toBe( "test-functionId" );
 					expect( newPostFunction.getCondition().getHandler() ).toBe( conditionHandler );
@@ -655,7 +655,7 @@ component extends="testbox.system.BaseSpec" {
 			beforeEach( body=function(){
 				_function = new cfflow.models.definition.spec.WorkflowFunction(
 					  id        = functionId
-					, title     = functionTitle
+					, meta      = { title=functionTitle }
 					, preOrPost = functionPreOrPost
 					, handler   = functionHandler
 				);
@@ -666,9 +666,9 @@ component extends="testbox.system.BaseSpec" {
 					expect( _function.getId() ).toBe( functionId );
 				} );
 			} );
-			describe( "getTitle()", function(){
-				it( "should return the function title", function(){
-					expect( _function.getTitle() ).toBe( functionTitle );
+			describe( "getMeta()", function(){
+				it( "should return the function meta", function(){
+					expect( _function.getMeta() ).toBe( { title=functionTitle } );
 				} );
 			} );
 			describe( "getPreOrPost()", function(){
