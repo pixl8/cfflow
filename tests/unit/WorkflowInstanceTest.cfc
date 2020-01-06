@@ -7,7 +7,7 @@ component extends="testbox.system.BaseSpec" {
 			var _instanceArgs = { test=CreateUUId(), cool="beans" };
 			var _definition = CreateEmptyMock( "cfflow.models.definition.spec.Workflow" );
 			var _implementation = CreateEmptyMock( "cfflow.models.implementation.WorkflowImplementation" );
-			var _engine = CreateEmptyMock( "cfflow.models.WorkflowEngine" );
+			var _engine = CreateEmptyMock( "cfflow.models.engine.WorkflowEngine" );
 
 			beforeEach( function(){
 				_instance = CreateMock( object=new cfflow.models.instances.WorkflowInstance(

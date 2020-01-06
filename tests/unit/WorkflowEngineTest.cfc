@@ -2,8 +2,8 @@ component extends="testbox.system.BaseSpec" {
 
 	function run() {
 		describe( "Workflow Engine", function() {
-			var _library = "";
 			var _implFactory = "";
+			var _library = "";
 			var _engine  = "";
 			var _impl = "";
 			var _instance  = "";
@@ -13,17 +13,14 @@ component extends="testbox.system.BaseSpec" {
 			var _wf  = "";
 
 			beforeEach( function(){
-				_library = CreateEmptyMock( "cfflow.models.definition.WorkflowLibrary" );
+				_library     = CreateEmptyMock( "cfflow.models.definition.WorkflowLibrary" );
 				_implFactory = CreateEmptyMock( "cfflow.models.implementation.WorkflowImplementationFactory" );
 				_impl        = CreateMock( "cfflow.models.implementation.WorkflowImplementation" );
-				_engine      = CreateMock( object=new cfflow.models.WorkflowEngine() );
+				_engine      = CreateMock( object=new cfflow.models.engine.WorkflowEngine( implementationFactory=_implFactory, workflowLibrary=_library ) );
 				_wfId        = CreateUUId();
 				_instance    = CreateMock( "cfflow.models.instances.WorkflowInstance" );
 				_wf          = CreateMock( "cfflow.models.definition.spec.Workflow" );
 				_steps       = [];
-
-				_engine.$( "_getWorkflowLibrary", _library );
-				_engine.$( "_getImplementationFactory", _implFactory );
 
 				for( var i=1; i<=5; i++ ) {
 					_steps.append( CreateMock( "cfflow.models.definition.spec.WorkflowStep" ) );
@@ -38,21 +35,6 @@ component extends="testbox.system.BaseSpec" {
 				_library.$( "getWorkflow" ).$args( _wfId ).$results( _wf );
 				_impl.$( "setStepStatus" );
 
-			} );
-
-			describe( "getImplementation( workflow )", function(){
-				it( "should use the implementation factory to get the implementation for the given workflows class", function(){
-					var wf = CreateMock( "cfflow.models.definition.spec.Workflow" );
-					var wfClass = CreateUUId();
-					var result = CreateMock( "tests.resources.TestWfImplementation" );
-
-					wf.setClass( wfClass );
-
-					_implFactory.$( "getWorkflowImplementation" ).$args( wfClass ).$results( result );
-
-					expect( _engine.getImplementation( wf ) ).toBe( result );
-					expect( _engine.getImplementation( wf ).isTestWfImplementation() ).toBeTrue();
-				} );
 			} );
 
 			describe( "doAction( wfInstance, wfAction )", function() {
@@ -74,6 +56,21 @@ component extends="testbox.system.BaseSpec" {
 					expect( callLog.len()  ).toBe( 1 );
 					expect( callLog[ 1 ].wfInstance.getWorkflowId() ).toBe( _instance.getWorkflowId() );
 					expect( callLog[ 1 ].wfResult.getId() ).toBe( result.getId() );
+				} );
+			} );
+
+			describe( "getImplementation( workflow )", function(){
+				it( "should use the implementation factory to get the implementation for the given workflows class", function(){
+					var wf = CreateMock( "cfflow.models.definition.spec.Workflow" );
+					var wfClass = CreateUUId();
+					var result = CreateMock( "tests.resources.TestWfImplementation" );
+
+					wf.setClass( wfClass );
+
+					_implFactory.$( "getWorkflowImplementation" ).$args( wfClass ).$results( result );
+
+					expect( _engine.getImplementation( wf ) ).toBe( result );
+					expect( _engine.getImplementation( wf ).isTestWfImplementation() ).toBeTrue();
 				} );
 			} );
 
@@ -540,88 +537,6 @@ component extends="testbox.system.BaseSpec" {
 					expect( _engine.$callLog().doAction.len() ).toBe( 0 );
 				} );
 
-			} );
-
-			describe( "getInstance( workflowId, instanceArgs )", function(){
-				it( "should construct a new workflow instance with the given args", function(){
-					var instanceArgs = { test=CreateUUId(), args={ yes="test", no=false } };
-
-					_engine.$( "getImplementation" ).$args( _wf ).$results( _impl );
-					_impl.$( "instanceExists" ).$args( instanceArgs=instanceArgs ).$results( true );
-
-					var instance = _engine.getInstance( _wfId, instanceArgs );
-
-					expect( instance.getWorkflowId() ).toBe( _wfId );
-					expect( instance.getInstanceArgs() ).toBe( instanceArgs );
-					expect( instance.getWorkflowDefinition() ).toBe( _wf );
-					expect( instance.getWorkflowImplementation() ).toBe( _impl );
-				} );
-
-				it( "should return NULL when no instance exists", function(){
-					var instanceArgs = { test=CreateUUId(), args={ yes="test", no=false } };
-
-					_engine.$( "getImplementation" ).$args( _wf ).$results( _impl );
-					_impl.$( "instanceExists" ).$args( instanceArgs=instanceArgs ).$results( false );
-
-					expect( _engine.getInstance( _wfId, instanceArgs ) ).toBeNull();
-				} );
-			} );
-
-			describe( "instanceExists( workflowId, instanceArgs )", function(){
-				it( "should proxy to the implementation's instanceExists method", function(){
-					var instanceArgs = { test=CreateUUId(), args={ yes="test", no=false } };
-
-					_engine.$( "getImplementation" ).$args( _wf ).$results( _impl );
-
-					_impl.$( "instanceExists" ).$args( instanceArgs=instanceArgs ).$results( true );
-					expect( _engine.instanceExists( _wfId, instanceArgs ) ).toBe( true );
-
-					_impl.$( "instanceExists" ).$args( instanceArgs=instanceArgs ).$results( false );
-					expect( _engine.instanceExists( _wfId, instanceArgs ) ).toBe( false );
-				} );
-			} );
-
-			describe( "createInstance( workflowId, instanceArgs, initialState, initialActionId )", function(){
-				it( "should use the workflowIds corresponding workflow implementation to get a new workflow instance using the supplied instance args", function(){
-					var instanceArgs = { test=CreateUUId(), args={ yes="test", no=false } };
-
-					_impl.$( "createInstance" );
-					_engine.$( "getImplementation" ).$args( _wf ).$results( _impl );
-					_engine.$( "initializeInstance" );
-					_impl.$( "instanceExists" ).$args( instanceArgs=instanceArgs ).$results( true );
-
-					var instance = _engine.createInstance( _wfId, instanceArgs, {} );
-
-					var callLog = _impl.$callLog().createInstance;
-					expect( callLog.len() ).toBe( 1 );
-					expect( callLog[ 1 ].instanceArgs ).toBe( instanceArgs );
-					expect( callLog[ 1 ].workflowId ).toBe( _wfId );
-
-					expect( instance.getWorkflowId() ).toBe( _wfId );
-					expect( instance.getInstanceArgs() ).toBe( instanceArgs );
-					expect( instance.getWorkflowDefinition() ).toBe( _wf );
-					expect( instance.getWorkflowImplementation() ).toBe( _impl );
-				} );
-
-
-				it( "should pass the initial action ID to the initializeInstance method when set", function(){
-					var instanceArgs = { test=CreateUUId(), args={ yes="test", no=false } };
-					var initialState = { test=true, fubar=CreateUUId() }
-					var initialActionId = CreateUUId();
-
-					_impl.$( "createInstance" );
-					_engine.$( "getImplementation" ).$args( _wf ).$results( _impl );
-					_engine.$( "initializeInstance" );
-					_impl.$( "instanceExists" ).$args( instanceArgs=instanceArgs ).$results( true );
-
-					var instance = _engine.createInstance( _wfId, instanceArgs, initialState, initialActionId );
-					var callLog = _engine.$callLog().initializeInstance;
-					expect( callLog.len() ).toBe( 1 );
-					expect( callLog[ 1 ].wfInstance ).toBe( instance );
-					expect( callLog[ 1 ].initialState ).toBe( initialState );
-					expect( callLog[ 1 ].initialActionId ).toBe( initialActionId );
-
-				} );
 			} );
 
 			describe( "initializeInstance( wfInstance, initialState, initialActionId )", function(){

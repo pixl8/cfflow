@@ -4,7 +4,7 @@ component accessors=true {
 	property name="instanceArgs"           type="struct";
 	property name="workflowDefinition"     type="Workflow";
 	property name="workflowImplementation" type="WorkflowImplementation";
-	property name="workflowEngine"         type="WorkflowEngine";
+	property name="cfflow"                 type="CfFlow";
 
 // STATE INTERACTION PROXIES
 	public struct function getState(){
