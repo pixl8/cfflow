@@ -4,7 +4,7 @@ component accessors=true {
 	property name="instanceArgs"           type="struct";
 	property name="workflowDefinition"     type="Workflow";
 	property name="workflowImplementation" type="WorkflowImplementation";
-	property name="cfflow"                 type="CfFlow";
+	property name="workflowEngine"         type="WorkflowEngine";
 
 // STATE INTERACTION PROXIES
 	public struct function getState(){
@@ -82,6 +82,32 @@ component accessors=true {
 		}
 
 		return steps;
+	}
+
+// ACTION PROXIES
+	public array function getManualActions( string stepId=getActiveStep() ) {
+		var step          = _getStep( arguments.stepId );
+		var actions       = step.getActions();
+		var manualActions = [];
+
+		for( var action in actions ) {
+			if ( action.getIsManual() ) {
+				if ( action.hasCondition() ) {
+					var conditionPasses = getWorkflowEngine().evaluateCondition(
+						  wfCondition = action.getCondition()
+						, wfInstance  = this
+					);
+
+					if ( !conditionPasses ) {
+						continue;
+					}
+				}
+
+				ArrayAppend( manualActions, action.getId() );
+			}
+		}
+
+		return manualActions;
 	}
 
 // PRIVATE HELPERS

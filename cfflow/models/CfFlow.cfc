@@ -36,8 +36,9 @@ component singleton {
 	}
 
 	public any function getInstance( required string workflowId, struct instanceArgs={} ) {
+		var engine         = _getWorkflowEngine();
 		var wf             = _getWorkflowDefinition( arguments.workflowId );
-		var impl           = _getWorkflowEngine().getImplementation( wf );
+		var impl           = engine.getImplementation( wf );
 		var instanceExists = impl.instanceExists( instanceArgs=arguments.instanceArgs );
 
 		if ( instanceExists ) {
@@ -46,7 +47,7 @@ component singleton {
 				, instanceArgs           = arguments.instanceArgs
 				, workflowDefinition     = wf
 				, workflowImplementation = impl
-				, cfFlow                 = this
+				, workflowEngine         = engine
 			);
 		}
 

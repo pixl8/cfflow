@@ -209,6 +209,77 @@ component extends="testbox.system.BaseSpec" {
 					} );
 				} );
 			} );
+
+			describe( "Actions", function(){
+				describe( "getManualActions()", function(){
+					it( "should get the manual actions from the passed step", function(){
+						var mockStep = CreateStub();
+						var actions = [];
+
+						for( var i=1; i<=5; i++ ) {
+							var action = CreateStub();
+							action.$( "getId", "action-#i#" );
+							action.$( "getIsManual", i!=3 );
+							action.$( "hasCondition", false );
+
+							actions.append( action );
+						}
+						mockStep.$( "getActions", actions );
+						_instance.$( "getActiveStep", "step-2" );
+						_instance.$( "_getStep" ).$args( "step-1" ).$results( mockStep );
+
+						expect( _instance.getManualActions( "step-1" ) ).toBe( [ "action-1", "action-2", "action-4", "action-5" ] );
+					} );
+
+					it( "should get the manual actions from the currently active step when no step passed", function(){
+						var mockStep = CreateStub();
+						var actions = [];
+
+						for( var i=1; i<=5; i++ ) {
+							var action = CreateStub();
+							action.$( "getId", "action-#i#" );
+							action.$( "getIsManual", true );
+							action.$( "hasCondition", false );
+
+							actions.append( action );
+						}
+						mockStep.$( "getActions", actions );
+						_instance.$( "getActiveStep", "step-2" );
+						_instance.$( "_getStep" ).$args( "step-2" ).$results( mockStep );
+
+						expect( _instance.getManualActions() ).toBe( [ "action-1", "action-2", "action-3", "action-4", "action-5" ] );
+					} );
+
+					it( "should filter out manual actions with conditions that evaluate false", function(){
+						var mockStep      = CreateStub();
+						var mockCondition = CreateMock( "cfflow.models.definition.spec.WorkflowCondition" );
+						var actions       = [];
+
+						for( var i=1; i<=5; i++ ) {
+							var action = CreateStub();
+							action.$( "getId", "action-#i#" );
+							action.$( "getIsManual", i!=3 );
+							action.$( "hasCondition", i==5 );
+							if ( i==5 ) {
+								action.$( "getCondition", mockCondition );
+							}
+
+							actions.append( action );
+						}
+						mockStep.$( "getActions", actions );
+						_engine.$( "evaluateCondition", false );
+						_instance.$( "getActiveStep", "step-2" );
+						_instance.$( "_getStep" ).$args( "step-1" ).$results( mockStep );
+
+						expect( _instance.getManualActions( "step-1" ) ).toBe( [ "action-1", "action-2", "action-4" ] );
+
+						var callLog = _engine.$callLog().evaluateCondition;
+						expect( callLog.len() ).toBe( 1 );
+						expect( callLog[ 1 ].wfCondition ).toBe( mockCondition );
+						expect( callLog[ 1 ].wfInstance ).toBe( _instance );
+					} );
+				} );
+			} );
 		});
 	}
 }
