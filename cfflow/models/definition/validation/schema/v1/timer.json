@@ -4,8 +4,9 @@
     "type": "object",
     "required":[ "interval" ],
     "additionalProperties": false,
+    "description":"A timer is a combination of an 'interval' that defines the length of time to wait and a 'count' that describes the maximum number of times the timer will be executed.",
     "properties":{
-        "interval":{ "type":"string"},
-        "count":{ "type":"integer"}
+        "interval":{ "type":"string", "description":"The interval to wait for this timer in CfFlow timer format. e.g. 1h for 1 hour, 1m for 1 minute, etc. Valid units are: s=second, m=minute, h=hour, d=day, w=week, y=year." },
+        "count":{ "type":"integer", "description":"How many failed attempts to execute auto actions at this timer interval before giving up or moving on to the next interval timer configuration." }
     }
 }

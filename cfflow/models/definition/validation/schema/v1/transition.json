@@ -4,10 +4,12 @@
     "type": "object",
     "additionalProperties": false,
     "required":[ "step", "status" ],
+    "description":"A transition represents the setting of a new status on a step. Combinations of transitions effectively move instances through the workflow.",
     "properties":{
-        "step":{ "type":"string"},
+        "step":{ "type":"string", "description":"The unique ID of the step within this workflow that the transition applies to." },
         "status":{
             "type":"string",
+            "description":"The new status for the step. Either 'pending', 'active', 'complete' or 'skipped'.",
             "enum":["pending","active","complete","skipped"]
         }
     }
