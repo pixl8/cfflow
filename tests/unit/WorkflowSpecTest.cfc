@@ -68,13 +68,13 @@ component extends="testbox.system.BaseSpec" {
 			describe( "addStep()", function() {
 				it( "should register and create a new step with the supplied arguments", function(){
 					var newStep = _workflowDef.addStep(
-						  id    = "my-step"
-						, title = "My step"
+						  id   = "my-step"
+						, meta =  { title = "My step" }
 					);
 
 					expect( _workflowDef.getSteps() ).toBe( [ newStep ] );
 					expect( newStep.getId() ).toBe( "my-step" );
-					expect( newStep.getTitle() ).toBe( "My step" );
+					expect( newStep.getMeta() ).toBe( { title="My step" } );
 				} );
 			} );
 
@@ -113,9 +113,8 @@ component extends="testbox.system.BaseSpec" {
 
 			beforeEach( body=function(){
 				_workflowStep = CreateMock( object=new cfflow.models.definition.spec.WorkflowStep(
-					  id          = stepId
-					, title       = stepTitle
-					, description = stepDescription
+					  id   = stepId
+					, meta = { title=stepTitle, description=stepDescription }
 				) );
 			} );
 
@@ -125,15 +124,9 @@ component extends="testbox.system.BaseSpec" {
 				} );
 			} );
 
-			describe( "getTitle()", function() {
-				it( "should return the step title", function(){
-					expect( _workflowStep.getTitle() ).toBe( stepTitle );
-				} );
-			} );
-
-			describe( "getDescription()", function() {
-				it( "should return the step description", function(){
-					expect( _workflowStep.getDescription() ).toBe( stepDescription );
+			describe( "getMeta()", function() {
+				it( "should return the step meta", function(){
+					expect( _workflowStep.getMeta() ).toBe( { title=stepTitle, description=stepDescription } );
 				} );
 			} );
 

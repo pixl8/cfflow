@@ -80,17 +80,6 @@ component extends="testbox.system.BaseSpec" {
 						validator.validate( workflow );
 					} ).toThrow( "preside.workflow.definition.validation.error" );
 				} );
-				it( "should raise an error when one or more steps has no title", function(){
-					workflow.workflow.steps[1].delete( "title" );
-					expect( function(){
-						validator.validate( workflow );
-					} ).toThrow( "preside.workflow.definition.validation.error" );
-
-					workflow.workflow.steps[1].title = "";
-					expect( function(){
-						validator.validate( workflow );
-					} ).toThrow( "preside.workflow.definition.validation.error" );
-				} );
 				it( "should raise an error when one or more step actions has no ID", function(){
 					workflow.workflow.steps[1].actions[1].delete( "id" );
 					expect( function(){
@@ -375,7 +364,7 @@ component extends="testbox.system.BaseSpec" {
 				}],
 				"steps":[{
 					"id":"step-1",
-					"title":"Step 1",
+					"meta":{"title":"Step 1"},
 					"autoActionTimers":[{
 						"interval":"10m",
 						"count":10
@@ -537,7 +526,7 @@ component extends="testbox.system.BaseSpec" {
 					}]
 				},{
 					"id":"step-2",
-					"title":"Step 2",
+					"meta":{"title":"Step 2"},
 					"actions":[]
 				}]
 			}

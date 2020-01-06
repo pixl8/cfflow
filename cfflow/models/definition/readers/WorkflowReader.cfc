@@ -63,9 +63,8 @@ component singleton {
 
 	private void function _addStep( wf, step ) {
 		var wfStep = wf.addStep(
-			  id          = arguments.step.id          ?: "unknown"
-			, title       = arguments.step.title       ?: "unknown"
-			, description = arguments.step.description ?: ""
+			  id   = arguments.step.id   ?: "unknown"
+			, meta = arguments.step.meta ?: {}
 		);
 
 		var timers = arguments.step.autoActionTimers ?: [];

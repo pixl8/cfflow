@@ -1,8 +1,7 @@
 component accessors=true {
 
 	property name="id"               type="string"  required=true;
-	property name="title"            type="string"  required=true;
-	property name="description"      type="string"  required=false;
+	property name="meta"             type="struct";
 	property name="autoActionTimers" type="array"   required=false;
 	property name="actions"          type="array"   required=false;
 	property name="_hasAutoActions"  type="boolean";
@@ -72,5 +71,9 @@ component accessors=true {
 		}
 
 		return variables._hasAutoActions;
+	}
+
+	public struct function getMeta() {
+		return variables.meta ?: {};
 	}
 }

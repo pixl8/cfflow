@@ -47,14 +47,12 @@ component extends="testbox.system.BaseSpec" {
 
 					expect( steps.len() ).toBe( 2 );
 					expect( steps[1].getId() ).toBe( "step-1" );
-					expect( steps[1].getTitle() ).toBe( "Step 1" );
-					expect( steps[1].getDescription() ).toBe( "Step 1 description" );
+					expect( steps[1].getMeta() ).toBe( { title="Step 1", description="Step 1 description" } );
 					expect( steps[1].getAutoActionTimers()[1].getInterval() ).toBe( 600 );
 					expect( steps[1].getAutoActionTimers()[1].getCount() ).toBe( 100 );
 					expect( steps[2].getId() ).toBe( "step-2" );
 					expect( steps[2].getAutoActionTimers() ).toBe( [] );
-					expect( steps[2].getTitle() ).toBe( "Step 2" );
-					expect( steps[2].getDescription() ).toBe( "Step 2 description" );
+					expect( steps[2].getMeta() ).toBe( { title="Step 2", description="Step 2 description" } );
 				} );
 
 				it( "should read all step actions in the flow", function(){

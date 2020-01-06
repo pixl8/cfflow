@@ -17,8 +17,9 @@ workflow:
         status: active
   steps:
   - id: "step-1"
-    title: "Step 1"
-    description: "Step 1 description"
+    meta:
+      title: "Step 1"
+      description: "Step 1 description"
     autoActionTimers:
     - interval: 10m
       count: 100
@@ -126,5 +127,6 @@ workflow:
         - step: step-2
           status: active
   - id: "step-2"
-    title: "Step 2"
-    description: "Step 2 description"
+    meta:
+      title: "Step 2"
+      description: "Step 2 description"

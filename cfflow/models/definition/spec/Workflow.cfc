@@ -18,8 +18,7 @@ component accessors=true {
 
 	public any function addStep(
 		  required string id
-		, required string title
-		,          string description = ""
+		,          struct meta = {}
 	) {
 		var steps   = getSteps();
 		var newStep = new WorkflowStep( argumentCollection=arguments );
