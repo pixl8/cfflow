@@ -8,23 +8,23 @@ component accessors=true {
 
 // STATE INTERACTION PROXIES
 	public struct function getState(){
-		return getWorkflowImplementation().getState( instanceArgs=getInstanceArgs() );
+		return getWorkflowImplementation().getState( workflowId=getWorkflowId(), instanceArgs=getInstanceArgs() );
 	}
 	public void function setState( required struct state ){
-		getWorkflowImplementation().setState( instanceArgs=getInstanceArgs(), state=arguments.state );
+		getWorkflowImplementation().setState( workflowId=getWorkflowId(), instanceArgs=getInstanceArgs(), state=arguments.state );
 	}
 	public void function appendState( required struct state ){
-		getWorkflowImplementation().appendState( instanceArgs=getInstanceArgs(), state=arguments.state );
+		getWorkflowImplementation().appendState( workflowId=getWorkflowId(), instanceArgs=getInstanceArgs(), state=arguments.state );
 	}
 
 // STATUS INTERACTION PROXIES
 	public string function getStepStatus( required string step ){
-		return getWorkflowImplementation().getStepStatus( instanceArgs=getInstanceArgs(), step=arguments.step );
+		return getWorkflowImplementation().getStepStatus( workflowId=getWorkflowId(), instanceArgs=getInstanceArgs(), step=arguments.step );
 	}
 
 	public array function getAllStepStatuses(){
 		var statuses         = [];
-		var recordedStatuses = getWorkflowImplementation().getAllStepStatuses( instanceArgs=getInstanceArgs() );
+		var recordedStatuses = getWorkflowImplementation().getAllStepStatuses( workflowId=getWorkflowId(), instanceArgs=getInstanceArgs() );
 
 		for( var step in getSteps() ) {
 			ArrayAppend( statuses, { step=step, status=recordedStatuses[ step ] ?: "pending" } );

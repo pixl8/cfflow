@@ -24,7 +24,7 @@ component extends="testbox.system.BaseSpec" {
 					it( "should proxy to the implementation's getState method, passing in the instances args", function(){
 						var mockState = { test=CreateUUId() };
 
-						_implementation.$( "getState" ).$args( instanceArgs=_instanceArgs ).$results( mockState );
+						_implementation.$( "getState" ).$args( instanceArgs=_instanceArgs, workflowId=_workflowId ).$results( mockState );
 
 						expect( _instance.getState() ).toBe( mockState );
 					} );
@@ -39,6 +39,7 @@ component extends="testbox.system.BaseSpec" {
 
 						var callLog = _implementation.$callLog().setState;
 						expect( callLog.len() ).toBe( 1 );
+						expect( callLog[1].workflowId ).toBe( _workflowId );
 						expect( callLog[1].instanceArgs ).toBe( _instanceArgs );
 						expect( callLog[1].state ).toBe( mockState );
 					} );
@@ -53,6 +54,7 @@ component extends="testbox.system.BaseSpec" {
 
 						var callLog = _implementation.$callLog().appendState;
 						expect( callLog.len() ).toBe( 1 );
+						expect( callLog[1].workflowId ).toBe( _workflowId );
 						expect( callLog[1].instanceArgs ).toBe( _instanceArgs );
 						expect( callLog[1].state ).toBe( mockState );
 					} );
@@ -65,7 +67,7 @@ component extends="testbox.system.BaseSpec" {
 						var mockStatus = CreateUUId();
 						var step = CreateUUId();
 
-						_implementation.$( "getStepStatus" ).$args( instanceArgs=_instanceArgs, step=step ).$results( mockStatus );
+						_implementation.$( "getStepStatus" ).$args( workflowId=_workflowId, instanceArgs=_instanceArgs, step=step ).$results( mockStatus );
 
 						expect( _instance.getStepStatus( step ) ).toBe( mockStatus );
 					} );
@@ -77,7 +79,7 @@ component extends="testbox.system.BaseSpec" {
 						var steps        = [ "step1", "step2", "step3", "step4", "step5" ];
 
 						_instance.$( "getSteps", steps );
-						_implementation.$( "getAllStepStatuses" ).$args( instanceArgs=_instanceArgs ).$results( mockStatuses );
+						_implementation.$( "getAllStepStatuses" ).$args( workflowId=_workflowId, instanceArgs=_instanceArgs ).$results( mockStatuses );
 
 						expect( _instance.getAllStepStatuses() ).toBe( [
 							  { step="step1", status="complete" }

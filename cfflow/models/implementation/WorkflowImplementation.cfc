@@ -7,28 +7,28 @@ component accessors=true {
 
 
 // STORAGE CLASS PROXIES
-	public boolean function instanceExists( required struct instanceArgs ){
+	public boolean function instanceExists( required string workflowId, required struct instanceArgs ){
 		return getStorageClass().instanceExists( argumentCollection=arguments );
 	}
-	public void function createInstance( required struct instanceArgs ){
+	public void function createInstance( required string workflowId, required struct instanceArgs ){
 		return getStorageClass().createInstance( argumentCollection=arguments );
 	}
-	public struct function getState( required struct instanceArgs ){
+	public struct function getState( required string workflowId, required struct instanceArgs ){
 		return getStorageClass().getState( argumentCollection=arguments );
 	}
-	public void function setState( required struct instanceArgs, required struct state ){
+	public void function setState( required string workflowId, required struct instanceArgs, required struct state ){
 		return getStorageClass().setState( argumentCollection=arguments );
 	}
-	public void function appendState( required struct instanceArgs, required struct state ){
+	public void function appendState( required string workflowId, required struct instanceArgs, required struct state ){
 		return getStorageClass().appendState( argumentCollection=arguments );
 	}
-	public string function getStepStatus( required struct instanceArgs, required string step ){
+	public string function getStepStatus( required string workflowId, required struct instanceArgs, required string step ){
 		return getStorageClass().getStepStatus( argumentCollection=arguments );
 	}
-	public void function setStepStatus( required struct instanceArgs, required string step, required string status ){
+	public void function setStepStatus( required string workflowId, required struct instanceArgs, required string step, required string status ){
 		return getStorageClass().setStepStatus( argumentCollection=arguments );
 	}
-	public struct function getAllStepStatuses( required struct instanceArgs ){
+	public struct function getAllStepStatuses( required string workflowId, required struct instanceArgs ){
 		return getStorageClass().getAllStepStatuses( argumentCollection=arguments );
 	}
 
