@@ -1,7 +1,8 @@
 version: 1.0.0
 workflow:
   id: test-workflow
-  title: Test workflow
+  meta:
+    title: Test workflow
   class: pixl8.webflow
   initialActions:
   - id: action-1

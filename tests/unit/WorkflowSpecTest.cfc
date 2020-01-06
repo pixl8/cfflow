@@ -10,7 +10,7 @@ component extends="testbox.system.BaseSpec" {
 			beforeEach( body=function(){
 				_workflowDef = new cfflow.models.definition.spec.Workflow(
 					  id    = flowId
-					, title = flowTitle
+					, meta  = { title=flowTitle }
 					, class = flowClass
 				);
 
@@ -23,9 +23,9 @@ component extends="testbox.system.BaseSpec" {
 				} );
 			} );
 
-			describe( "getTitle()", function() {
-				it( "should return the workflow title", function(){
-					expect( _workflowDef.getTitle() ).toBe( flowTitle );
+			describe( "getMeta()", function() {
+				it( "should return the workflow meta", function(){
+					expect( _workflowDef.getMeta() ).toBe( { title=flowTitle } );
 				} );
 			} );
 

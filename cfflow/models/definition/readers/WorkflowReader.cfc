@@ -26,7 +26,7 @@ component singleton {
 		var wf    = arguments.workflow.workflow ?: {};
 		var wfObj = _getWorkflowFactory().getWorkflow(
 			  id    = wf.id    ?: "unknown"
-			, title = wf.title ?: "unknown"
+			, meta  = wf.meta  ?: {}
 			, class = wf.class ?: "unknown"
 		);
 

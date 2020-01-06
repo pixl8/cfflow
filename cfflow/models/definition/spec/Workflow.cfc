@@ -1,8 +1,8 @@
 component accessors=true {
 
 	property name="id"             type="string" required=true;
-	property name="title"          type="string" required=true;
 	property name="class"          type="string" required=true;
+	property name="meta"           type="struct";
 	property name="initialActions" type="array";
 	property name="steps"          type="array";
 
@@ -27,6 +27,10 @@ component accessors=true {
 		ArrayAppend( steps, newStep );
 
 		return newStep;
+	}
+
+	public struct function getMeta() {
+		return variables.meta ?: {};
 	}
 
 	public array function getSteps() {

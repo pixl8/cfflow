@@ -17,15 +17,16 @@
         "workflow": {
             "type": "object",
             "description": "The root object that describes the workflow",
-            "required":[ "id", "title", "class", "steps", "initialActions" ],
+            "required":[ "id", "class", "steps", "initialActions" ],
             "additionalProperties": false,
             "properties": {
-                "id":{ "type":"string"},
-                "title":{ "type":"string"},
-                "class":{ "type":"string"},
+                "id":{ "type":"string", "description": "The unique identifier for the workflow." },
+                "class":{ "type":"string", "description": "The workflow class. Determines what storage class and scheduler to use." },
+                "meta":{ "type":"object", "description": "Abitrary metadata that you may use to describe the workflow" },
                 "initialActions":{
                     "type": "array",
                     "minItems": 1,
+                    "description": "Array of initial actions for the workflow. At least one must be specified to set the first step and perform any other functions and checks.",
                     "items": {
                         "type": "object",
                         "$ref": "initialAction.json"
@@ -34,6 +35,7 @@
                 "steps": {
                     "type": "array",
                     "minItems": 2,
+                    "description": "The steps of the flow. Any workflow must have at least two steps.",
                     "items": {
                         "type": "object",
                         "$ref": "step.json"

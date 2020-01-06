@@ -29,7 +29,7 @@ component extends="testbox.system.BaseSpec" {
 
 				it( "should read top level workflow information from the struct definition", function(){
 					expect( wf.getId() ).toBe( "test-workflow" );
-					expect( wf.getTitle() ).toBe( "Test workflow" );
+					expect( wf.getMeta() ).toBe( { title="Test workflow" } );
 					expect( wf.getClass() ).toBe( "pixl8.webflow" );
 				} );
 

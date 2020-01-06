@@ -22,7 +22,7 @@ component extends="testbox.system.BaseSpec" {
 
 				it( "should use yaml parser to convert to struct and then use the Struct reader to read workflow", function(){
 					expect( wf.getId() ).toBe( "test-workflow" );
-					expect( wf.getTitle() ).toBe( "Test workflow" );
+					expect( wf.getMeta().title ).toBe( "Test workflow" );
 					expect( wf.getClass() ).toBe( "pixl8.webflow" );
 				} );
 			} );

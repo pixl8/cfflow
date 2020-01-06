@@ -57,12 +57,6 @@ component extends="testbox.system.BaseSpec" {
 						validator.validate( workflow );
 					} ).toThrow( "preside.workflow.definition.validation.error" );
 				} );
-				it( "should raise an error when the workflow entry has no title", function(){
-					workflow.workflow.delete( "title" );
-					expect( function(){
-						validator.validate( workflow );
-					} ).toThrow( "preside.workflow.definition.validation.error" );
-				} );
 				it( "should raise an error when the workflow entry has no class", function(){
 					workflow.workflow.delete( "class" );
 					expect( function(){
@@ -368,7 +362,9 @@ component extends="testbox.system.BaseSpec" {
 			"version":"1.0.0",
 			"workflow":{
 				"id":"my-workflow",
-				"title":"My workflow",
+				"meta":{
+					"title":"My workflow"
+				},
 				"class":"my.workflow.class",
 				"initialActions":[{
 					"id":"action-1",
