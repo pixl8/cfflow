@@ -11,6 +11,8 @@ component extends="testbox.system.BaseSpec" {
 			var _steps  = "";
 			var _wfId  = "";
 			var _wf  = "";
+			var _reader = "";
+			var _yamlReader = "";
 
 			beforeEach( function(){
 				_library     = CreateEmptyMock( "cfflow.models.definition.WorkflowLibrary" );
@@ -21,11 +23,15 @@ component extends="testbox.system.BaseSpec" {
 				_wfId        = CreateUUId();
 				_instance    = CreateMock( "cfflow.models.instances.WorkflowInstance" );
 				_wf          = CreateMock( "cfflow.models.definition.spec.Workflow" );
+				_reader      = CreateMock( "cfflow.models.definition.readers.WorkflowReader" );
+				_yamlReader  = CreateMock( "cfflow.models.definition.readers.WorkflowYamlReader" );
 				_steps       = [];
 
 				_cfflow.$( "_getWorkflowLibrary", _library );
 				_cfflow.$( "_getImplementationFactory", _implFactory );
 				_cfflow.$( "_getWorkflowEngine", _engine );
+				_cfflow.$( "_getWorkflowReader", _reader );
+				_cfflow.$( "_getYamlWorkflowReader", _yamlReader );
 
 				for( var i=1; i<=5; i++ ) {
 					_steps.append( CreateMock( "cfflow.models.definition.spec.WorkflowStep" ) );
@@ -123,6 +129,65 @@ component extends="testbox.system.BaseSpec" {
 						expect( callLog[ 1 ].initialState ).toBe( initialState );
 						expect( callLog[ 1 ].initialActionId ).toBe( initialActionId );
 
+					} );
+				} );
+			} );
+
+			describe( "Library proxies", function(){
+				describe( "registerWorkflow( any flow )", function(){
+					it( "should directly proxy to the library passing in the passed Workflow object", function(){
+						_library.$( "registerWorkflow" );
+
+						_cfflow.registerWorkflow( _wf );
+
+						var callLog = _library.$callLog().registerWorkflow;
+
+						expect( callLog.len() ).toBe( 1 );
+						expect( callLog[ 1 ][ 1 ] ).toBe( _wf );
+					} );
+
+					it( "it should first convert the passed workflow from a struct to a workflow object when passed a struct", function(){
+						var flow = { some="struct" };
+
+						_library.$( "registerWorkflow" );
+						_reader.$( "read" ).$args( flow ).$results( _wf );
+
+						_cfflow.registerWorkflow( flow );
+
+						var callLog = _library.$callLog().registerWorkflow;
+
+						expect( callLog.len() ).toBe( 1 );
+						expect( callLog[ 1 ][ 1 ] ).toBe( _wf );
+					} );
+
+					it( "should attempt registering a workflow from a yaml file path", function(){
+						var flow = "/tests/resources/yaml/fullSpecExample.yaml";
+						var yaml = FileRead( flow );
+
+						_library.$( "registerWorkflow" );
+						_yamlReader.$( "read" ).$args( yaml ).$results( _wf );
+
+						_cfflow.registerWorkflow( flow );
+
+						var callLog = _library.$callLog().registerWorkflow;
+
+						expect( callLog.len() ).toBe( 1 );
+						expect( callLog[ 1 ][ 1 ] ).toBe( _wf );
+					} );
+
+					it( "should attempt registering a workflow from raw yaml input", function(){
+						var filePath = "/tests/resources/yaml/fullSpecExample.yaml";
+						var flow = FileRead( filePath );
+
+						_library.$( "registerWorkflow" );
+						_yamlReader.$( "read" ).$args( flow ).$results( _wf );
+
+						_cfflow.registerWorkflow( flow );
+
+						var callLog = _library.$callLog().registerWorkflow;
+
+						expect( callLog.len() ).toBe( 1 );
+						expect( callLog[ 1 ][ 1 ] ).toBe( _wf );
 					} );
 				} );
 			} );

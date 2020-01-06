@@ -12,6 +12,17 @@ component singleton {
 			  implementationFactory = _getImplementationFactory()
 			, workflowLibrary       = _getWorkflowLibrary()
 		) );
+		_setWorkflowReader( new definition.readers.WorkflowReader(
+			  workflowFactory = new definition.WorkflowFactory()
+			, schemaValidator = new definition.validation.WorkflowSchemaValidator()
+			, schemaUtil      = new util.WorkflowSchemaUtil()
+		) );
+		_setYamlWorkflowReader( new definition.readers.WorkflowYamlReader(
+			  workflowFactory = new definition.WorkflowFactory()
+			, schemaValidator = new definition.validation.WorkflowSchemaValidator()
+			, schemaUtil      = new util.WorkflowSchemaUtil()
+			, yamlParser      = new util.YamlParser()
+		) );
 
 		return this;
 	}
@@ -69,8 +80,28 @@ component singleton {
 	}
 
 // LIBRARY PROXIES
-	public void function registerWorkflow( required Workflow wf ) {
-		_getWorkflowLibrary().registerWorkflow( argumentCollection=arguments );
+	public void function registerWorkflow( required any wf ) {
+		var lib = _getWorkflowLibrary();
+
+		// given a workflow object already parsed
+		if ( IsInstanceOf( arguments.wf, "Workflow" ) ) {
+			lib.registerWorkflow( wf=arguments.wf );
+
+		// given a simple struct, ready for parsing
+		} else if ( IsStruct( arguments.wf ) && !IsObject( arguments.wf ) ) {
+			lib.registerWorkflow( wf=_getWorkflowReader().read( arguments.wf ) );
+
+		// given a string
+		} else if ( IsSimpleValue( arguments.wf ) ) {
+			// if a file path, presume a YAML file with workflow definition
+			if ( FileExists( arguments.wf ) ) {
+				lib.registerWorkflow( wf=_getYamlWorkflowReader().read( FileRead( arguments.wf ) ) );
+
+			// otherwise, presume YAML string
+			} else {
+				lib.registerWorkflow( wf=_getYamlWorkflowReader().read( arguments.wf ) );
+			}
+		}
 	}
 
 // IMPLEMENTATION PROXIES
@@ -133,6 +164,20 @@ component singleton {
 	}
 	private void function _setWorkflowEngine( required any workflowEngine ) {
 	    _workflowEngine = arguments.workflowEngine;
+	}
+
+	private any function _getWorkflowReader() {
+	    return _workflowReader;
+	}
+	private void function _setWorkflowReader( required any workflowReader ) {
+	    _workflowReader = arguments.workflowReader;
+	}
+
+	private any function _getYamlWorkflowReader() {
+	    return _yamlWorkflowReader;
+	}
+	private void function _setYamlWorkflowReader( required any yamlWorkflowReader ) {
+	    _yamlWorkflowReader = arguments.yamlWorkflowReader;
 	}
 
 }
