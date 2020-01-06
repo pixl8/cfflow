@@ -324,14 +324,14 @@ component extends="testbox.system.BaseSpec" {
 				it( "should register and create a new conditional result with the supplied arguments", function(){
 					var newResult = _workflowAction.addConditionalResult(
 						  id        = "test-id"
-						, title     = "test-title"
+						, meta      = { title="test-title" }
 						, type      = "join"
 						, condition = _getCondition()
 					);
 
 					expect( _workflowAction.getConditionalResults() ).toBe( [ newResult ] );
 					expect( newResult.getId() ).toBe( "test-id" );
-					expect( newResult.getTitle() ).toBe( "test-title" );
+					expect( newResult.getMeta() ).toBe( { title="test-title" } );
 					expect( newResult.getType() ).toBe( "join" );
 					expect( newResult.getIsDefault() ).toBe( false );
 					expect( newResult.getCondition().getHandler() ).toBe( conditionHandler );
@@ -341,14 +341,14 @@ component extends="testbox.system.BaseSpec" {
 			describe( "setDefaultResult()", function() {
 				it( "should register and create a new default result with the supplied arguments", function(){
 					_workflowAction.setDefaultResult(
-						  id        = "test-id"
-						, title     = "test-title"
-						, type      = "split"
+						  id   = "test-id"
+						, meta = { title="test-title" }
+						, type = "split"
 					);
 					newResult = _workflowAction.getDefaultResult();
 
 					expect( newResult.getId() ).toBe( "test-id" );
-					expect( newResult.getTitle() ).toBe( "test-title" );
+					expect( newResult.getMeta() ).toBe( { title="test-title" } );
 					expect( newResult.getType() ).toBe( "split" );
 					expect( newResult.getIsDefault() ).toBe( true );
 					expect( newResult.hasCondition() ).toBeFalse();
@@ -430,7 +430,7 @@ component extends="testbox.system.BaseSpec" {
 			beforeEach( body=function(){
 				_workflowResult = CreateMock( object=new cfflow.models.definition.spec.WorkflowResult(
 					  id        = resultId
-					, title     = resultTitle
+					, meta      = { title=resultTitle }
 					, type      = resultType
 					, isDefault = resultIsDefault
 				) );
@@ -442,9 +442,9 @@ component extends="testbox.system.BaseSpec" {
 				} );
 			} );
 
-			describe( "getTitle()", function() {
+			describe( "getMeta()", function() {
 				it( "should return the result title", function(){
-					expect( _workflowResult.getTitle() ).toBe( resultTitle );
+					expect( _workflowResult.getMeta() ).toBe( { title=resultTitle } );
 				} );
 			} );
 

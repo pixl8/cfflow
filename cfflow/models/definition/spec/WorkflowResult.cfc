@@ -1,9 +1,9 @@
 component accessors=true {
 
 	property name="id"            type="string"  required=true;
-	property name="title"         type="string"  required=true;
 	property name="type"          type="string"  required=true;
 	property name="isDefault"     type="boolean" required=true;
+	property name="meta"          type="struct";
 	property name="condition"     type="WorkflowCondition";
 	property name="transitions"   type="array";
 	property name="preFunctions"  type="array";
@@ -97,5 +97,9 @@ component accessors=true {
 
 	public boolean function hasCondition() {
 		return !IsNull( variables.condition );
+	}
+
+	public struct function getMeta() {
+		return variables.meta ?: {};
 	}
 }

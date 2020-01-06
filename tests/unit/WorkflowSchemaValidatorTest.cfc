@@ -98,12 +98,6 @@ component extends="testbox.system.BaseSpec" {
 						validator.validate( workflow );
 					} ).toThrow( "preside.workflow.definition.validation.error" );
 				} );
-				it( "should raise an error when default action result has no title", function(){
-					workflow.workflow.steps[1].actions[1].defaultResult.delete( "title" );
-					expect( function(){
-						validator.validate( workflow );
-					} ).toThrow( "preside.workflow.definition.validation.error" );
-				} );
 				it( "should raise an error when default action result has no type", function(){
 					workflow.workflow.steps[1].actions[1].defaultResult.delete( "type" );
 					expect( function(){
@@ -119,12 +113,6 @@ component extends="testbox.system.BaseSpec" {
 
 				it( "should raise an error when one or more condition results has no id", function(){
 					workflow.workflow.steps[1].actions[1].conditionalResults[1].delete( "id" );
-					expect( function(){
-						validator.validate( workflow );
-					} ).toThrow( "preside.workflow.definition.validation.error" );
-				} );
-				it( "should raise an error when one or more conditional results has no title", function(){
-					workflow.workflow.steps[1].actions[1].conditionalResults[1].delete( "title" );
 					expect( function(){
 						validator.validate( workflow );
 					} ).toThrow( "preside.workflow.definition.validation.error" );
@@ -354,7 +342,7 @@ component extends="testbox.system.BaseSpec" {
 					"meta":{ "title":"Action 1" },
 					"defaultResult":{
 						"id":"result-1",
-						"title":"Result 1",
+						"meta":{"title":"Result 1"},
 						"type":"step",
 						"transitions":[{
 							"step":"step-1",
@@ -382,7 +370,7 @@ component extends="testbox.system.BaseSpec" {
 						"isAutomatic":true,
 						"defaultResult":{
 							"id":"result-1",
-							"title":"Result 1",
+							"meta":{"title":"Result 1"},
 							"type":"step",
 							"transitions":[{
 								"step":"step-1",
@@ -438,7 +426,7 @@ component extends="testbox.system.BaseSpec" {
 						},
 						"conditionalResults":[{
 							"id":"result-2",
-							"title":"Result 2",
+							"meta":{"title":"Result 2"},
 							"type":"join",
 							"condition":{
 								"handler":"test.condition.one",
@@ -477,7 +465,7 @@ component extends="testbox.system.BaseSpec" {
 							}
 						},{
 							"id":"result-3",
-							"title":"Result 3",
+							"meta":{"title":"Result 3"},
 							"type":"split",
 							"condition":{
 								"handler":"test.condition.two",
@@ -516,7 +504,7 @@ component extends="testbox.system.BaseSpec" {
 						"meta":{"title":"Action 2"},
 						"defaultResult":{
 							"id":"result-1",
-							"title":"Result 1",
+							"meta":{"title":"Result 1"},
 							"type":"step",
 							"transitions":[{
 								"step":"step-2",

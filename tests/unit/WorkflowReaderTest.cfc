@@ -78,7 +78,7 @@ component extends="testbox.system.BaseSpec" {
 					var result = wf.getSteps()[1].getActions()[1].getDefaultResult();
 
 					expect( result.getId() ).toBe( "result-1" );
-					expect( result.getTitle() ).toBe( "Result 1" );
+					expect( result.getMeta() ).toBe( {title="Result 1"} );
 					expect( result.getType() ).toBe( "step" );
 					expect( result.getIsDefault() ).toBe( true );
 					expect( result.getCondition() ).toBeNull();
@@ -90,13 +90,13 @@ component extends="testbox.system.BaseSpec" {
 					expect( results.len() ).toBe( 2 );
 
 					expect( results[1].getId() ).toBe( "result-2" );
-					expect( results[1].getTitle() ).toBe( "Result 2" );
+					expect( results[1].getMeta() ).toBe( {title="Result 2"} );
 					expect( results[1].getType() ).toBe( "split" );
 					expect( results[1].getIsDefault() ).toBe( false );
 					expect( results[1].getCondition().getHandler() ).toBe( "result2.condition.handler" );
 
 					expect( results[2].getId() ).toBe( "result-3" );
-					expect( results[2].getTitle() ).toBe( "Result 3" );
+					expect( results[2].getMeta() ).toBe( {title="Result 3"} );
 					expect( results[2].getType() ).toBe( "step" );
 					expect( results[2].getIsDefault() ).toBe( false );
 					expect( results[2].getCondition().getHandler() ).toBe( "result3ConditionId" );

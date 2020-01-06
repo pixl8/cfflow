@@ -3,21 +3,24 @@
     "$id": "resource:/schema/v1/defaultResult#",
     "type": "object",
     "additionalProperties": false,
-    "required":[ "id", "title", "type", "transitions" ],
+    "required":[ "id", "meta", "type", "transitions" ],
     "properties":{
-        "id"    : { "type":"string"},
-        "title" : { "type":"string"},
+        "id"    : { "type":"string", "description":"Unique identifier for the result within the action" },
+        "meta" : { "type":"object", "description":"Abitrary metadata that you may use to describe the result."},
         "type":{
             "type":"string",
+            "description":"Describes the type of this result. Either 'step', 'join' or 'split'",
             "enum":[ "step", "join", "split" ]
         },
         "functions":{
             "type":"object",
+            "description":"Pre and post functions that execute before and after this result is executed.",
             "$ref":"functions.json"
         },
         "transitions":{
             "type":"array",
             "minItems":1,
+            "description":"Array of step status transitions that this result actions when executed.",
             "items":{
                 "type":"object",
                 "$ref":"transition.json"

@@ -98,9 +98,9 @@ component singleton {
 
 	private void function _addDefaultResult( wfAction, result ) {
 		wfAction.setDefaultResult(
-			  id    = arguments.result.id        ?: "unknown"
-			, title = arguments.result.title     ?: "unknown"
-			, type  = arguments.result.type      ?: ""
+			  id   = arguments.result.id   ?: "unknown"
+			, meta = arguments.result.meta ?: {}
+			, type = arguments.result.type ?: ""
 		);
 
 		var wfResult = wfAction.getDefaultResult();
@@ -109,10 +109,10 @@ component singleton {
 
 	private void function _addConditionalResult( wfAction, result ) {
 		var wfResult = wfAction.addConditionalResult(
-			  id           = arguments.result.id        ?: "unknown"
-			, title        = arguments.result.title     ?: "unknown"
-			, type         = arguments.result.type      ?: ""
-			, condition    = _createCondition( arguments.result.condition ?: "" )
+			  id        = arguments.result.id   ?: "unknown"
+			, meta      = arguments.result.meta ?: {}
+			, type      = arguments.result.type ?: ""
+			, condition = _createCondition( arguments.result.condition ?: "" )
 		);
 		_addResultTransitionsAndFunctions( wfResult, result );
 	}
