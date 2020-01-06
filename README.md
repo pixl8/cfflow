@@ -61,10 +61,10 @@ instance.appendState( { one="more thing" } );
 ```
 
 ```cfc
-// process a workflow action (moves the instance through the workflow steps)
+// process a workflow action (conditionally moves the instance through 
+// the workflow steps and functions)
 instance.processAction( stepId, actionId, args );
 ```
-
 
 ## Versioning
 
