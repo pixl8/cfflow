@@ -97,12 +97,6 @@ component extends="testbox.system.BaseSpec" {
 						validator.validate( workflow );
 					} ).toThrow( "preside.workflow.definition.validation.error" );
 				} );
-				it( "should raise an error when one or more step actions has no title", function(){
-					workflow.workflow.steps[1].actions[1].delete( "title" );
-					expect( function(){
-						validator.validate( workflow );
-					} ).toThrow( "preside.workflow.definition.validation.error" );
-				} );
 				it( "should raise an error when one or more step actions has no default result", function(){
 					workflow.workflow.steps[1].actions[1].delete( "defaultResult" );
 					expect( function(){
@@ -368,7 +362,7 @@ component extends="testbox.system.BaseSpec" {
 				"class":"my.workflow.class",
 				"initialActions":[{
 					"id":"action-1",
-					"title":"Action 1",
+					"meta":{ "title":"Action 1" },
 					"defaultResult":{
 						"id":"result-1",
 						"title":"Result 1",
@@ -388,7 +382,7 @@ component extends="testbox.system.BaseSpec" {
 					} ],
 					"actions":[{
 						"id":"action-1",
-						"title":"Action 1",
+						"meta":{"title":"Action 1"},
 						"condition":{
 							"handler":"some.handler",
 							"args":{
@@ -530,7 +524,7 @@ component extends="testbox.system.BaseSpec" {
 						} ]
 					},{
 						"id":"action-2",
-						"title":"Action 2",
+						"meta":{"title":"Action 2"},
 						"defaultResult":{
 							"id":"result-1",
 							"title":"Result 1",

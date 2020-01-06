@@ -38,7 +38,7 @@ component extends="testbox.system.BaseSpec" {
 
 					expect( actions.len() ).toBe( 1 );
 					expect( actions[1].getId() ).toBe( "action-1" );
-					expect( actions[1].getTitle() ).toBe( "Action 1" );
+					expect( actions[1].getMeta() ).toBe( { title="Action 1"} );
 					expect( actions[1].getIsAutomatic() ).toBe( true );
 				} );
 
@@ -66,11 +66,11 @@ component extends="testbox.system.BaseSpec" {
 					expect( step2Actions.len() ).toBe( 0 );
 
 					expect( step1Actions[1].getId() ).toBe( "action-1" );
-					expect( step1Actions[1].getTitle() ).toBe( "Action 1" );
+					expect( step1Actions[1].getMeta() ).toBe( {title="Action 1"} );
 					expect( step1Actions[1].getCondition().getHandler() ).toBe( "action1.condition.handler" );
 					expect( step1Actions[1].getIsAutomatic() ).toBe( true );
 					expect( step1Actions[2].getId() ).toBe( "action-2" );
-					expect( step1Actions[2].getTitle() ).toBe( "Action 2" );
+					expect( step1Actions[2].getMeta() ).toBe( {title="Action 2"} );
 					expect( step1Actions[2].getScreen() ).toBe( "" );
 					expect( step1Actions[2].getCondition().getHandler() ).toBe( "action2.condition" );
 					expect( step1Actions[2].getIsAutomatic() ).toBe( false );

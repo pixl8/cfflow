@@ -51,7 +51,7 @@ component extends="testbox.system.BaseSpec" {
 				it( "should register and create a new action with the supplied arguments", function(){
 					var newAction = _workflowDef.addInitialAction(
 						  id          = "test-id"
-						, title       = "test-title"
+						, meta        = { title="test-title" }
 						, screen      = "test-screen"
 						, condition   = _getCondition()
 					);
@@ -59,7 +59,7 @@ component extends="testbox.system.BaseSpec" {
 					expect( _workflowDef.getInitialActions() ).toBe( [ newAction ] );
 
 					expect( newAction.getId() ).toBe( "test-id" );
-					expect( newAction.getTitle() ).toBe( "test-title" );
+					expect( newAction.getMeta() ).toBe( { title="test-title" } );
 					expect( newAction.getScreen() ).toBe( "test-screen" );
 					expect( newAction.getCondition().getHandler() ).toBe( conditionHandler );
 				} );
@@ -147,7 +147,7 @@ component extends="testbox.system.BaseSpec" {
 				it( "should register and create a new action with the supplied arguments", function(){
 					var newAction = _workflowStep.addAction(
 						  id          = "test-id"
-						, title       = "test-title"
+						, meta        = { title="test-title" }
 						, screen      = "test-screen"
 						, condition   = _getCondition()
 					);
@@ -155,7 +155,7 @@ component extends="testbox.system.BaseSpec" {
 					expect( _workflowStep.getActions() ).toBe( [ newAction ] );
 
 					expect( newAction.getId() ).toBe( "test-id" );
-					expect( newAction.getTitle() ).toBe( "test-title" );
+					expect( newAction.getMeta() ).toBe( { title="test-title" } );
 					expect( newAction.getScreen() ).toBe( "test-screen" );
 					expect( newAction.getCondition().getHandler() ).toBe( conditionHandler );
 				} );
@@ -259,8 +259,8 @@ component extends="testbox.system.BaseSpec" {
 
 			beforeEach( body=function(){
 				_workflowAction = CreateMock( object=new cfflow.models.definition.spec.WorkflowAction(
-					  id          = actionId
-					, title       = actionTitle
+					  id   = actionId
+					, meta = { title = actionTitle }
 				) );
 			} );
 
@@ -270,9 +270,9 @@ component extends="testbox.system.BaseSpec" {
 				} );
 			} );
 
-			describe( "getTitle()", function() {
-				it( "should return the action title", function(){
-					expect( _workflowAction.getTitle() ).toBe( actionTitle );
+			describe( "getMeta()", function() {
+				it( "should return the action meta", function(){
+					expect( _workflowAction.getMeta() ).toBe( { title=actionTitle } );
 				} );
 			} );
 

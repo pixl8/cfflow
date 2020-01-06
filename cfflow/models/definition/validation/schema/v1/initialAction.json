@@ -2,22 +2,25 @@
     "$schema": "http://json-schema.org/draft-07/schema#",
     "$id": "resource:/schema/v1/initialAction#",
     "type": "object",
-    "required":[ "id", "title", "defaultResult" ],
+    "required":[ "id", "defaultResult" ],
     "additionalProperties": false,
     "properties":{
-        "id":{ "type":"string"},
-        "title":{ "type":"string"},
+        "id":{ "type":"string", "description":"Unique identifier for the action (unique within this set of initial actions)" },
+        "meta":{ "type":"object", "description": "Abitrary metadata that you may use to describe the action." },
         "condition":{
             "type":"object",
+            "description":"Optional condition for the action. If specified, the action will only be executed if the condition evaluates true.",
             "$ref":"condition.json"
         },
         "defaultResult":{
             "type":"object",
+            "description":"The default result for this action. If no conditional results are defined or evaluate true, this result will be executed.",
             "$ref":"defaultResult.json"
         },
         "conditionalResults":{
             "type":"array",
             "minItems":0,
+            "description":"Array of conditional results that are only chosen if their condition evaluates true.",
             "items":{
             	"type":"object",
             	"$ref":"conditionalResult.json"

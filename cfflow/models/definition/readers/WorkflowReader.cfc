@@ -47,8 +47,8 @@ component singleton {
 // PRIVATE HELPERS
 	private void function _addInitialAction( wf, action ) {
 		var wfAction = wf.addInitialAction(
-			  id          = arguments.action.id     ?: "unknown"
-			, title       = arguments.action.title  ?: "unknown"
+			  id          = arguments.action.id   ?: "unknown"
+			, meta        = arguments.action.meta ?: {}
 			, isAutomatic = true
 			, condition   = _createCondition( arguments.action.condition ?: "" )
 		);
@@ -83,8 +83,8 @@ component singleton {
 
 	private void function _addAction( wfstep, action ) {
 		var wfAction = wfstep.addAction(
-			  id          = arguments.action.id     ?: "unknown"
-			, title       = arguments.action.title  ?: "unknown"
+			  id          = arguments.action.id    ?: "unknown"
+			, meta        = arguments.action.meta  ?: {}
 			, isAutomatic = IsBoolean( arguments.action.isAutomatic ?: "" ) && arguments.action.isAutomatic
 			, condition   = _createCondition( arguments.action.condition ?: "" )
 		);

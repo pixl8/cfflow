@@ -6,7 +6,8 @@ workflow:
   class: pixl8.webflow
   initialActions:
   - id: action-1
-    title: Action 1
+    meta:
+      title: Action 1
     defaultResult:
       id: start
       title: Start
@@ -23,7 +24,8 @@ workflow:
       count: 100
     actions:
     - id: action-1
-      title: Action 1
+      meta:
+        title: Action 1
       condition:
         handler: action1.condition.handler
       isAutomatic: true
@@ -110,7 +112,8 @@ workflow:
             condition:
               handler: function2conditionid
     - id: action-2
-      title: Action 2
+      meta:
+        title: Action 2
       condition:
         handler: action2.condition
       defaultResult:
