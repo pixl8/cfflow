@@ -5,7 +5,9 @@ component extends="testbox.system.BaseSpec" {
 			var _library = "";
 			var _implFactory = "";
 			var _engine  = "";
+			var _impl = "";
 			var _instance  = "";
+			var _instanceArgs = { test=true };
 			var _steps  = "";
 			var _wfId  = "";
 			var _wf  = "";
@@ -13,11 +15,12 @@ component extends="testbox.system.BaseSpec" {
 			beforeEach( function(){
 				_library = CreateEmptyMock( "cfflow.models.definition.WorkflowLibrary" );
 				_implFactory = CreateEmptyMock( "cfflow.models.implementation.WorkflowImplementationFactory" );
-				_engine  = CreateMock( object=new cfflow.models.WorkflowEngine() );
-				_wfId     = CreateUUId();
-				_instance = CreateMock( "cfflow.models.instances.WorkflowInstance" );
-				_wf       = CreateStub();
-				_steps    = [];
+				_impl        = CreateMock( "cfflow.models.implementation.WorkflowImplementation" );
+				_engine      = CreateMock( object=new cfflow.models.WorkflowEngine() );
+				_wfId        = CreateUUId();
+				_instance    = CreateMock( "cfflow.models.instances.WorkflowInstance" );
+				_wf          = CreateMock( "cfflow.models.definition.spec.Workflow" );
+				_steps       = [];
 
 				_engine.$( "_getWorkflowLibrary", _library );
 				_engine.$( "_getImplementationFactory", _implFactory );
@@ -30,21 +33,11 @@ component extends="testbox.system.BaseSpec" {
 				_wf.$( "getId", _wfId );
 				_wf.$( "getSteps", _steps );
 				_instance.$( "getWorkflowId", _wfId );
-				_instance.$( "setStatus" );
+				_instance.setWorkflowImplementation( _impl );
+				_instance.setInstanceArgs( _instanceArgs );
 				_library.$( "getWorkflow" ).$args( _wfId ).$results( _wf );
+				_impl.$( "setStepStatus" );
 
-			} );
-
-			describe( "getActiveSteps( wfInstance )", function(){
-				it( "should query the workflow instance using steps from the workflow, returning any steps that return as active", function(){
-					_instance.$( "getStatus" ).$args( "step-1" ).$results( "complete" );
-					_instance.$( "getStatus" ).$args( "step-2" ).$results( "active" );
-					_instance.$( "getStatus" ).$args( "step-3" ).$results( "skipped" );
-					_instance.$( "getStatus" ).$args( "step-4" ).$results( "active" );
-					_instance.$( "getStatus" ).$args( "step-5" ).$results( "pending" );
-
-					expect( _engine.getActiveSteps( _instance ) ).toBe( [ "step-2", "step-4" ] );
-				} );
 			} );
 
 			describe( "getImplementation( workflow )", function(){
@@ -59,65 +52,6 @@ component extends="testbox.system.BaseSpec" {
 
 					expect( _engine.getImplementation( wf ) ).toBe( result );
 					expect( _engine.getImplementation( wf ).isTestWfImplementation() ).toBeTrue();
-				} );
-			} );
-
-			describe( "getImplementationForInstance( wfInstance )", function(){
-				it( "should call getImplementation() using the workflow class associated with the instance", function(){
-					var wf = CreateMock( "cfflow.models.definition.spec.Workflow" );
-					var wfClass = CreateUUId();
-					var wfId = CreateUUId();
-					var result = CreateMock( "tests.resources.TestWfImplementation" );
-
-					wf.setClass( wfClass );
-
-					_instance.$( "getWorkflowId", wfId );
-					_library.$( "getWorkflow" ).$args( wfId ).$results( wf );
-
-					_implFactory.$( "getWorkflowImplementation" ).$args( wfClass ).$results( result );
-
-					expect( _engine.getImplementationForInstance( _instance ) ).toBe( result );
-					expect( _engine.getImplementationForInstance( _instance ).isTestWfImplementation() ).toBeTrue();
-				} );
-			} );
-
-			describe( "isComplete( wfInstance )", function(){
-				it( "should return true when no active steps contain any actions", function(){
-					_instance.$( "getStatus", "complete" );
-					_instance.$( "getStatus" ).$args( "step-1" ).$results( "complete" );
-					_instance.$( "getStatus" ).$args( "step-2" ).$results( "active" );
-					_instance.$( "getStatus" ).$args( "step-3" ).$results( "skipped" );
-					_instance.$( "getStatus" ).$args( "step-4" ).$results( "active" );
-					_instance.$( "getStatus" ).$args( "step-5" ).$results( "pending" );
-
-					_steps[ 2 ].$( "getActions", [] );
-					_steps[ 4 ].$( "getActions", [] );
-
-					expect( _engine.isComplete( _instance ) ).toBeTrue();
-				} );
-
-				it( "should return true when there are no active steps", function(){
-					_instance.$( "getStatus", "complete" );
-					_instance.$( "getStatus" ).$args( "step-1" ).$results( "complete" );
-					_instance.$( "getStatus" ).$args( "step-2" ).$results( "complete" );
-					_instance.$( "getStatus" ).$args( "step-3" ).$results( "complete" );
-					_instance.$( "getStatus" ).$args( "step-4" ).$results( "complete" );
-					_instance.$( "getStatus" ).$args( "step-5" ).$results( "complete" );
-
-					expect( _engine.isComplete( _instance ) ).toBeTrue();
-				} );
-
-				it( "should return false when one or more active steps contains any actions", function(){
-					_instance.$( "getStatus", "complete" );
-					_instance.$( "getStatus" ).$args( "step-1" ).$results( "complete" );
-					_instance.$( "getStatus" ).$args( "step-2" ).$results( "active" );
-					_instance.$( "getStatus" ).$args( "step-3" ).$results( "skipped" );
-					_instance.$( "getStatus" ).$args( "step-4" ).$results( "active" );
-					_instance.$( "getStatus" ).$args( "step-5" ).$results( "pending" );
-
-					_steps[ 2 ].$( "getActions", [ CreateStub() ] );
-
-					expect( _engine.isComplete( _instance ) ).toBeFalse();
 				} );
 			} );
 
@@ -235,9 +169,10 @@ component extends="testbox.system.BaseSpec" {
 					_engine.$( "unscheduleAutoActions" );
 					_engine.doTransition( _instance, transition );
 
-					var callLog = _instance.$callLog().setStatus;
+					var callLog = _impl.$callLog().setStepStatus;
 					expect( callLog.len() ).toBe( 1 );
-					expect( callLog[ 1 ] ).toBe( { step=step, status=status } );
+					expect( callLog[ 1 ].step ).toBe( step );
+					expect( callLog[ 1 ].status ).toBe( status );
 				} );
 
 				it( "should trigger auto action scheduling and execution for the step if set to active", function(){
@@ -284,12 +219,11 @@ component extends="testbox.system.BaseSpec" {
 				it( "should immediately execute any auto actions for the step when the step has no auto action timers", function(){
 					var step = CreateMock( "cfflow.models.definition.spec.WorkflowStep" );
 					var stepId = "some-step-#CreateUUId()#";
-					var impl = CreateMock( "cfflow.models.implementation.WorkflowImplementation" );
 
 					step.$( "hasAutoActionTimers", false );
 					step.$( "hasAutoActions", true );
-					impl.$( "scheduleAutoActions" );
-					_engine.$( "getImplementationForInstance" ).$args( _instance ).$results( impl );
+					_impl.$( "scheduleAutoActions" );
+					_instance.setWorkflowImplementation( _impl );
 					_engine.$( "getStepForInstance" ).$args( wfInstance=_instance, stepId=stepId ).$results( step );
 					_engine.$( "doAutoActions", true );
 
@@ -300,25 +234,24 @@ component extends="testbox.system.BaseSpec" {
 					expect( callLog[ 1 ].wfStep ).toBe( step );
 					expect( callLog[ 1 ].wfInstance ).toBe( _instance );
 
-					expect( impl.$callLog().scheduleAutoActions.len() ).toBe( 0 );
+					expect( _impl.$callLog().scheduleAutoActions.len() ).toBe( 0 );
 				} );
 				it( "should setup scheduling with the workflow implementation when there is timer configuration and one or more automatic actions", function(){
 					var step = CreateMock( "cfflow.models.definition.spec.WorkflowStep" );
 					var stepId = "some-step-#CreateUUId()#";
-					var impl = CreateMock( "cfflow.models.implementation.WorkflowImplementation" );
 					var timers = [ CreateUUId(), CreateUUId(), CreateUUId() ];
 
 					step.$( "hasAutoActionTimers", true );
 					step.$( "hasAutoActions", true );
 					step.$( "getAutoActionTimers", timers );
-					impl.$( "scheduleAutoActions" );
-					_engine.$( "getImplementationForInstance" ).$args( _instance ).$results( impl );
+					_impl.$( "scheduleAutoActions" );
+					_instance.setWorkflowImplementation( _impl );
 					_engine.$( "getStepForInstance" ).$args( wfInstance=_instance, stepId=stepId ).$results( step );
 					_engine.$( "doAutoActions" );
 
 					_engine.scheduleAutoActions( wfInstance=_instance, stepId=stepId );
 
-					var callLog = impl.$callLog().scheduleAutoActions;
+					var callLog = _impl.$callLog().scheduleAutoActions;
 					expect( callLog.len() ).toBe( 1 );
 					expect( callLog[ 1 ].stepId ).toBe( stepId );
 					expect( callLog[ 1 ].wfInstance ).toBe( _instance );
@@ -330,19 +263,18 @@ component extends="testbox.system.BaseSpec" {
 				it( "should do nothing when there are not automatically executable actions", function(){
 					var step = CreateMock( "cfflow.models.definition.spec.WorkflowStep" );
 					var stepId = "some-step-#CreateUUId()#";
-					var impl = CreateMock( "cfflow.models.implementation.WorkflowImplementation" );
 
 					step.$( "hasAutoActionTimers", false );
 					step.$( "hasAutoActions", false );
-					impl.$( "scheduleAutoActions" );
-					_engine.$( "getImplementationForInstance" ).$args( _instance ).$results( impl );
+					_impl.$( "scheduleAutoActions" );
+					_instance.setWorkflowImplementation( _impl );
 					_engine.$( "getStepForInstance" ).$args( wfInstance=_instance, stepId=stepId ).$results( step );
 					_engine.$( "doAutoActions" );
 
 					_engine.scheduleAutoActions( wfInstance=_instance, stepId=stepId );
 
 					expect( _engine.$callLog().doAutoActions.len() ).toBe( 0 );
-					expect( impl.$callLog().scheduleAutoActions.len() ).toBe( 0 );
+					expect( _impl.$callLog().scheduleAutoActions.len() ).toBe( 0 );
 				} );
 			} );
 
@@ -350,17 +282,16 @@ component extends="testbox.system.BaseSpec" {
 				it( "should attempt to unschedule auto actions with the workflow implementation when there is timer configuration and one or more automatic actions", function(){
 					var step = CreateMock( "cfflow.models.definition.spec.WorkflowStep" );
 					var stepId = "some-step-#CreateUUId()#";
-					var impl = CreateMock( "cfflow.models.implementation.WorkflowImplementation" );
 
 					step.$( "hasAutoActionTimers", true );
 					step.$( "hasAutoActions", true );
-					impl.$( "unscheduleAutoActions" );
-					_engine.$( "getImplementationForInstance" ).$args( _instance ).$results( impl );
+					_impl.$( "unscheduleAutoActions" );
+					_instance.setWorkflowImplementation( _impl );
 					_engine.$( "getStepForInstance" ).$args( wfInstance=_instance, stepId=stepId ).$results( step );
 
 					_engine.unScheduleAutoActions( wfInstance=_instance, stepId=stepId );
 
-					var callLog = impl.$callLog().unscheduleAutoActions;
+					var callLog = _impl.$callLog().unscheduleAutoActions;
 
 					expect( callLog.len() ).toBe( 1 );
 					expect( callLog[ 1 ].stepId ).toBe( stepId );
@@ -371,47 +302,43 @@ component extends="testbox.system.BaseSpec" {
 				it( "should do nothing when step has no auto actions", function(){
 					var step = CreateMock( "cfflow.models.definition.spec.WorkflowStep" );
 					var stepId = "some-step-#CreateUUId()#";
-					var impl = CreateMock( "cfflow.models.implementation.WorkflowImplementation" );
 
 					step.$( "hasAutoActionTimers", true );
 					step.$( "hasAutoActions", false );
-					impl.$( "unscheduleAutoActions" );
-					_engine.$( "getImplementationForInstance" ).$args( _instance ).$results( impl );
+					_impl.$( "unscheduleAutoActions" );
+					_instance.setWorkflowImplementation( _impl );
 					_engine.$( "getStepForInstance" ).$args( wfInstance=_instance, stepId=stepId ).$results( step );
 
 					_engine.unScheduleAutoActions( wfInstance=_instance, stepId=stepId );
 
-					expect( impl.$callLog().unscheduleAutoActions.len() ).toBe( 0 );
+					expect( _impl.$callLog().unscheduleAutoActions.len() ).toBe( 0 );
 				} );
 
 				it( "should do nothing when step has no auto action timers", function(){
 					var step = CreateMock( "cfflow.models.definition.spec.WorkflowStep" );
 					var stepId = "some-step-#CreateUUId()#";
-					var impl = CreateMock( "cfflow.models.implementation.WorkflowImplementation" );
 
 					step.$( "hasAutoActions", true );
 					step.$( "hasAutoActionTimers", false );
-					impl.$( "unscheduleAutoActions" );
-					_engine.$( "getImplementationForInstance" ).$args( _instance ).$results( impl );
+					_impl.$( "unscheduleAutoActions" );
+					_instance.setWorkflowImplementation( _impl );
 					_engine.$( "getStepForInstance" ).$args( wfInstance=_instance, stepId=stepId ).$results( step );
 
 					_engine.unScheduleAutoActions( wfInstance=_instance, stepId=stepId );
 
-					expect( impl.$callLog().unscheduleAutoActions.len() ).toBe( 0 );
+					expect( _impl.$callLog().unscheduleAutoActions.len() ).toBe( 0 );
 				} );
 			} );
 
 
 			describe( "evaluateCondition( wfCondition, wfInstance )", function(){
 				it( "should use the workflow implementation's evaluator to evaluate the given condition, passing through the workflow instance and workflow definition objects", function(){
-					var impl = CreateMock( "cfflow.models.implementation.WorkflowImplementation" );
 					var condition = _getCondition("some.condition", { test=true } );
 
-					_engine.$( "getImplementationForInstance" ).$args( _instance ).$results( impl );
+					_instance.setWorkflowImplementation( _impl );
 
-					impl.$( "evaluateCondition" ).$args( condition, _instance ).$results( true );
+					_impl.$( "evaluateCondition" ).$results( true, false );
 					expect( _engine.evaluateCondition( condition, _instance ) ).toBeTrue();
-					impl.$( "evaluateCondition" ).$args( condition, _instance ).$results( false );
 					expect( _engine.evaluateCondition( condition, _instance ) ).toBeFalse();
 				} );
 			} );
@@ -446,18 +373,17 @@ component extends="testbox.system.BaseSpec" {
 
 			describe( "doFunction( wfInstance, wfFunction )", function(){
 				it( "should use the workflow implementation's function executor to execute the function, passing the workflow instance along to it", function(){
-					var impl = CreateMock( "cfflow.models.implementation.WorkflowImplementation" );
 					var fn   = CreateMock( "cfflow.models.definition.spec.WorkflowFunction" );
 					var fnId = CreateUUId();
 
 					fn.setId( fnId );
 
-					_engine.$( "getImplementationForInstance" ).$args( _instance ).$results( impl );
-					impl.$( "executeFunction" );
+					_instance.setWorkflowImplementation( _impl );
+					_impl.$( "executeFunction" );
 
 					_engine.doFunction( _instance, fn );
 
-					var callLog = impl.$callLog().executeFunction;
+					var callLog = _impl.$callLog().executeFunction;
 
 					expect( callLog.len() ).toBe( 1 );
 					expect( callLog[ 1 ].wfInstance ).toBe( _instance );
@@ -617,91 +543,81 @@ component extends="testbox.system.BaseSpec" {
 			} );
 
 			describe( "getInstance( workflowId, instanceArgs )", function(){
-				it( "should use the workflowIds corresponding workflow implementation to get a new workflow instance using the supplied instance args", function(){
+				it( "should construct a new workflow instance with the given args", function(){
 					var instanceArgs = { test=CreateUUId(), args={ yes="test", no=false } };
-					var impl = CreateMock( "cfflow.models.implementation.WorkflowImplementation" );
-					var mockInstance = CreateMock( "tests.resources.WorkflowInstance" );
 
-					impl.$( "getInstance" ).$args( instanceArgs=instanceArgs ).$results( mockInstance );
-					_engine.$( "getWorkflowImplementation" ).$args( _wf ).$results( impl );
+					_engine.$( "getImplementation" ).$args( _wf ).$results( _impl );
+					_impl.$( "instanceExists" ).$args( instanceArgs=instanceArgs ).$results( true );
 
-					expect( _engine.getInstance( _wfId, instanceArgs ) ).toBe( mockInstance );
+					var instance = _engine.getInstance( _wfId, instanceArgs );
+
+					expect( instance.getWorkflowId() ).toBe( _wfId );
+					expect( instance.getInstanceArgs() ).toBe( instanceArgs );
+					expect( instance.getWorkflowDefinition() ).toBe( _wf );
+					expect( instance.getWorkflowImplementation() ).toBe( _impl );
 				} );
 
 				it( "should return NULL when no instance exists", function(){
 					var instanceArgs = { test=CreateUUId(), args={ yes="test", no=false } };
-					var impl = CreateMock( "cfflow.models.implementation.WorkflowImplementation" );
 
-					impl.$( "getInstance" ).$args( instanceArgs=instanceArgs ).$results( NullValue() );
-					_engine.$( "getWorkflowImplementation" ).$args( _wf ).$results( impl );
+					_engine.$( "getImplementation" ).$args( _wf ).$results( _impl );
+					_impl.$( "instanceExists" ).$args( instanceArgs=instanceArgs ).$results( false );
 
 					expect( _engine.getInstance( _wfId, instanceArgs ) ).toBeNull();
 				} );
+			} );
 
-				it( "should raise an informative error when the workflow implementation returns something other than NULL or a workflow instance", function(){
+			describe( "instanceExists( workflowId, instanceArgs )", function(){
+				it( "should proxy to the implementation's instanceExists method", function(){
 					var instanceArgs = { test=CreateUUId(), args={ yes="test", no=false } };
-					var impl = CreateMock( "cfflow.models.implementation.WorkflowImplementation" );
-					var mockResult = { whatever=true };
 
-					impl.$( "getInstance" ).$args( instanceArgs=instanceArgs ).$results( mockResult );
-					_wf.$( "getClass", "whatever" );
-					_engine.$( "getWorkflowImplementation" ).$args( _wf ).$results( impl );
+					_engine.$( "getImplementation" ).$args( _wf ).$results( _impl );
 
-					expect( function(){
-						_engine.getInstance( _wfId, instanceArgs );
-					} ).toThrow( "cfflow.invalid.instance" );
+					_impl.$( "instanceExists" ).$args( instanceArgs=instanceArgs ).$results( true );
+					expect( _engine.instanceExists( _wfId, instanceArgs ) ).toBe( true );
+
+					_impl.$( "instanceExists" ).$args( instanceArgs=instanceArgs ).$results( false );
+					expect( _engine.instanceExists( _wfId, instanceArgs ) ).toBe( false );
 				} );
 			} );
 
 			describe( "createInstance( workflowId, instanceArgs, initialState, initialActionId )", function(){
 				it( "should use the workflowIds corresponding workflow implementation to get a new workflow instance using the supplied instance args", function(){
 					var instanceArgs = { test=CreateUUId(), args={ yes="test", no=false } };
-					var impl = CreateMock( "cfflow.models.implementation.WorkflowImplementation" );
-					var mockInstance = CreateMock( "tests.resources.WorkflowInstance" );
 
-					impl.$( "createInstance" ).$args( instanceArgs=instanceArgs ).$results( mockInstance );
-					_engine.$( "getWorkflowImplementation" ).$args( _wf ).$results( impl );
+					_impl.$( "createInstance" );
+					_engine.$( "getImplementation" ).$args( _wf ).$results( _impl );
 					_engine.$( "initializeInstance" );
+					_impl.$( "instanceExists" ).$args( instanceArgs=instanceArgs ).$results( true );
 
-					expect( _engine.createInstance( _wfId, instanceArgs, {} ) ).toBe( mockInstance );
-				} );
+					var instance = _engine.createInstance( _wfId, instanceArgs, {} );
 
-				it( "should initialize the instance using the initial state passed", function(){
-					var instanceArgs = { test=CreateUUId(), args={ yes="test", no=false } };
-					var impl = CreateMock( "cfflow.models.implementation.WorkflowImplementation" );
-					var mockInstance = CreateMock( "tests.resources.WorkflowInstance" );
-					var initialState = { test=CreateUUId() };
-
-					impl.$( "createInstance" ).$args( instanceArgs=instanceArgs ).$results( mockInstance );
-					_engine.$( "getWorkflowImplementation" ).$args( _wf ).$results( impl );
-					_engine.$( "initializeInstance" );
-
-					expect( _engine.createInstance( _wfId, instanceArgs, initialState ) ).toBe( mockInstance );
-
-					var callLog = _engine.$callLog().initializeInstance;
+					var callLog = _impl.$callLog().createInstance;
 					expect( callLog.len() ).toBe( 1 );
-					expect( callLog[ 1 ].wfInstance ).toBe( mockInstance );
-					expect( callLog[ 1 ].initialState ).toBe( initialState );
-					expect( callLog[ 1 ].initialActionId ).toBeNull();
+					expect( callLog[ 1 ].instanceArgs ).toBe( instanceArgs );
+					expect( callLog[ 1 ].workflowId ).toBe( _wfId );
 
+					expect( instance.getWorkflowId() ).toBe( _wfId );
+					expect( instance.getInstanceArgs() ).toBe( instanceArgs );
+					expect( instance.getWorkflowDefinition() ).toBe( _wf );
+					expect( instance.getWorkflowImplementation() ).toBe( _impl );
 				} );
+
 
 				it( "should pass the initial action ID to the initializeInstance method when set", function(){
 					var instanceArgs = { test=CreateUUId(), args={ yes="test", no=false } };
-					var impl = CreateMock( "cfflow.models.implementation.WorkflowImplementation" );
-					var mockInstance = CreateMock( "tests.resources.WorkflowInstance" );
-					var initialState = { test=CreateUUId() };
+					var initialState = { test=true, fubar=CreateUUId() }
 					var initialActionId = CreateUUId();
 
-					impl.$( "createInstance" ).$args( instanceArgs=instanceArgs ).$results( mockInstance );
-					_engine.$( "getWorkflowImplementation" ).$args( _wf ).$results( impl );
+					_impl.$( "createInstance" );
+					_engine.$( "getImplementation" ).$args( _wf ).$results( _impl );
 					_engine.$( "initializeInstance" );
+					_impl.$( "instanceExists" ).$args( instanceArgs=instanceArgs ).$results( true );
 
-					expect( _engine.createInstance( _wfId, instanceArgs, initialState, initialActionId ) ).toBe( mockInstance );
-
+					var instance = _engine.createInstance( _wfId, instanceArgs, initialState, initialActionId );
 					var callLog = _engine.$callLog().initializeInstance;
 					expect( callLog.len() ).toBe( 1 );
-					expect( callLog[ 1 ].wfInstance ).toBe( mockInstance );
+					expect( callLog[ 1 ].wfInstance ).toBe( instance );
 					expect( callLog[ 1 ].initialState ).toBe( initialState );
 					expect( callLog[ 1 ].initialActionId ).toBe( initialActionId );
 

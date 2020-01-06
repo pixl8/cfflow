@@ -12,9 +12,99 @@ component singleton {
 		return this;
 	}
 
+// INSTANCES
+	public boolean function instanceExists( required string workflowId, struct instanceArgs={} ) {
+		var wf   = getWorkflowDefinition( arguments.workflowId );
+		var impl = getImplementation( wf );
+
+		return impl.instanceExists( instanceArgs=arguments.instanceArgs );
+	}
+
+	public any function getInstance( required string workflowId, struct instanceArgs={} ) {
+		var wf             = getWorkflowDefinition( arguments.workflowId );
+		var impl           = getImplementation( wf );
+		var instanceExists = impl.instanceExists( instanceArgs=arguments.instanceArgs );
+
+		if ( instanceExists ) {
+			return new instances.WorkflowInstance(
+				  workflowId             = arguments.workflowId
+				, instanceArgs           = arguments.instanceArgs
+				, workflowDefinition     = wf
+				, workflowImplementation = impl
+				, workflowEngine         = this
+			);
+		}
+
+		return;
+	}
+
+	public WorkflowInstance function createInstance( required string workflowId, struct instanceArgs={}, struct initialState={}, string initialActionId ) {
+		var wf         = getWorkflowDefinition( arguments.workflowId );
+		var impl       = getImplementation( wf );
+		var wfInstance = "";
+
+		impl.createInstance(
+			  workflowId   = arguments.workflowId
+			, instanceArgs = arguments.instanceArgs
+		);
+		wfInstance = getInstance( workflowId=arguments.workflowId, instanceArgs=arguments.instanceArgs );
+
+		initializeInstance(
+			  wfInstance      = wfInstance
+			, initialState    = arguments.initialState
+			, initialActionId = arguments.initialActionId ?: NullValue()
+		);
+
+		return wfInstance;
+	}
+
+	public void function initializeInstance( required WorkflowInstance wfInstance, struct initialState={}, string initialActionId ) {
+		if ( StructCount( arguments.initialState ) ) {
+			arguments.wfInstance.setState( arguments.initialState );
+		}
+
+		doInitialAction(
+			  wfInstance      = arguments.wfInstance
+			, initialActionId = arguments.initialActionId ?: NullValue()
+		);
+	}
+
+	public void function doInitialAction(
+		  required WorkflowInstance wfInstance
+		,          string           initialActionId = ""
+	) {
+		var wf             = getWorkflowDefinition( arguments.wfInstance.getWorkflowId() );
+		var actions        = wf.getInitialActions();
+		var specificAction = Len( Trim( arguments.initialActionId ) );
+
+		for( var action in actions ) {
+			var useAction = !specificAction || action.getId() == arguments.initialActionId;
+
+			if ( !useAction ) {
+				continue;
+			}
+
+			if ( action.hasCondition() ) {
+				useAction = evaluateCondition( wfInstance=arguments.wfInstance, wfCondition=action.getCondition() );
+				if ( !useAction ) {
+					continue;
+				}
+			}
+
+			doAction( wfInstance=arguments.wfInstance, wfAction=action );
+			return;
+		}
+
+		throw( "The workflow [#wf.getId()#] could not be initialized. No initial actions met their conditional criteria.", "cfflow.no.initial.actions.runnable" );
+	}
+
 // LIBRARY PROXIES
 	public void function registerWorkflow( required Workflow wf ) {
 		_getWorkflowLibrary().registerWorkflow( argumentCollection=arguments );
+	}
+
+	public Workflow function getWorkflowDefinition( required string workflowId ) {
+		return _getWorkflowLibrary().getWorkflow( arguments.workflowId );
 	}
 
 // IMPLEMENTATION PROXIES
@@ -58,101 +148,6 @@ component singleton {
 		return _getImplementationFactory().getWorkflowImplementation( wf.getClass() );
 	}
 
-	public WorkflowImplementation function getImplementationForInstance( required WorkflowInstance wfInstance ) {
-		return getImplementation( _getWorkflowLibrary().getWorkflow( arguments.wfInstance.getWorkflowId() ) );
-	}
-
-	public any function getInstance( required string workflowId, struct instanceArgs={} ) {
-		var wf   = _getWorkflowLibrary().getWorkflow( arguments.workflowId );
-		var impl = getImplementation( wf );
-		var wfInstance = impl.getInstance( instanceArgs=instanceArgs );
-
-		if ( IsNull( local.wfInstance ) || isInstanceOf( wfInstance, "WorkflowInstance" ) ) {
-			return local.wfInstance ?: NullValue();
-		}
-
-		throw( "The workflow implementation, [#wf.getClass()#], returned an invalid workflow instance. Returned instances must be an object that implements the WorkflowInstance interface.", "cfflow.invalid.instance" );
-	}
-
-	public any function createInstance( required string workflowId, struct instanceArgs={}, struct initialState={}, string initialActionId ) {
-		var wf   = _getWorkflowLibrary().getWorkflow( arguments.workflowId );
-		var impl = getImplementation( wf );
-		var wfInstance = impl.createInstance( instanceArgs=instanceArgs );
-
-		initializeInstance(
-			  wfInstance      = wfInstance
-			, initialState    = arguments.initialState
-			, initialActionId = arguments.initialActionId ?: NullValue()
-		);
-
-		return wfInstance;
-	}
-
-	public void function initializeInstance( required WorkflowInstance wfInstance, struct initialState={}, string initialActionId ) {
-		if ( StructCount( arguments.initialState ) ) {
-			arguments.wfInstance.setState( arguments.initialState );
-		}
-
-		doInitialAction(
-			  wfInstance      = arguments.wfInstance
-			, initialActionId = arguments.initialActionId ?: NullValue()
-		);
-	}
-
-	public void function doInitialAction(
-		  required WorkflowInstance wfInstance
-		,          string           initialActionId = ""
-	) {
-		var wf             = _getWorkflowLibrary().getWorkflow( arguments.wfInstance.getWorkflowId() );
-		var actions        = wf.getInitialActions();
-		var specificAction = Len( Trim( arguments.initialActionId ) );
-
-		for( var action in actions ) {
-			var useAction = !specificAction || action.getId() == arguments.initialActionId;
-
-			if ( !useAction ) {
-				continue;
-			}
-
-			if ( action.hasCondition() ) {
-				useAction = evaluateCondition( wfInstance=arguments.wfInstance, wfCondition=action.getCondition() );
-				if ( !useAction ) {
-					continue;
-				}
-			}
-
-			doAction( wfInstance=arguments.wfInstance, wfAction=action );
-			return;
-		}
-
-		throw( "The workflow [#wf.getId()#] could not be initialized. No initial actions met their conditional criteria.", "cfflow.no.initial.actions.runnable" );
-	}
-
-
-	public array function getActiveSteps( required WorkflowInstance wfInstance ) {
-		var activeSteps = [];
-
-		for( var step in _getFlowStepsForInstance( arguments.wfInstance ) ) {
-			if ( _isStepActive( arguments.wfInstance, step ) ) {
-				activeSteps.append( step.getId() );
-			}
-		}
-
-		return activeSteps;
-	}
-
-	public boolean function isComplete( required WorkflowInstance wfInstance ) {
-		for( var step in _getFlowStepsForInstance( arguments.wfInstance ) ) {
-			if ( _isStepActive( arguments.wfInstance, step ) ) {
-				if ( ArrayLen( step.getActions() ) ) {
-					return false;
-				}
-			}
-		}
-
-		return true;
-	}
-
 	public void function doAction( required WorkflowInstance wfInstance, required WorkflowAction wfAction ) {
 		doResult(
 			  wfInstance = arguments.wfInstance
@@ -182,8 +177,11 @@ component singleton {
 		  required WorkflowInstance  wfInstance
 		, required WorkflowTransition wfTransition
 	) {
-		arguments.wfInstance.setStatus(
-			  step   = arguments.wfTransition.getStep()
+		var impl = arguments.wfInstance.getWorkflowImplementation();
+
+		impl.setStepStatus(
+			  instanceArgs = arguments.wfInstance.getInstanceArgs()
+			, step   = arguments.wfTransition.getStep()
 			, status = arguments.wfTransition.getStatus()
 		);
 
@@ -213,13 +211,13 @@ component singleton {
 	}
 
 	public boolean function evaluateCondition( required  WorkflowCondition wfCondition, required WorkflowInstance wfInstance ) {
-		var impl = getImplementationForInstance( arguments.wfInstance );
+		var impl = arguments.wfInstance.getWorkflowImplementation();
 
 		return impl.evaluateCondition( arguments.wfCondition, arguments.wfInstance );
 	}
 
 	public void function doFunction( required WorkflowInstance wfInstance, required WorkflowFunction wfFunction ) {
-		var impl = getImplementationForInstance( arguments.wfInstance );
+		var impl = arguments.wfInstance.getWorkflowImplementation();
 
 		impl.executeFunction( wfInstance=arguments.wfInstance, wfFunction=arguments.wfFunction );
 	}
@@ -237,7 +235,7 @@ component singleton {
 	}
 
 	public WorkflowStep function getStepForInstance( required WorkflowInstance wfInstance, required string stepId ) {
-		var steps = _getWorkflowLibrary().getWorkflow( arguments.wfInstance.getWorkflowId() ).getSteps();
+		var steps = getWorkflowDefinition( arguments.wfInstance.getWorkflowId() ).getSteps();
 
 		for( var step in steps ) {
 			if ( step.getId() == arguments.stepId ) {
@@ -251,7 +249,7 @@ component singleton {
 
 		if ( wfStep.hasAutoActions() ) {
 			if ( wfStep.hasAutoActionTimers() ) {
-				getImplementationForInstance( wfInstance=arguments.wfInstance ).scheduleAutoActions(
+				arguments.wfInstance.getWorkflowImplementation().scheduleAutoActions(
 					  wfInstance = arguments.wfInstance
 					, stepId     = arguments.stepId
 					, timers     = wfStep.getAutoActionTimers()
@@ -268,7 +266,7 @@ component singleton {
 
 		if ( wfStep.hasAutoActions() ) {
 			if ( wfStep.hasAutoActionTimers() ) {
-				getImplementationForInstance( wfInstance=arguments.wfInstance ).unScheduleAutoActions(
+				arguments.wfInstance.getWorkflowImplementation().unScheduleAutoActions(
 					  wfInstance = arguments.wfInstance
 					, stepId     = arguments.stepId
 				);
@@ -291,16 +289,6 @@ component singleton {
 		}
 		return false;
 	}
-
-// PRIVATE HELPERS
-	private array function _getFlowStepsForInstance( wfInstance ) {
-		return _getWorkflowLibrary().getWorkflow( arguments.wfInstance.getWorkflowId() ).getSteps();
-	}
-
-	private boolean function _isStepActive( wfInstance, step ) {
-		return arguments.wfInstance.getStatus( arguments.step.getId() ) == "active";
-	}
-
 
 // GETTERS AND SETTERS
 	private any function _getWorkflowLibrary() {
