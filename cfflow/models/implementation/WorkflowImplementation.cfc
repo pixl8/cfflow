@@ -32,4 +32,32 @@ component accessors=true {
 		return getStorageClass().getAllStepStatuses( argumentCollection=arguments );
 	}
 
+// EXECUTOR PROXIES
+	public void function executeFunction( required WorkflowFunction wfFunction, required IWorkflowInstance wfInstance ){
+		return getFunctionExecutor().executeFunction( argumentCollection=arguments );
+	}
+
+// EVALUATOR PROXIES
+	public boolean function evaluateCondition( required WorkflowCondition wfCondition, required IWorkflowInstance wfInstance ) {
+		return getConditionEvaluator().evaluateCondition( argumentCollection=arguments );
+	}
+
+// SCHEDULER PROXIES
+	public void function scheduleAutoActions(
+		  required string workflowId
+		, required struct instanceArgs
+		, required string stepId
+		, required array  timers
+	){
+		return getScheduler().scheduleAutoActions( argumentCollection=arguments );
+	}
+
+	public void function unScheduleAutoActions(
+		  required string workflowId
+		, required struct instanceArgs
+		, required string stepId
+	){
+		return getScheduler().unScheduleAutoActions( argumentCollection=arguments );
+	}
+
 }
