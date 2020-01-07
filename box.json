@@ -20,6 +20,7 @@
         ".travis.yml",
         ".twgit_features_subject",
         "tests/*",
+        "docs/*",
         "runtests.sh"
     ],
     "devDependencies":{
