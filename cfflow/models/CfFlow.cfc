@@ -119,7 +119,6 @@ component singleton {
 	public void function registerWorkflowClass(
 		  required string className
 		, required string storageClass
-		, required string conditionEvaluator
 		, required string scheduler
 	) {
 		_getImplementationFactory().registerWorkflowClass( argumentCollection=arguments );
@@ -129,12 +128,6 @@ component singleton {
 		, required IWorkflowInstanceStorage implementation
 	) {
 		_getImplementationFactory().registerStorageClass( argumentCollection=arguments );
-	}
-	public void function registerConditionEvaluator(
-		  required string                       className
-		, required IWorkflowConditionEvaluator implementation
-	) {
-		_getImplementationFactory().registerConditionEvaluator( argumentCollection=arguments );
 	}
 	public void function registerScheduler(
 		  required string             className
@@ -147,6 +140,12 @@ component singleton {
 		, required IWorkflowFunction implementation
 	) {
 		_getImplementationFactory().registerFunction( argumentCollection=arguments );
+	}
+	public void function registerCondition(
+		  required string            id
+		, required IWorkflowFunction implementation
+	) {
+		_getImplementationFactory().registerCondition( argumentCollection=arguments );
 	}
 
 // PRIVATE HELPERS

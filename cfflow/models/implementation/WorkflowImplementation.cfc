@@ -1,9 +1,7 @@
 component accessors=true {
 
-	property name="storageClass"       type="IWorkflowInstanceStorage";
-	property name="conditionEvaluator" type="IWorkflowConditionEvaluator";
-	property name="scheduler"          type="IWorkflowScheduler";
-
+	property name="storageClass" type="IWorkflowInstanceStorage";
+	property name="scheduler"    type="IWorkflowScheduler";
 
 // STORAGE CLASS PROXIES
 	public boolean function instanceExists( required string workflowId, required struct instanceArgs ){
@@ -29,11 +27,6 @@ component accessors=true {
 	}
 	public struct function getAllStepStatuses( required string workflowId, required struct instanceArgs ){
 		return getStorageClass().getAllStepStatuses( argumentCollection=arguments );
-	}
-
-// EVALUATOR PROXIES
-	public boolean function evaluateCondition( required WorkflowCondition wfCondition, required WorkflowInstance wfInstance ) {
-		return getConditionEvaluator().evaluateCondition( argumentCollection=arguments );
 	}
 
 // SCHEDULER PROXIES

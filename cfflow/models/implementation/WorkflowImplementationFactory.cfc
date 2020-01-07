@@ -3,7 +3,7 @@
  * provides the ability to register and fetch workflow
  * functionality implementations by classname. You are
  * able to register storage classes, functions,
- * condition evaluators, schedulers and, finally,
+ * conditions, schedulers and, finally,
  * workflow classes that are a named bundle of the other
  * four implementation types.
  *
@@ -16,7 +16,6 @@ component {
 	variables._storageClasses      = {};
 	variables._functions           = {};
 	variables._conditions          = {};
-	variables._conditionEvaluators = {};
 	variables._schedulers          = {};
 	variables._implementations     = {};
 
@@ -29,12 +28,10 @@ component {
 	public void function registerWorkflowClass(
 		  required string className
 		, required string storageClass
-		, required string conditionEvaluator
 		, required string scheduler
 	) {
 		variables._workflowClasses[ arguments.className ] = {
 			  storageClass       = arguments.storageClass
-			, conditionEvaluator = arguments.conditionEvaluator
 			, scheduler          = arguments.scheduler
 		};
 	}
@@ -44,9 +41,8 @@ component {
 			var classes = variables._workflowClasses[ arguments.className ] ?: throw( "The workflow class, [#arguments.className#], is not registered with the workflow implementation library.", "cfflow.workflow.class.not.exists", "Registered implementations: [#StructKeyList( variables._workflowClasses )#]" );
 
 			_implementations[ arguments.className ] = new WorkflowImplementation(
-				  storageClass       = getStorageClass( classes.storageClass )
-				, conditionEvaluator = getConditionEvaluator( classes.conditionEvaluator )
-				, scheduler          = getScheduler( classes.scheduler )
+				  storageClass = getStorageClass( classes.storageClass )
+				, scheduler    = getScheduler( classes.scheduler )
 			);
 		}
 
@@ -62,17 +58,6 @@ component {
 	}
 	public IWorkflowInstanceStorage function getStorageClass( required string className ) {
 		return variables._storageClasses[ arguments.className ] ?: throw( "The workflow instance storage class, [#arguments.className#], is not registered with the workflow implementation library.", "cfflow.storage.class.not.exists", "Registered implementations: [#StructKeyList( variables._storageClasses )#]" );
-	}
-
-// CONDiTION EVALUATORS
-	public void function registerConditionEvaluator(
-		  required string                       className
-		, required IWorkflowConditionEvaluator implementation
-	) {
-		variables._conditionEvaluators[ arguments.className ] = arguments.implementation;
-	}
-	public IWorkflowConditionEvaluator function getConditionEvaluator( required string className ) {
-		return variables._conditionEvaluators[ arguments.className ] ?: throw( "The workflow condition evaluator class, [#arguments.className#], is not registered with the workflow implementation library.", "cfflow.condition.evaluator.not.exists", "Registered implementations: [#StructKeyList( variables._conditionEvaluators )#]" );
 	}
 
 // SCHEDULERS
