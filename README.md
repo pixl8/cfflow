@@ -3,7 +3,7 @@ CfFlow
 
 CfFlow is an open source workflow engine for the CFML language. It is inspired by the work and concepts of Open Symphony Workflow (OSWorkflow), an unmaintained Java workflow engine that is used in JIRA and many other java projects.
 
-[![Build Status](https://travis-ci.org/pixl8/cfflow.svg?branch=stable "Stable")](https://travis-ci.org/pixl8/cfflow)
+[![Build Status](https://travis-ci.org/pixl8/cfflow.svg?branch=master "Master")](https://travis-ci.org/pixl8/cfflow)
 
 [![Latest version](https://forgebox.io/api/v1/entry/cfflow/badges/version)](https://forgebox.io/view/cfflow)
 
@@ -72,7 +72,7 @@ We use [SemVer](https://semver.org) for versioning. For the versions available, 
 
 ## License
 
-This project is licensed under the GPLv2 License - see the [LICENSE.txt](https://github.com/pixl8/Preside-CMS/blob/stable/LICENSE.txt) file for details.
+This project is licensed under the GPLv2 License - see the [LICENSE.txt](https://github.com/pixl8/Preside-CMS/blob/master/LICENSE.txt) file for details.
 
 ## Authors
 
@@ -80,4 +80,4 @@ The project is maintained by [The Pixl8 Group](https://www.pixl8.co.uk). The lea
 
 ## Code of conduct
 
-We are a small, friendly and professional community. For the eradication of doubt, we publish a simple [code of conduct](https://github.com/pixl8/cfflow/blob/stable/CODE_OF_CONDUCT.md) and expect all contributors, users and passers-by to observe it.
+We are a small, friendly and professional community. For the eradication of doubt, we publish a simple [code of conduct](https://github.com/pixl8/cfflow/blob/master/CODE_OF_CONDUCT.md) and expect all contributors, users and passers-by to observe it.
