@@ -313,7 +313,7 @@ component extends="testbox.system.BaseSpec" {
 						"id":"action-1",
 						"meta":{"title":"Action 1"},
 						"condition":{
-							"handler":"some.handler",
+							"id":"some.handler",
 							"args":{
 								"test":true,
 								"this":[1,2,3,4]
@@ -340,7 +340,7 @@ component extends="testbox.system.BaseSpec" {
 										"here":true
 									},
 									"condition":{
-										"handler":"function.condition",
+										"id":"function.condition",
 										"args":{
 											"test":false,
 											"thisIsInteresting":[1,2,3,4]
@@ -350,20 +350,20 @@ component extends="testbox.system.BaseSpec" {
 									"id":"function.id.2",
 									"meta":{"title":"Function title"},
 									"condition":{
-										"handler":"function.condition"
+										"id":"function.condition"
 									}
 								}],
 								"post":[{
 									"id":"function.id",
 									"meta":{"title":"Function title"},
 									"condition":{
-										"handler":"function.condition"
+										"id":"function.condition"
 									}
 								},{
 									"id":"function.id.2",
 									"meta":{"title":"Function title"},
 									"condition":{
-										"handler":"function.condition",
+										"id":"function.condition",
 										"args":{
 											"test":false,
 											"thisIsInteresting":[1,2,3,4]
@@ -377,7 +377,7 @@ component extends="testbox.system.BaseSpec" {
 							"meta":{"title":"Result 2"},
 							"type":"join",
 							"condition":{
-								"handler":"test.condition.one",
+								"id":"test.condition.one",
 								"args":{
 									"test":false,
 									"thisIsInteresting":[1,2,3,4]
@@ -395,7 +395,7 @@ component extends="testbox.system.BaseSpec" {
 									"id":"function.id",
 									"meta":{"title":"Function title"},
 									"condition":{
-										"handler":"function.condition",
+										"id":"function.condition",
 										"args":{
 											"test":false,
 											"thisIsInteresting":[1,2,3,4]
@@ -405,7 +405,7 @@ component extends="testbox.system.BaseSpec" {
 									"id":"function.id.2",
 									"meta":{"title":"Function title"},
 									"condition":{
-										"handler":"function.condition"
+										"id":"function.condition"
 									}
 								}]
 							}
@@ -414,7 +414,7 @@ component extends="testbox.system.BaseSpec" {
 							"meta":{"title":"Result 3"},
 							"type":"split",
 							"condition":{
-								"handler":"test.condition.two",
+								"id":"test.condition.two",
 								"args":{
 									"test":false,
 									"thisIsInteresting":[1,2,3,4]
@@ -432,13 +432,13 @@ component extends="testbox.system.BaseSpec" {
 									"id":"function.id",
 									"meta":{"title":"Function title"},
 									"condition":{
-										"handler":"function.condition"
+										"id":"function.condition"
 									}
 								},{
 									"id":"function.id.2",
 									"meta":{"title":"Function title"},
 									"condition":{
-										"handler":"function.condition"
+										"id":"function.condition"
 									}
 								}]
 							}

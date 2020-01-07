@@ -332,12 +332,15 @@ component extends="testbox.system.BaseSpec" {
 
 
 			describe( "evaluateCondition( wfCondition, wfInstance )", function(){
-				it( "should use the workflow implementation's evaluator to evaluate the given condition, passing through the workflow instance and workflow definition objects", function(){
-					var condition = _getCondition("some.condition", { test=true } );
+				it( "should run the 'evaluate' method on the condition fetched from the implementation library that corresponds with the condition ID on the condition object", function(){
+					var args = { test=CreateUUId() };
+					var condition = _getCondition("some.condition", args );
+					var testCondition = createMock( "tests.resources.TestCondition" );
 
-					_instance.setWorkflowImplementation( _impl );
+					_implFactory.$( "getCondition" ).$args( "some.condition" ).$results( testCondition );
 
-					_impl.$( "evaluateCondition" ).$results( true, false );
+					testCondition.$( "evaluate" ).$args( wfInstance=_instance, args=args ).$results( true, false );
+
 					expect( _engine.evaluateCondition( condition, _instance ) ).toBeTrue();
 					expect( _engine.evaluateCondition( condition, _instance ) ).toBeFalse();
 				} );
@@ -608,7 +611,7 @@ component extends="testbox.system.BaseSpec" {
 					_wf.$( "getInitialActions", actions );
 
 					_engine.$( method="evaluateCondition", callback=function(){
-						return arguments.wfCondition.getHandler() != "handler.1";
+						return arguments.wfCondition.getId() != "handler.1";
 					} );
 
 					_engine.$( "doAction" );
@@ -684,7 +687,7 @@ component extends="testbox.system.BaseSpec" {
 					_wf.$( "getInitialActions", actions );
 
 					_engine.$( method="evaluateCondition", callBack=function(){
-						return arguments.wfCondition.getHandler() == "handler.3";
+						return arguments.wfCondition.getId() == "handler.3";
 					} );
 
 					_engine.$( "doAction" );
@@ -733,7 +736,7 @@ component extends="testbox.system.BaseSpec" {
 					_wf.$( "getInitialActions", actions );
 
 					_engine.$( method="evaluateCondition", callBack=function(){
-						return arguments.wfCondition.getHandler() != "handler.1";
+						return arguments.wfCondition.getId() != "handler.1";
 					} );
 					_engine.$( "doAction" );
 
@@ -746,7 +749,7 @@ component extends="testbox.system.BaseSpec" {
 	}
 
 // helpers
-	private any function _getCondition( required string handler, struct args={} ) {
+	private any function _getCondition( required string id, struct args={} ) {
 		return new cfflow.models.definition.spec.WorkflowCondition( argumentCollection=arguments );
 	}
 }

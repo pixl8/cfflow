@@ -124,9 +124,12 @@ component singleton {
 	}
 
 	public boolean function evaluateCondition( required  WorkflowCondition wfCondition, required WorkflowInstance wfInstance ) {
-		var impl = arguments.wfInstance.getWorkflowImplementation();
+		var condition = _getImplementationFactory().getCondition( id=arguments.wfCondition.getId() );
 
-		return impl.evaluateCondition( arguments.wfCondition, arguments.wfInstance );
+		return condition.evaluate(
+			  wfInstance = arguments.wfInstance
+			, args       = arguments.wfCondition.getArgs()
+		);
 	}
 
 	public void function doFunction( required WorkflowInstance wfInstance, required WorkflowFunction wfFunction ) {

@@ -65,12 +65,12 @@ component extends="testbox.system.BaseSpec" {
 
 					expect( step1Actions[1].getId() ).toBe( "action-1" );
 					expect( step1Actions[1].getMeta() ).toBe( {title="Action 1"} );
-					expect( step1Actions[1].getCondition().getHandler() ).toBe( "action1.condition.handler" );
+					expect( step1Actions[1].getCondition().getId() ).toBe( "action1.condition.handler" );
 					expect( step1Actions[1].getIsAutomatic() ).toBe( true );
 					expect( step1Actions[2].getId() ).toBe( "action-2" );
 					expect( step1Actions[2].getMeta() ).toBe( {title="Action 2"} );
 					expect( step1Actions[2].getScreen() ).toBe( "" );
-					expect( step1Actions[2].getCondition().getHandler() ).toBe( "action2.condition" );
+					expect( step1Actions[2].getCondition().getId() ).toBe( "action2.condition" );
 					expect( step1Actions[2].getIsAutomatic() ).toBe( false );
 				} );
 
@@ -93,13 +93,13 @@ component extends="testbox.system.BaseSpec" {
 					expect( results[1].getMeta() ).toBe( {title="Result 2"} );
 					expect( results[1].getType() ).toBe( "split" );
 					expect( results[1].getIsDefault() ).toBe( false );
-					expect( results[1].getCondition().getHandler() ).toBe( "result2.condition.handler" );
+					expect( results[1].getCondition().getId() ).toBe( "result2.condition.handler" );
 
 					expect( results[2].getId() ).toBe( "result-3" );
 					expect( results[2].getMeta() ).toBe( {title="Result 3"} );
 					expect( results[2].getType() ).toBe( "step" );
 					expect( results[2].getIsDefault() ).toBe( false );
-					expect( results[2].getCondition().getHandler() ).toBe( "result3ConditionId" );
+					expect( results[2].getCondition().getId() ).toBe( "result3ConditionId" );
 				} );
 
 				it( "should read all transitions from default results", function(){
@@ -135,13 +135,13 @@ component extends="testbox.system.BaseSpec" {
 					expect( preFunctions[1].getMeta() ).toBe( { title="Function 1"} );
 					expect( preFunctions[1].getPreOrPost() ).toBe( "pre" );
 					expect( preFunctions[1].getArgs() ).toBe( { test=true, cool="really" } );
-					expect( preFunctions[1].getCondition().getHandler() ).toBe( "function1.condition.handler" );
+					expect( preFunctions[1].getCondition().getId() ).toBe( "function1.condition.handler" );
 					expect( preFunctions[1].getCondition().getArgs() ).toBe( { test="blah" } );
 
 					expect( preFunctions[2].getId() ).toBe( "function-2" );
 					expect( preFunctions[2].getMeta() ).toBe( { title="Function 2" } );
 					expect( preFunctions[2].getPreOrPost() ).toBe( "pre" );
-					expect( preFunctions[2].getCondition().getHandler() ).toBe( "function2conditionid" );
+					expect( preFunctions[2].getCondition().getId() ).toBe( "function2conditionid" );
 				} );
 
 				it( "should read all post functions from default results", function(){
@@ -152,12 +152,12 @@ component extends="testbox.system.BaseSpec" {
 					expect( postFunctions[1].getId() ).toBe( "function-1" );
 					expect( postFunctions[1].getMeta() ).toBe( { title="Function 1" } );
 					expect( postFunctions[1].getPreOrPost() ).toBe( "post" );
-					expect( postFunctions[1].getCondition().getHandler() ).toBe( "function1.condition.handler" );
+					expect( postFunctions[1].getCondition().getId() ).toBe( "function1.condition.handler" );
 
 					expect( postFunctions[2].getId() ).toBe( "function-2" );
 					expect( postFunctions[2].getMeta() ).toBe( { title="Function 2" } );
 					expect( postFunctions[2].getPreOrPost() ).toBe( "post" );
-					expect( postFunctions[2].getCondition().getHandler() ).toBe( "function2conditionid" );
+					expect( postFunctions[2].getCondition().getId() ).toBe( "function2conditionid" );
 				} );
 
 				it( "should read all pre functions from conditional results", function(){
@@ -168,12 +168,12 @@ component extends="testbox.system.BaseSpec" {
 					expect( preFunctions[1].getId() ).toBe( "function-1" );
 					expect( preFunctions[1].getMeta() ).toBe( {title="Function 1"} );
 					expect( preFunctions[1].getPreOrPost() ).toBe( "pre" );
-					expect( preFunctions[1].getCondition().getHandler() ).toBe( "function1.condition.handler" );
+					expect( preFunctions[1].getCondition().getId() ).toBe( "function1.condition.handler" );
 
 					expect( preFunctions[2].getId() ).toBe( "function-2" );
 					expect( preFunctions[2].getMeta() ).toBe( {title="Function 2"} );
 					expect( preFunctions[2].getPreOrPost() ).toBe( "pre" );
-					expect( preFunctions[2].getCondition().getHandler() ).toBe( "function2conditionid" );
+					expect( preFunctions[2].getCondition().getId() ).toBe( "function2conditionid" );
 				} );
 
 				it( "should read all post functions from conditional results", function(){
@@ -184,12 +184,12 @@ component extends="testbox.system.BaseSpec" {
 					expect( postFunctions[1].getId() ).toBe( "function-1" );
 					expect( postFunctions[1].getMeta() ).toBe( {title="Function 1"} );
 					expect( postFunctions[1].getPreOrPost() ).toBe( "post" );
-					expect( postFunctions[1].getCondition().getHandler() ).toBe( "function1.condition.handler" );
+					expect( postFunctions[1].getCondition().getId() ).toBe( "function1.condition.handler" );
 
 					expect( postFunctions[2].getId() ).toBe( "function-2" );
 					expect( postFunctions[2].getMeta() ).toBe( {title="Function 2"} );
 					expect( postFunctions[2].getPreOrPost() ).toBe( "post" );
-					expect( postFunctions[2].getCondition().getHandler() ).toBe( "function2conditionid" );
+					expect( postFunctions[2].getCondition().getId() ).toBe( "function2conditionid" );
 				} );
 			} );
 		} );

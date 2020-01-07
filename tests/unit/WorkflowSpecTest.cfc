@@ -61,7 +61,7 @@ component extends="testbox.system.BaseSpec" {
 					expect( newAction.getId() ).toBe( "test-id" );
 					expect( newAction.getMeta() ).toBe( { title="test-title" } );
 					expect( newAction.getScreen() ).toBe( "test-screen" );
-					expect( newAction.getCondition().getHandler() ).toBe( conditionHandler );
+					expect( newAction.getCondition().getId() ).toBe( conditionId );
 				} );
 			} );
 
@@ -150,7 +150,7 @@ component extends="testbox.system.BaseSpec" {
 					expect( newAction.getId() ).toBe( "test-id" );
 					expect( newAction.getMeta() ).toBe( { title="test-title" } );
 					expect( newAction.getScreen() ).toBe( "test-screen" );
-					expect( newAction.getCondition().getHandler() ).toBe( conditionHandler );
+					expect( newAction.getCondition().getId() ).toBe( conditionId );
 				} );
 			} );
 
@@ -273,7 +273,7 @@ component extends="testbox.system.BaseSpec" {
 				it( "should return the set condition object", function(){
 					_workflowAction.setCondition( _getCondition() );
 
-					expect( _workflowAction.getCondition().getHandler() ).toBe( conditionHandler );
+					expect( _workflowAction.getCondition().getId() ).toBe( conditionId );
 				} );
 				it( "should return NULL when no condition set", function(){
 					expect( _workflowAction.getCondition() ).toBeNull();
@@ -334,7 +334,7 @@ component extends="testbox.system.BaseSpec" {
 					expect( newResult.getMeta() ).toBe( { title="test-title" } );
 					expect( newResult.getType() ).toBe( "join" );
 					expect( newResult.getIsDefault() ).toBe( false );
-					expect( newResult.getCondition().getHandler() ).toBe( conditionHandler );
+					expect( newResult.getCondition().getId() ).toBe( conditionId );
 				} );
 			} );
 
@@ -462,7 +462,7 @@ component extends="testbox.system.BaseSpec" {
 				it( "should return the set condition object", function(){
 					_workflowResult.setCondition( _getCondition() );
 
-					expect( _workflowResult.getCondition().getHandler() ).toBe( conditionHandler );
+					expect( _workflowResult.getCondition().getId() ).toBe( conditionId );
 				} );
 				it( "should return NULL when no condition set", function(){
 					expect( _workflowResult.getCondition() ).toBeNull();
@@ -523,7 +523,7 @@ component extends="testbox.system.BaseSpec" {
 					expect( newPreFunction.getId() ).toBe( "test-id" );
 					expect( newPreFunction.getMeta() ).toBe( {title="test-title"} );
 					expect( newPreFunction.getPreOrPost() ).toBe( "pre" );
-					expect( newPreFunction.getCondition().getHandler() ).toBe( conditionHandler );
+					expect( newPreFunction.getCondition().getId() ).toBe( conditionId );
 				} );
 			} );
 
@@ -540,7 +540,7 @@ component extends="testbox.system.BaseSpec" {
 					expect( newPostFunction.getId() ).toBe( "test-id" );
 					expect( newPostFunction.getMeta() ).toBe( {title="test-title"} );
 					expect( newPostFunction.getPreOrPost() ).toBe( "post" );
-					expect( newPostFunction.getCondition().getHandler() ).toBe( conditionHandler );
+					expect( newPostFunction.getCondition().getId() ).toBe( conditionId );
 				} );
 			} );
 
@@ -677,7 +677,7 @@ component extends="testbox.system.BaseSpec" {
 				it( "should return the set condition object", function(){
 					_function.setCondition( _getCondition() );
 
-					expect( _function.getCondition().getHandler() ).toBe( conditionHandler );
+					expect( _function.getCondition().getId() ).toBe( conditionId );
 				} );
 				it( "should return NULL when no condition set", function(){
 					expect( _function.getCondition() ).toBeNull();
@@ -727,12 +727,12 @@ component extends="testbox.system.BaseSpec" {
 			var handler    = CreateUUId();
 
 			beforeEach( function(){
-				_condition = new cfflow.models.definition.spec.WorkflowCondition( handler=handler );
+				_condition = new cfflow.models.definition.spec.WorkflowCondition( id=handler );
 			} );
 
-			describe( "getHandler()", function() {
-				it( "should return the handler", function(){
-					expect( _condition.getHandler() ).toBe( handler );
+			describe( "getId()", function() {
+				it( "should return the id", function(){
+					expect( _condition.getId() ).toBe( handler );
 				} );
 			} );
 
@@ -749,9 +749,9 @@ component extends="testbox.system.BaseSpec" {
 			} );
 
 			describe( "getSignature()", function(){
-				it( "should return a hash checksum of the handler and args", function(){
+				it( "should return a hash checksum of the id and args", function(){
 					expect( _condition.getSignature() ).toBe( LCase( Hash(
-						_condition.getHandler() &
+						_condition.getId() &
 						SerializeJson( _condition.getArgs() )
 					) ) );
 				} );
@@ -789,10 +789,10 @@ component extends="testbox.system.BaseSpec" {
 	private any function _getCondition() {
 		var condition = CreateMock( "cfflow.models.definition.spec.WorkflowCondition" );
 
-		variables.conditionHandler = CreateUUId();
+		variables.conditionId = CreateUUId();
 		variables.conditionArgs    = { test=true, another=CreateUUId() };
 
-		condition.setHandler( conditionHandler );
+		condition.setId( conditionId );
 		condition.setArgs( conditionArgs );
 
 		return condition;
