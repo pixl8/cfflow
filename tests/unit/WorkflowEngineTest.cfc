@@ -168,6 +168,7 @@ component extends="testbox.system.BaseSpec" {
 
 					var callLog = _impl.$callLog().setStepStatus;
 					expect( callLog.len() ).toBe( 1 );
+					expect( callLog[ 1 ].workflowId ).toBe( _wfId );
 					expect( callLog[ 1 ].step ).toBe( step );
 					expect( callLog[ 1 ].status ).toBe( status );
 				} );

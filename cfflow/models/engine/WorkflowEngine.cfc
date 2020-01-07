@@ -92,9 +92,10 @@ component singleton {
 		var impl = arguments.wfInstance.getWorkflowImplementation();
 
 		impl.setStepStatus(
-			  instanceArgs = arguments.wfInstance.getInstanceArgs()
-			, step   = arguments.wfTransition.getStep()
-			, status = arguments.wfTransition.getStatus()
+			  workflowId   = arguments.wfInstance.getWorkflowId()
+			, instanceArgs = arguments.wfInstance.getInstanceArgs()
+			, step         = arguments.wfTransition.getStep()
+			, status       = arguments.wfTransition.getStatus()
 		);
 
 		if ( arguments.wfTransition.getStatus() == "active" ) {
