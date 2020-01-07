@@ -1,5 +1,5 @@
 interface {
 
-	public void function executeFunction( required WorkflowFunction wfFunction, required IWorkflowInstance wfInstance );
+	public void function executeFunction( required WorkflowFunction wfFunction, required WorkflowInstance wfInstance );
 
 }

@@ -163,9 +163,10 @@ component singleton {
 		if ( wfStep.hasAutoActions() ) {
 			if ( wfStep.hasAutoActionTimers() ) {
 				arguments.wfInstance.getWorkflowImplementation().scheduleAutoActions(
-					  wfInstance = arguments.wfInstance
-					, stepId     = arguments.stepId
-					, timers     = wfStep.getAutoActionTimers()
+					  workflowId   = arguments.wfInstance.getWorkflowId()
+					, instanceArgs = arguments.wfInstance.getInstanceArgs()
+					, stepId       = arguments.stepId
+					, timers       = wfStep.getAutoActionTimers()
 				);
 			} else {
 				// immediate execution
@@ -180,8 +181,9 @@ component singleton {
 		if ( wfStep.hasAutoActions() ) {
 			if ( wfStep.hasAutoActionTimers() ) {
 				arguments.wfInstance.getWorkflowImplementation().unScheduleAutoActions(
-					  wfInstance = arguments.wfInstance
-					, stepId     = arguments.stepId
+					  workflowId   = arguments.wfInstance.getWorkflowId()
+					, instanceArgs = arguments.wfInstance.getInstanceArgs()
+					, stepId       = arguments.stepId
 				);
 			}
 		}

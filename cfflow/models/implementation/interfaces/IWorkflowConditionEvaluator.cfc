@@ -1,5 +1,5 @@
 interface {
 
-	public boolean function evaluateCondition( required WorkflowCondition wfCondition, required IWorkflowInstance wfInstance );
+	public boolean function evaluateCondition( required WorkflowCondition wfCondition, required WorkflowInstance wfInstance );
 
 }

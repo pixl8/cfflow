@@ -252,8 +252,9 @@ component extends="testbox.system.BaseSpec" {
 					var callLog = _impl.$callLog().scheduleAutoActions;
 					expect( callLog.len() ).toBe( 1 );
 					expect( callLog[ 1 ].stepId ).toBe( stepId );
-					expect( callLog[ 1 ].wfInstance ).toBe( _instance );
 					expect( callLog[ 1 ].timers ).toBe( timers );
+					expect( callLog[ 1 ].instanceArgs ).toBe( _instanceArgs );
+					expect( callLog[ 1 ].workflowId ).toBe( _wfId );
 
 					expect( _engine.$callLog().doAutoActions.len() ).toBe( 0 );
 
@@ -293,7 +294,8 @@ component extends="testbox.system.BaseSpec" {
 
 					expect( callLog.len() ).toBe( 1 );
 					expect( callLog[ 1 ].stepId ).toBe( stepId );
-					expect( callLog[ 1 ].wfInstance ).toBe( _instance );
+					expect( callLog[ 1 ].instanceArgs ).toBe( _instanceArgs );
+					expect( callLog[ 1 ].workflowId ).toBe( _wfId );
 
 				} );
 

@@ -33,12 +33,12 @@ component accessors=true {
 	}
 
 // EXECUTOR PROXIES
-	public void function executeFunction( required WorkflowFunction wfFunction, required IWorkflowInstance wfInstance ){
+	public void function executeFunction( required WorkflowFunction wfFunction, required WorkflowInstance wfInstance ){
 		return getFunctionExecutor().executeFunction( argumentCollection=arguments );
 	}
 
 // EVALUATOR PROXIES
-	public boolean function evaluateCondition( required WorkflowCondition wfCondition, required IWorkflowInstance wfInstance ) {
+	public boolean function evaluateCondition( required WorkflowCondition wfCondition, required WorkflowInstance wfInstance ) {
 		return getConditionEvaluator().evaluateCondition( argumentCollection=arguments );
 	}
 
