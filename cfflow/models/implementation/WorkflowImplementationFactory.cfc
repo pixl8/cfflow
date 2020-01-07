@@ -15,6 +15,7 @@ component {
 	variables._workflowClasses     = {};
 	variables._storageClasses      = {};
 	variables._functions           = {};
+	variables._conditions          = {};
 	variables._conditionEvaluators = {};
 	variables._schedulers          = {};
 	variables._implementations     = {};
@@ -93,6 +94,17 @@ component {
 		variables._functions[ arguments.id ] = arguments.implementation;
 	}
 	public IWorkflowFunction function getFunction( required string id ) {
-		return variables._functions[ arguments.id ] ?: throw( "The workflow function class, [#arguments.id#], is not registered with the workflow implementation library.", "cfflow.function.not.exists", "Registered functions: [#StructKeyList( variables._functions )#]" );
+		return variables._functions[ arguments.id ] ?: throw( "The workflow function, [#arguments.id#], is not registered with the workflow implementation library.", "cfflow.function.not.exists", "Registered functions: [#StructKeyList( variables._functions )#]" );
+	}
+
+// CONDITIONS
+	public void function registerCondition(
+		  required string             id
+		, required IWorkflowCondition implementation
+	) {
+		variables._conditions[ arguments.id ] = arguments.implementation;
+	}
+	public IWorkflowCondition function getCondition( required string id ) {
+		return variables._conditions[ arguments.id ] ?: throw( "The workflow condition, [#arguments.id#], is not registered with the workflow implementation library.", "cfflow.condition.not.exists", "Registered conditions: [#StructKeyList( variables._conditions )#]" );
 	}
 }

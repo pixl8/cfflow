@@ -166,6 +166,36 @@ component extends="testbox.system.BaseSpec" {
 					} );
 				} );
 			} );
+
+			describe( "Conditions", function(){
+				describe( "registerCondition( id, object )", function(){
+					it( "it should make the given condition available to fetch by string id at a later date", function(){
+						var id = CreateUUId();
+						var mockCondition = new tests.resources.TestCondition();
+
+						_library.registerCondition( id=id, implementation=mockCondition );
+
+						expect( _library.getCondition( id=id ) ).toBe( mockCondition );
+					} );
+
+					it( "should raise an error when attempting to set an object that does not implement the IWorkflowFunction interface", function(){
+						var id = CreateUUId();
+						var mockCondition = CreateStub();
+
+						expect( function(){
+							_library.registerCondition( id=id, implementation=mockCondition );
+						} ).toThrow( "expression" );
+					} );
+				} );
+
+				describe( "getCondition( id )", function(){
+					it( "should throw an informative error when the condition does not exist", function(){
+						expect( function(){
+							_library.getCondition( id=CreateUUId() );
+						} ).toThrow( "cfflow.condition.not.exists" );
+					} );
+				} );
+			} );
 		} );
 	}
 
