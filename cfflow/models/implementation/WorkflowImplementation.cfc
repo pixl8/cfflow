@@ -1,7 +1,6 @@
 component accessors=true {
 
 	property name="storageClass"       type="IWorkflowInstanceStorage";
-	property name="functionExecutor"   type="IWorkflowFunctionExecutor";
 	property name="conditionEvaluator" type="IWorkflowConditionEvaluator";
 	property name="scheduler"          type="IWorkflowScheduler";
 
@@ -30,11 +29,6 @@ component accessors=true {
 	}
 	public struct function getAllStepStatuses( required string workflowId, required struct instanceArgs ){
 		return getStorageClass().getAllStepStatuses( argumentCollection=arguments );
-	}
-
-// EXECUTOR PROXIES
-	public void function executeFunction( required WorkflowFunction wfFunction, required WorkflowInstance wfInstance ){
-		return getFunctionExecutor().executeFunction( argumentCollection=arguments );
 	}
 
 // EVALUATOR PROXIES

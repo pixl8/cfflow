@@ -119,7 +119,6 @@ component singleton {
 	public void function registerWorkflowClass(
 		  required string className
 		, required string storageClass
-		, required string functionExecutor
 		, required string conditionEvaluator
 		, required string scheduler
 	) {
@@ -130,12 +129,6 @@ component singleton {
 		, required IWorkflowInstanceStorage implementation
 	) {
 		_getImplementationFactory().registerStorageClass( argumentCollection=arguments );
-	}
-	public void function registerFunctionExecutor(
-		  required string                    className
-		, required IWorkflowFunctionExecutor implementation
-	) {
-		_getImplementationFactory().registerFunctionExecutor( argumentCollection=arguments );
 	}
 	public void function registerConditionEvaluator(
 		  required string                       className

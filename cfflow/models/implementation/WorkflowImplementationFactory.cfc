@@ -2,7 +2,7 @@
  * The workflow implementation factory is a class that
  * provides the ability to register and fetch workflow
  * functionality implementations by classname. You are
- * able to register storage classes, function executors,
+ * able to register storage classes, functions,
  * condition evaluators, schedulers and, finally,
  * workflow classes that are a named bundle of the other
  * four implementation types.
@@ -14,7 +14,6 @@ component {
 
 	variables._workflowClasses     = {};
 	variables._storageClasses      = {};
-	variables._functionExecutors   = {};
 	variables._functions           = {};
 	variables._conditionEvaluators = {};
 	variables._schedulers          = {};
@@ -29,13 +28,11 @@ component {
 	public void function registerWorkflowClass(
 		  required string className
 		, required string storageClass
-		, required string functionExecutor
 		, required string conditionEvaluator
 		, required string scheduler
 	) {
 		variables._workflowClasses[ arguments.className ] = {
 			  storageClass       = arguments.storageClass
-			, functionExecutor   = arguments.functionExecutor
 			, conditionEvaluator = arguments.conditionEvaluator
 			, scheduler          = arguments.scheduler
 		};
@@ -47,7 +44,6 @@ component {
 
 			_implementations[ arguments.className ] = new WorkflowImplementation(
 				  storageClass       = getStorageClass( classes.storageClass )
-				, functionExecutor   = getFunctionExecutor( classes.functionExecutor )
 				, conditionEvaluator = getConditionEvaluator( classes.conditionEvaluator )
 				, scheduler          = getScheduler( classes.scheduler )
 			);
@@ -65,17 +61,6 @@ component {
 	}
 	public IWorkflowInstanceStorage function getStorageClass( required string className ) {
 		return variables._storageClasses[ arguments.className ] ?: throw( "The workflow instance storage class, [#arguments.className#], is not registered with the workflow implementation library.", "cfflow.storage.class.not.exists", "Registered implementations: [#StructKeyList( variables._storageClasses )#]" );
-	}
-
-// FUNCTION EXECUTORS
-	public void function registerFunctionExecutor(
-		  required string                    className
-		, required IWorkflowFunctionExecutor implementation
-	) {
-		variables._functionExecutors[ arguments.className ] = arguments.implementation;
-	}
-	public IWorkflowFunctionExecutor function getFunctionExecutor( required string className ) {
-		return variables._functionExecutors[ arguments.className ] ?: throw( "The workflow function executor class, [#arguments.className#], is not registered with the workflow implementation library.", "cfflow.function.executor.not.exists", "Registered implementations: [#StructKeyList( variables._functionExecutors )#]" );
 	}
 
 // CONDiTION EVALUATORS
