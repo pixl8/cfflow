@@ -22,8 +22,8 @@ title: CfFlow
 email: dominic.watson@pixl8.co.uk
 description: >- # this means to ignore newlines until "baseurl:"
   CfFlow is a stateful workflow engine for CFML maintained by the Pixl8 Group.
-baseurl: "" # the subpath of your site, e.g. /blog
-url: "" # the base hostname & protocol for your site, e.g. http://example.com
+baseurl: "/cfflow" # the subpath of your site, e.g. /blog
+url: "https://pixl8.github.io" # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username: pixl8
 github_username:  pixl8
 
