@@ -1,7 +1,8 @@
 ---
 layout: page
 title: Reference
-permalink: /referene/
+nav_order: 4
+has_children: true
 ---
 
 # Reference
