@@ -1,7 +1,8 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
-    "$id": "resource:/schema/v1/conditionalResult#",
+    "$id": "conditionalResult.schema.json",
     "type": "object",
+    "title": "Workflow result (conditional)",
     "required":[ "id", "type", "condition", "transitions" ],
     "additionalProperties": false,
     "properties":{
@@ -15,12 +16,12 @@
         "condition":{
             "type":"object",
             "description":"Condition that must evaluate to true in order for this conditional result to be chosen",
-            "$ref":"condition.json"
+            "$ref":"condition.schema.json"
         },
         "functions":{
             "type":"object",
             "description":"Pre and post functions that execute before and after this result is executed.",
-            "$ref":"functions.json"
+            "$ref":"functions.schema.json"
         },
         "transitions":{
             "type":"array",
@@ -28,7 +29,7 @@
             "description":"Array of step status transitions that this result actions when executed.",
             "items":{
                 "type":"object",
-                "$ref":"transition.json"
+                "$ref":"transition.schema.json"
             }
         }
     }

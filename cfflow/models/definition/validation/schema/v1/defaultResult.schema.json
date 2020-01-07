@@ -1,7 +1,8 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
-    "$id": "resource:/schema/v1/defaultResult#",
+    "$id": "defaultResult.schema.json",
     "type": "object",
+    "title": "Workflow result (default)",
     "additionalProperties": false,
     "required":[ "id", "meta", "type", "transitions" ],
     "properties":{
@@ -15,7 +16,7 @@
         "functions":{
             "type":"object",
             "description":"Pre and post functions that execute before and after this result is executed.",
-            "$ref":"functions.json"
+            "$ref":"functions.schema.json"
         },
         "transitions":{
             "type":"array",
@@ -23,7 +24,7 @@
             "description":"Array of step status transitions that this result actions when executed.",
             "items":{
                 "type":"object",
-                "$ref":"transition.json"
+                "$ref":"transition.schema.json"
             }
         }
     }

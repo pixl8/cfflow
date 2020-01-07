@@ -1,7 +1,8 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
-    "$id": "resource:/schema/v1/timer#",
+    "$id": "timer.schema.json",
     "type": "object",
+    "title": "Workflow timer",
     "required":[ "interval" ],
     "additionalProperties": false,
     "description":"A timer is a combination of an 'interval' that defines the length of time to wait and a 'count' that describes the maximum number of times the timer will be executed.",

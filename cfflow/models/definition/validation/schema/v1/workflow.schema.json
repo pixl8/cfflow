@@ -1,7 +1,9 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
-    "$id": "resource:/schema/v1/workflow#",
+    "$id": "workflow.schema.json",
     "type": "object",
+    "title":"Workflow definition",
+    "description":"Container object for a complete CfFlow workflow definition",
     "required": [
         "version",
         "workflow"
@@ -16,6 +18,7 @@
         },
         "workflow": {
             "type": "object",
+            "title": "Workflow",
             "description": "The root object that describes the workflow",
             "required":[ "id", "class", "steps", "initialActions" ],
             "additionalProperties": false,
@@ -28,8 +31,7 @@
                     "minItems": 1,
                     "description": "Array of initial actions for the workflow. At least one must be specified to set the first step and perform any other functions and checks.",
                     "items": {
-                        "type": "object",
-                        "$ref": "initialAction.json"
+                        "$ref": "initialAction.schema.json"
                     }
                 },
                 "steps": {
@@ -37,8 +39,7 @@
                     "minItems": 2,
                     "description": "The steps of the flow. Any workflow must have at least two steps.",
                     "items": {
-                        "type": "object",
-                        "$ref": "step.json"
+                        "$ref": "step.schema.json"
                     }
                 }
             }

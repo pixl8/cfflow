@@ -1,7 +1,8 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
-    "$id": "resource:/schema/v1/condition#",
+    "$id": "condition.schema.json",
     "type": "object",
+    "title": "Workflow condition",
     "additionalProperties": false,
     "description":"A condition represents a decision and will evaluate to either true or false when executed.",
     "required":[ "handler"],

@@ -1,7 +1,8 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
-    "$id": "resource:/schema/v1/functions#",
+    "$id": "functions.schema.json",
     "type": "object",
+    "title": "Workflow functions",
     "additionalProperties": false,
     "properties":{
         "pre":{
@@ -9,7 +10,7 @@
             "description":"Array of functions that will execute before the parent result is actioned.",
             "items":{
                 "type":"object",
-                "$ref":"function.json"
+                "$ref":"function.schema.json"
             }
         },
         "post":{
@@ -17,7 +18,7 @@
             "description":"Array of functions that will execute after the parent result is actioned.",
             "items":{
                 "type":"object",
-                "$ref":"function.json"
+                "$ref":"function.schema.json"
             }
         }
     }

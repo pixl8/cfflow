@@ -183,7 +183,7 @@ component singleton {
 
 	private void function _setupSchemaValidator() {
 		var schemaDir = GetDirectoryFromPath( GetCurrentTemplatePath() ) & "schema/v1/"
-		var schema    = FileRead( schemaDir & "workflow.json" );
+		var schema    = FileRead( schemaDir & "workflow.schema.json" );
 		var schemaObj = _obj( "org.json.JSONObject" ).init( _obj( "org.json.JSONTokener" ).init( schema ) );
 		var schemaLoader = _obj( "org.everit.json.schema.loader.SchemaLoader" ).builder()
             .schemaJson( schemaObj )

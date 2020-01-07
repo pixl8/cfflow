@@ -1,7 +1,8 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
-    "$id": "resource:/schema/v1/step#",
+    "$id": "step.schema.json",
     "type": "object",
+    "title": "Workflow step",
     "description": "A step within a workflow",
     "required":[ "id" ],
     "additionalProperties": false,
@@ -13,7 +14,7 @@
             "description": "Array of timer definitions for repeatedly checking any automatically triggered actions on this step.",
             "items":{
                 "type":"object",
-                "$ref":"timer.json"
+                "$ref":"timer.schema.json"
             }
         },
         "actions":{
@@ -22,7 +23,7 @@
             "description":"Array of actions for the step that allow the workflow to transition from this step to one or more others. If none defined, the step is considered to be a terminating step and the workflow completed for any instances arriving here.",
             "items":{
                 "type":"object",
-                "$ref":"action.json"
+                "$ref":"action.schema.json"
             }
         }
     }

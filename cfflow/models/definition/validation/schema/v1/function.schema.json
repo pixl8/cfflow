@@ -1,7 +1,8 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
-    "$id": "resource:/schema/v1/function#",
+    "$id": "function.schema.json",
     "type": "object",
+    "title": "Workflow function",
     "additionalProperties": false,
     "required":["id", "handler"],
     "properties":{
@@ -12,7 +13,7 @@
         "condition":{
             "type":"object",
             "description":"Optional condition object that will determine whether or not the function is executed",
-            "$ref":"condition.json"
+            "$ref":"condition.schema.json"
         }
     }
 }
