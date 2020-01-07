@@ -10,7 +10,7 @@ CfFlow is an open source workflow engine for the CFML language. It is inspired b
 
 ## Getting started
 
-The following code snippets demonstrate the overall _gist_ of how the engine is designed to work. Full documentation can be found here: [citation needed]().
+The following code snippets demonstrate the overall _gist_ of how the engine is designed to work. Full documentation can be found here: [https://pixl8.github.io/cfflow](https://pixl8.github.io/cfflow).
 
 ```cfc
 // create a singleton instance of CfFlow i.e. only one instance for your application
