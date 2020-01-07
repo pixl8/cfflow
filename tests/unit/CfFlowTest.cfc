@@ -55,7 +55,7 @@ component extends="testbox.system.BaseSpec" {
 						var instanceArgs = { test=CreateUUId(), args={ yes="test", no=false } };
 
 						_engine.$( "getImplementation" ).$args( _wf ).$results( _impl );
-						_impl.$( "instanceExists" ).$args( instanceArgs=instanceArgs ).$results( true );
+						_impl.$( "instanceExists" ).$args( workflowId=_wfId, instanceArgs=instanceArgs ).$results( true );
 
 						var instance = _cfflow.getInstance( _wfId, instanceArgs );
 
@@ -69,7 +69,7 @@ component extends="testbox.system.BaseSpec" {
 						var instanceArgs = { test=CreateUUId(), args={ yes="test", no=false } };
 
 						_engine.$( "getImplementation" ).$args( _wf ).$results( _impl );
-						_impl.$( "instanceExists" ).$args( instanceArgs=instanceArgs ).$results( false );
+						_impl.$( "instanceExists" ).$args( workflowId=_wfId, instanceArgs=instanceArgs ).$results( false );
 
 						expect( _cfflow.getInstance( _wfId, instanceArgs ) ).toBeNull();
 					} );
@@ -81,10 +81,10 @@ component extends="testbox.system.BaseSpec" {
 
 						_engine.$( "getImplementation" ).$args( _wf ).$results( _impl );
 
-						_impl.$( "instanceExists" ).$args( instanceArgs=instanceArgs ).$results( true );
+						_impl.$( "instanceExists" ).$args( workflowId=_wfId, instanceArgs=instanceArgs ).$results( true );
 						expect( _cfflow.instanceExists( _wfId, instanceArgs ) ).toBe( true );
 
-						_impl.$( "instanceExists" ).$args( instanceArgs=instanceArgs ).$results( false );
+						_impl.$( "instanceExists" ).$args( workflowId=_wfId, instanceArgs=instanceArgs ).$results( false );
 						expect( _cfflow.instanceExists( _wfId, instanceArgs ) ).toBe( false );
 					} );
 				} );
@@ -96,7 +96,7 @@ component extends="testbox.system.BaseSpec" {
 						_impl.$( "createInstance" );
 						_engine.$( "getImplementation" ).$args( _wf ).$results( _impl );
 						_engine.$( "initializeInstance" );
-						_impl.$( "instanceExists" ).$args( instanceArgs=instanceArgs ).$results( true );
+						_impl.$( "instanceExists" ).$args( workflowId=_wfId, instanceArgs=instanceArgs ).$results( true );
 
 						var instance = _cfflow.createInstance( _wfId, instanceArgs, {} );
 
@@ -120,7 +120,7 @@ component extends="testbox.system.BaseSpec" {
 						_impl.$( "createInstance" );
 						_engine.$( "getImplementation" ).$args( _wf ).$results( _impl );
 						_engine.$( "initializeInstance" );
-						_impl.$( "instanceExists" ).$args( instanceArgs=instanceArgs ).$results( true );
+						_impl.$( "instanceExists" ).$args( workflowId=_wfId, instanceArgs=instanceArgs ).$results( true );
 
 						var instance = _cfflow.createInstance( _wfId, instanceArgs, initialState, initialActionId );
 						var callLog = _engine.$callLog().initializeInstance;

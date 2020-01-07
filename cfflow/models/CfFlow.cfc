@@ -32,14 +32,14 @@ component singleton {
 		var wf   = _getWorkflowDefinition( arguments.workflowId );
 		var impl = _getWorkflowEngine().getImplementation( wf );
 
-		return impl.instanceExists( instanceArgs=arguments.instanceArgs );
+		return impl.instanceExists( workflowId=arguments.workflowId, instanceArgs=arguments.instanceArgs );
 	}
 
 	public any function getInstance( required string workflowId, struct instanceArgs={} ) {
 		var engine         = _getWorkflowEngine();
 		var wf             = _getWorkflowDefinition( arguments.workflowId );
 		var impl           = engine.getImplementation( wf );
-		var instanceExists = impl.instanceExists( instanceArgs=arguments.instanceArgs );
+		var instanceExists = impl.instanceExists( workflowId=arguments.workflowId, instanceArgs=arguments.instanceArgs );
 
 		if ( instanceExists ) {
 			return new instances.WorkflowInstance(
