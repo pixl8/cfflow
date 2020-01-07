@@ -46,7 +46,6 @@ workflow:
           - id: function-1
             meta:
               title: Function 1
-            handler: handler-1
             args:
               test: true
               cool: really
@@ -57,20 +56,17 @@ workflow:
           - id: function-2
             meta:
               title: Function 2
-            handler: handler-2
             condition:
               handler: function2conditionid
           post:
           - id: function-1
             meta:
               title: Function 1
-            handler: handler-1
             condition:
               handler: function1.condition.handler
           - id: function-2
             meta:
               title: Function 2
-            handler: handler-2
             condition:
               handler: function2conditionid
       conditionalResults:
@@ -90,13 +86,11 @@ workflow:
           - id: function-1
             meta:
               title: Function 1
-            handler: handler-1
             condition:
               handler: function1.condition.handler
           - id: function-2
             meta:
               title: Function 2
-            handler: handler-2
             condition:
               handler: function2conditionid
       - id: result-3
@@ -115,13 +109,11 @@ workflow:
           - id: function-1
             meta:
               title: Function 1
-            handler: handler-1
             condition:
               handler: function1.condition.handler
           - id: function-2
             meta:
               title: Function 2
-            handler: handler-2
             condition:
               handler: function2conditionid
     - id: action-2

@@ -130,9 +130,9 @@ component singleton {
 	}
 
 	public void function doFunction( required WorkflowInstance wfInstance, required WorkflowFunction wfFunction ) {
-		var impl = arguments.wfInstance.getWorkflowImplementation();
+		var fn = _getImplementationFactory().getFunction( id=arguments.wfFunction.getId() );
 
-		impl.executeFunction( wfInstance=arguments.wfInstance, wfFunction=arguments.wfFunction );
+		fn.do( wfInstance=arguments.wfInstance, args=arguments.wfFunction.getArgs() );
 	}
 
 	public array function filterFunctionsToExecute( required WorkflowInstance wfInstance, required array functions ) {

@@ -130,7 +130,6 @@ component singleton {
 		for( var pf in preFunctions ) {
 			wfResult.addPreFunction(
 				  id        = pf.id        ?: "unknown"
-				, handler   = pf.handler   ?: "unknown"
 				, meta      = pf.meta      ?: {}
 				, args      = pf.args      ?: {}
 				, condition = _createCondition( pf.condition ?: "" )
@@ -141,7 +140,6 @@ component singleton {
 		for( var pf in postFunctions ) {
 			wfResult.addPostFunction(
 				  id        = pf.id        ?: "unknown"
-				, handler   = pf.handler   ?: "unknown"
 				, meta      = pf.meta      ?: {}
 				, args      = pf.args      ?: {}
 				, condition = _createCondition( pf.condition ?: "" )

@@ -523,7 +523,6 @@ component extends="testbox.system.BaseSpec" {
 					expect( newPreFunction.getId() ).toBe( "test-id" );
 					expect( newPreFunction.getMeta() ).toBe( {title="test-title"} );
 					expect( newPreFunction.getPreOrPost() ).toBe( "pre" );
-					expect( newPreFunction.getHandler() ).toBe( "test-functionId" );
 					expect( newPreFunction.getCondition().getHandler() ).toBe( conditionHandler );
 				} );
 			} );
@@ -541,7 +540,6 @@ component extends="testbox.system.BaseSpec" {
 					expect( newPostFunction.getId() ).toBe( "test-id" );
 					expect( newPostFunction.getMeta() ).toBe( {title="test-title"} );
 					expect( newPostFunction.getPreOrPost() ).toBe( "post" );
-					expect( newPostFunction.getHandler() ).toBe( "test-functionId" );
 					expect( newPostFunction.getCondition().getHandler() ).toBe( conditionHandler );
 				} );
 			} );
@@ -657,7 +655,6 @@ component extends="testbox.system.BaseSpec" {
 					  id        = functionId
 					, meta      = { title=functionTitle }
 					, preOrPost = functionPreOrPost
-					, handler   = functionHandler
 				);
 			} );
 
@@ -674,11 +671,6 @@ component extends="testbox.system.BaseSpec" {
 			describe( "getPreOrPost()", function(){
 				it( "should return the function preOrPost", function(){
 					expect( _function.getPreOrPost() ).toBe( functionPreOrPost );
-				} );
-			} );
-			describe( "getHandler()", function(){
-				it( "should return the function handler", function(){
-					expect( _function.getHandler() ).toBe( functionHandler );
 				} );
 			} );
 			describe( "getCondition()", function(){

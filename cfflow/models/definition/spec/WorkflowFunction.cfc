@@ -2,7 +2,6 @@ component accessors=true {
 
 	property name="id"        type="string" required=true;
 	property name="preOrPost" type="string" required=true;
-	property name="handler"   type="string" required=true;
 	property name="meta"      type="struct";
 	property name="args"      type="struct";
 	property name="condition" type="WorkflowCondition";

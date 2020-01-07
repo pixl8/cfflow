@@ -372,22 +372,25 @@ component extends="testbox.system.BaseSpec" {
 			} );
 
 			describe( "doFunction( wfInstance, wfFunction )", function(){
-				it( "should use the workflow implementation's function executor to execute the function, passing the workflow instance along to it", function(){
+				it( "should use the function registered in the workflow library to execute with the definition arguments", function(){
 					var fn   = CreateMock( "cfflow.models.definition.spec.WorkflowFunction" );
+					var testFunction = CreateMock( "tests.resources.TestFunction" );
 					var fnId = CreateUUId();
+					var args = { test=CreateUUId() };
 
 					fn.setId( fnId );
+					fn.setArgs( args );
 
-					_instance.setWorkflowImplementation( _impl );
-					_impl.$( "executeFunction" );
+					testFunction.$( "do" );
+					_implFactory.$( "getFunction" ).$args( id=fnId ).$results( testFunction );
 
 					_engine.doFunction( _instance, fn );
 
-					var callLog = _impl.$callLog().executeFunction;
+					var callLog = testFunction.$callLog().do;
 
 					expect( callLog.len() ).toBe( 1 );
 					expect( callLog[ 1 ].wfInstance ).toBe( _instance );
-					expect( callLog[ 1 ].wfFunction ).toBe( fn );
+					expect( callLog[ 1 ].args ).toBe( args );
 				} );
 			} );
 

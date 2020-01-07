@@ -134,7 +134,6 @@ component extends="testbox.system.BaseSpec" {
 					expect( preFunctions[1].getId() ).toBe( "function-1" );
 					expect( preFunctions[1].getMeta() ).toBe( { title="Function 1"} );
 					expect( preFunctions[1].getPreOrPost() ).toBe( "pre" );
-					expect( preFunctions[1].getHandler() ).toBe( "handler-1" );
 					expect( preFunctions[1].getArgs() ).toBe( { test=true, cool="really" } );
 					expect( preFunctions[1].getCondition().getHandler() ).toBe( "function1.condition.handler" );
 					expect( preFunctions[1].getCondition().getArgs() ).toBe( { test="blah" } );
@@ -142,7 +141,6 @@ component extends="testbox.system.BaseSpec" {
 					expect( preFunctions[2].getId() ).toBe( "function-2" );
 					expect( preFunctions[2].getMeta() ).toBe( { title="Function 2" } );
 					expect( preFunctions[2].getPreOrPost() ).toBe( "pre" );
-					expect( preFunctions[2].getHandler() ).toBe( "handler-2" );
 					expect( preFunctions[2].getCondition().getHandler() ).toBe( "function2conditionid" );
 				} );
 
@@ -154,13 +152,11 @@ component extends="testbox.system.BaseSpec" {
 					expect( postFunctions[1].getId() ).toBe( "function-1" );
 					expect( postFunctions[1].getMeta() ).toBe( { title="Function 1" } );
 					expect( postFunctions[1].getPreOrPost() ).toBe( "post" );
-					expect( postFunctions[1].getHandler() ).toBe( "handler-1" );
 					expect( postFunctions[1].getCondition().getHandler() ).toBe( "function1.condition.handler" );
 
 					expect( postFunctions[2].getId() ).toBe( "function-2" );
 					expect( postFunctions[2].getMeta() ).toBe( { title="Function 2" } );
 					expect( postFunctions[2].getPreOrPost() ).toBe( "post" );
-					expect( postFunctions[2].getHandler() ).toBe( "handler-2" );
 					expect( postFunctions[2].getCondition().getHandler() ).toBe( "function2conditionid" );
 				} );
 
@@ -172,13 +168,11 @@ component extends="testbox.system.BaseSpec" {
 					expect( preFunctions[1].getId() ).toBe( "function-1" );
 					expect( preFunctions[1].getMeta() ).toBe( {title="Function 1"} );
 					expect( preFunctions[1].getPreOrPost() ).toBe( "pre" );
-					expect( preFunctions[1].getHandler() ).toBe( "handler-1" );
 					expect( preFunctions[1].getCondition().getHandler() ).toBe( "function1.condition.handler" );
 
 					expect( preFunctions[2].getId() ).toBe( "function-2" );
 					expect( preFunctions[2].getMeta() ).toBe( {title="Function 2"} );
 					expect( preFunctions[2].getPreOrPost() ).toBe( "pre" );
-					expect( preFunctions[2].getHandler() ).toBe( "handler-2" );
 					expect( preFunctions[2].getCondition().getHandler() ).toBe( "function2conditionid" );
 				} );
 
@@ -190,13 +184,11 @@ component extends="testbox.system.BaseSpec" {
 					expect( postFunctions[1].getId() ).toBe( "function-1" );
 					expect( postFunctions[1].getMeta() ).toBe( {title="Function 1"} );
 					expect( postFunctions[1].getPreOrPost() ).toBe( "post" );
-					expect( postFunctions[1].getHandler() ).toBe( "handler-1" );
 					expect( postFunctions[1].getCondition().getHandler() ).toBe( "function1.condition.handler" );
 
 					expect( postFunctions[2].getId() ).toBe( "function-2" );
 					expect( postFunctions[2].getMeta() ).toBe( {title="Function 2"} );
 					expect( postFunctions[2].getPreOrPost() ).toBe( "post" );
-					expect( postFunctions[2].getHandler() ).toBe( "handler-2" );
 					expect( postFunctions[2].getCondition().getHandler() ).toBe( "function2conditionid" );
 				} );
 			} );

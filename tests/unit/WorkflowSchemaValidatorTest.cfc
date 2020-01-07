@@ -183,20 +183,8 @@ component extends="testbox.system.BaseSpec" {
 						validator.validate( workflow );
 					} ).toThrow( "preside.workflow.definition.validation.error" );
 				} );
-				it( "should raise an error when one or more default result pre function has no handler", function(){
-					workflow.workflow.steps[1].actions[1].defaultResult.functions.pre[1].delete( "handler" );
-					expect( function(){
-						validator.validate( workflow );
-					} ).toThrow( "preside.workflow.definition.validation.error" );
-				} );
 				it( "should raise an error when one or more default result post function has no id", function(){
 					workflow.workflow.steps[1].actions[1].defaultResult.functions.post[1].delete( "id" );
-					expect( function(){
-						validator.validate( workflow );
-					} ).toThrow( "preside.workflow.definition.validation.error" );
-				} );
-				it( "should raise an error when one or more default result post function has no handler", function(){
-					workflow.workflow.steps[1].actions[1].defaultResult.functions.post[1].delete( "handler" );
 					expect( function(){
 						validator.validate( workflow );
 					} ).toThrow( "preside.workflow.definition.validation.error" );
@@ -207,20 +195,8 @@ component extends="testbox.system.BaseSpec" {
 						validator.validate( workflow );
 					} ).toThrow( "preside.workflow.definition.validation.error" );
 				} );
-				it( "should raise an error when one or more conditional result pre function has no handler", function(){
-					workflow.workflow.steps[1].actions[1].conditionalResults[1].functions.pre[1].delete( "handler" );
-					expect( function(){
-						validator.validate( workflow );
-					} ).toThrow( "preside.workflow.definition.validation.error" );
-				} );
 				it( "should raise an error when one or more conditional result post function has no id", function(){
 					workflow.workflow.steps[1].actions[1].conditionalResults[2].functions.post[1].delete( "id" );
-					expect( function(){
-						validator.validate( workflow );
-					} ).toThrow( "preside.workflow.definition.validation.error" );
-				} );
-				it( "should raise an error when one or more conditional result post function has no handler", function(){
-					workflow.workflow.steps[1].actions[1].conditionalResults[2].functions.post[1].delete( "handler" );
 					expect( function(){
 						validator.validate( workflow );
 					} ).toThrow( "preside.workflow.definition.validation.error" );
@@ -359,7 +335,6 @@ component extends="testbox.system.BaseSpec" {
 								"pre":[{
 									"id":"function.id",
 									"meta":{"title":"Function title"},
-									"handler":"function.handler",
 									"args":{
 										"anything":"goes",
 										"here":true
@@ -374,7 +349,6 @@ component extends="testbox.system.BaseSpec" {
 								},{
 									"id":"function.id.2",
 									"meta":{"title":"Function title"},
-									"handler":"function.handler.2",
 									"condition":{
 										"handler":"function.condition"
 									}
@@ -382,14 +356,12 @@ component extends="testbox.system.BaseSpec" {
 								"post":[{
 									"id":"function.id",
 									"meta":{"title":"Function title"},
-									"handler":"function.handler",
 									"condition":{
 										"handler":"function.condition"
 									}
 								},{
 									"id":"function.id.2",
 									"meta":{"title":"Function title"},
-									"handler":"function.handler.2",
 									"condition":{
 										"handler":"function.condition",
 										"args":{
@@ -422,7 +394,6 @@ component extends="testbox.system.BaseSpec" {
 								"pre":[{
 									"id":"function.id",
 									"meta":{"title":"Function title"},
-									"handler":"function.handler",
 									"condition":{
 										"handler":"function.condition",
 										"args":{
@@ -433,7 +404,6 @@ component extends="testbox.system.BaseSpec" {
 								},{
 									"id":"function.id.2",
 									"meta":{"title":"Function title"},
-									"handler":"function.handler.2",
 									"condition":{
 										"handler":"function.condition"
 									}
@@ -461,14 +431,12 @@ component extends="testbox.system.BaseSpec" {
 								"post":[{
 									"id":"function.id",
 									"meta":{"title":"Function title"},
-									"handler":"function.handler",
 									"condition":{
 										"handler":"function.condition"
 									}
 								},{
 									"id":"function.id.2",
 									"meta":{"title":"Function title"},
-									"handler":"function.handler.2",
 									"condition":{
 										"handler":"function.condition"
 									}

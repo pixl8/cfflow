@@ -38,8 +38,8 @@ component accessors=true {
 
 	public any function addPreFunction(
 		  required string            id
-		, required string            handler
 		,          struct            meta = {}
+		,          struct            args = {}
 		,          WorkflowCondition condition
 	) {
 		var preFunctions = getPreFunctions();
@@ -62,8 +62,8 @@ component accessors=true {
 
 	public any function addPostFunction(
 		  required string            id
-		, required string            handler
 		,          struct            meta = {}
+		,          struct            args = {}
 		,          WorkflowCondition condition
 	) {
 		var postFunctions = getPostFunctions();
