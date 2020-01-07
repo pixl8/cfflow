@@ -130,6 +130,16 @@ component accessors=true {
 		}
 	}
 
+	public boolean function doAutoActions( required string stepId ) {
+		if ( !ArrayFindNoCase( getActiveSteps(), arguments.stepId ) ) {
+			throw( "Cannot perform auto actions on step [#arguments.stepId#] because the step is not currently active", "cfflow.step.not.active" );
+		}
+		return getWorkflowEngine().doAutoActions(
+			  wfInstance = this
+			, stepId     = arguments.stepId
+		);
+	}
+
 // PRIVATE HELPERS
 	public any function _getStep( required string stepId ) {
 		for( var step in getWorkflowDefinition().getSteps() ) {

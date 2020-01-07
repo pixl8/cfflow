@@ -380,6 +380,35 @@ component extends="testbox.system.BaseSpec" {
 						} ).toThrow( "cfflow.invalid.manual.action" );
 					} );
 				} );
+
+				describe( "doAutoActions( stepId )", function(){
+					it( "should proxy to the engine with instance object + stepId based on the input arguments", function(){
+						var mockStep = CreateStub();
+						var stepId   = "step-2";
+
+						_instance.$( "getActiveSteps", [ "step-2" ] );
+						_engine.$( "doAutoActions", true );
+
+						_instance.doAutoActions( stepId=stepId );
+
+						var callLog = _engine.$callLog().doAutoActions;
+						expect( callLog.len() ).toBe( 1 );
+						expect( callLog[ 1 ].stepId ).toBe( stepId );
+						expect( callLog[ 1 ].wfInstance ).toBe( _instance );
+					} );
+
+					it( "should raise an error when the passed step is not active", function(){
+						var mockStep = CreateStub();
+						var stepId   = "step-2";
+
+						_instance.$( "getActiveSteps", [ "step-3" ] );
+						_engine.$( "doAutoActions", true );
+
+						expect( function(){
+							_instance.doAutoActions( stepId=stepId );
+						} ).toThrow( "cfflow.step.not.active" );
+					} );
+				} );
 			} );
 		});
 	}

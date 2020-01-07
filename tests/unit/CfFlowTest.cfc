@@ -131,6 +131,23 @@ component extends="testbox.system.BaseSpec" {
 
 					} );
 				} );
+
+				describe( "doAutoActions( workflowId, instanceArgs, stepId )", function(){
+					it( "should proxy to the instance.doAutoActions() method", function(){
+						var instanceArgs = { test=CreateUUId(), args={ yes="test", no=false } };
+						var mockInstance = createMock( "cfflow.models.instances.WorkflowInstance" );
+						var stepId       = CreateUUId();
+
+						_cfflow.$( "getInstance" ).$args( workflowId=_wfId, instanceArgs=instanceArgs ).$results( mockInstance );
+						mockInstance.$( "doAutoActions", true );
+
+						expect( _cfFlow.doAutoActions( workflowId=_wfId, instanceArgs=instanceArgs, stepId=stepId ) ).toBe( true );
+
+						var callLog = mockInstance.$callLog().doAutoActions;
+						expect( callLog.len() ).toBe( 1 );
+						expect( callLog[ 1 ] ).toBe( { stepId=stepId } );
+					} );
+				} );
 			} );
 
 			describe( "Library proxies", function(){

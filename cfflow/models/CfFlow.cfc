@@ -76,6 +76,20 @@ component singleton {
 		return wfInstance;
 	}
 
+	public boolean function doAutoActions(
+		  required string workflowId
+		, required struct instanceArgs
+		, required string stepId
+	) {
+		var instance = getInstance( workflowId=arguments.workflowId, instanceArgs=instanceArgs );
+
+		if ( !IsNull( local.instance ) ) {
+			return instance.doAutoActions( stepId=arguments.stepId )
+		}
+
+		return false;
+	}
+
 // LIBRARY PROXIES
 	public void function registerWorkflow( required any wf ) {
 		var lib = _getWorkflowLibrary();
