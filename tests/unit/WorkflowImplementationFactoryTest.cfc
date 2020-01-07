@@ -171,6 +171,36 @@ component extends="testbox.system.BaseSpec" {
 					} );
 				} );
 			} );
+
+			describe( "Functions", function(){
+				describe( "registerFunction( id, object )", function(){
+					it( "it should make the given function available to fetch by string id at a later date", function(){
+						var id = CreateUUId();
+						var mockFunction = new tests.resources.TestFunction();
+
+						_library.registerFunction( id=id, implementation=mockFunction );
+
+						expect( _library.getFunction( id=id ) ).toBe( mockFunction );
+					} );
+
+					it( "should raise an error when attempting to set an object that does not implement the IWorkflowFunctionExecutor interface", function(){
+						var id = CreateUUId();
+						var mockFunction = CreateStub();
+
+						expect( function(){
+							_library.registerFunction( id=id, implementation=mockFunction );
+						} ).toThrow( "expression" );
+					} );
+				} );
+
+				describe( "getFunction( id )", function(){
+					it( "should throw an informative error when the function does not exist", function(){
+						expect( function(){
+							_library.getFunction( id=CreateUUId() );
+						} ).toThrow( "cfflow.function.not.exists" );
+					} );
+				} );
+			} );
 		} );
 	}
 

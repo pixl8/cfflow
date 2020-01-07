@@ -149,6 +149,12 @@ component singleton {
 	) {
 		_getImplementationFactory().registerScheduler( argumentCollection=arguments );
 	}
+	public void function registerFunction(
+		  required string            id
+		, required IWorkflowFunction implementation
+	) {
+		_getImplementationFactory().registerFunction( argumentCollection=arguments );
+	}
 
 // PRIVATE HELPERS
 	private any function _getWorkflowDefinition( required string workflowId ) {

@@ -15,6 +15,7 @@ component {
 	variables._workflowClasses     = {};
 	variables._storageClasses      = {};
 	variables._functionExecutors   = {};
+	variables._functions           = {};
 	variables._conditionEvaluators = {};
 	variables._schedulers          = {};
 	variables._implementations     = {};
@@ -97,5 +98,16 @@ component {
 	}
 	public IWorkflowScheduler function getScheduler( required string className ) {
 		return variables._schedulers[ arguments.className ] ?: throw( "The workflow scheduler class, [#arguments.className#], is not registered with the workflow implementation library.", "cfflow.scheduler.not.exists", "Registered implementations: [#StructKeyList( variables._schedulers )#]" );
+	}
+
+// FUNCTIONS
+	public void function registerFunction(
+		  required string            id
+		, required IWorkflowFunction implementation
+	) {
+		variables._functions[ arguments.id ] = arguments.implementation;
+	}
+	public IWorkflowFunction function getFunction( required string id ) {
+		return variables._functions[ arguments.id ] ?: throw( "The workflow function class, [#arguments.id#], is not registered with the workflow implementation library.", "cfflow.function.not.exists", "Registered functions: [#StructKeyList( variables._functions )#]" );
 	}
 }
