@@ -754,3 +754,61 @@ condition:
     match: $another_state_variable
     range: 5
 ```
+
+## Date conditions
+
+### date.IsFuture
+
+The `date.IsFuture` condition allows you to validate whether the given date `value` is in the future. You may optionally provide an offset to offset the current date for the calculation.
+
+#### Args
+{: .no_toc }
+
+| Name | Description |
+|-------|-------|
+| `value` | Required. The value to compare against the current date. |
+| `offset` | Optional. Offset the current date. Must be in CfFlow friendly date format. e.g. `-2d`, or `3w`, or `-18y` |
+
+#### Examples
+{: .no_toc }
+
+```yaml
+condition:
+  id: number.IsFuture
+  args:
+    value: $event_date
+
+condition:
+  id: number.IsFuture
+  args:
+    value: $date_of_birth
+    offset: -18y
+```
+
+### date.IsPast
+
+The `date.IsPast` condition allows you to validate whether the given date `value` is in the past. You may optionally provide an offset to offset the current date for the calculation.
+
+#### Args
+{: .no_toc }
+
+| Name | Description |
+|-------|-------|
+| `value` | Required. The value to compare against the current date. |
+| `offset` | Optional. Offset the current date. Must be in CfFlow friendly date format. e.g. `-2d`, or `3w`, or `-18y` |
+
+#### Examples
+{: .no_toc }
+
+```yaml
+condition:
+  id: number.IsPast
+  args:
+    value: $event_date
+
+condition:
+  id: number.IsPast
+  args:
+    value: $date_of_birth
+    offset: -18y
+```

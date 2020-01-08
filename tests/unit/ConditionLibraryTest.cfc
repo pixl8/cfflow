@@ -558,6 +558,49 @@ component extends="testbox.system.BaseSpec" {
 					} );
 				} );
 			} );
+
+			describe( "Date", function(){
+				describe( "date.IsFuture", function(){
+					beforeEach( function(){
+						variables.condition = new cfflow.models.implementation.conditions.date.IsFuture();
+					} );
+					it( "should compare date to Now()", function(){
+						var args = { value=DateAdd( 'd', 1, Now() ) };
+
+						expect( condition.evaluate( _instance, args ) ).toBeTrue();
+						args.value = DateAdd( 'd', -1, Now() );
+						expect( condition.evaluate( _instance, args ) ).toBeFalse();
+					} );
+
+					it( "should offset Now() when offset provided", function(){
+						var args = { value=DateAdd( 'd', -9, Now() ), offset="-10d" };
+
+						expect( condition.evaluate( _instance, args ) ).toBeTrue();
+						args.value = DateAdd( 'd', -11, Now() );
+						expect( condition.evaluate( _instance, args ) ).toBeFalse();
+					} );
+				} );
+				describe( "date.IsPast", function(){
+					beforeEach( function(){
+						variables.condition = new cfflow.models.implementation.conditions.date.IsPast();
+					} );
+					it( "should compare date to Now()", function(){
+						var args = { value=DateAdd( 'd', -1, Now() ) };
+
+						expect( condition.evaluate( _instance, args ) ).toBeTrue();
+						args.value = DateAdd( 'd', 1, Now() );
+						expect( condition.evaluate( _instance, args ) ).toBeFalse();
+					} );
+
+					it( "should offset Now() when offset provided", function(){
+						var args = { value=DateAdd( 'd', 9, Now() ), offset="10d" };
+
+						expect( condition.evaluate( _instance, args ) ).toBeTrue();
+						args.value = DateAdd( 'd', 11, Now() );
+						expect( condition.evaluate( _instance, args ) ).toBeFalse();
+					} );
+				} );
+			} );
 		} );
 	}
 
