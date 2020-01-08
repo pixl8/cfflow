@@ -123,17 +123,21 @@ component singleton {
 		return arguments.wfAction.getDefaultResult();
 	}
 
-	public boolean function evaluateCondition( required  WorkflowCondition wfCondition, required WorkflowInstance wfInstance ) {
-		var condition = _getImplementationFactory().getCondition( id=arguments.wfCondition.getId() );
-
-		var result = condition.evaluate(
+	public boolean function evaluateCondition(
+		  required WorkflowCondition wfCondition
+		, required WorkflowInstance  wfInstance
+		,          struct            args
+	) {
+		var condition       = _getImplementationFactory().getCondition( id=arguments.wfCondition.getId() );
+		var substitutedArgs = arguments.args ?: substituteStateArgs( arguments.wfCondition.getArgs(), arguments.wfInstance.getState() );
+		var result          = condition.evaluate(
 			  wfInstance = arguments.wfInstance
-			, args       = arguments.wfCondition.getArgs()
+			, args       = substitutedArgs
 		);
 
 		if ( !result && ArrayLen( arguments.wfCondition.getOrConditions() ) ) {
 			for( var orCondition in arguments.wfCondition.getOrConditions() ) {
-				if ( evaluateCondition( orCondition, arguments.wfInstance ) ) {
+				if ( evaluateCondition( orCondition, arguments.wfInstance, substitutedArgs ) ) {
 					result = true;
 					break;
 				}
@@ -142,7 +146,7 @@ component singleton {
 
 		if ( result && ArrayLen( arguments.wfCondition.getAndConditions() ) ) {
 			for( var andCondition in arguments.wfCondition.getAndConditions() ) {
-				if ( !evaluateCondition( andCondition, arguments.wfInstance ) ) {
+				if ( !evaluateCondition( andCondition, arguments.wfInstance, substitutedArgs ) ) {
 					result = false;
 					break;
 				}
@@ -226,6 +230,30 @@ component singleton {
 			}
 		}
 		return false;
+	}
+
+	public any function substituteStateArgs( required any args, required struct state ) {
+		if ( IsSimpleValue( arguments.args ) ) {
+			for( var key in arguments.state ) {
+				if ( IsSimpleValue( arguments.state[ key ] ) ) {
+					arguments.args = ReplaceNoCase( arguments.args, "$#key#", arguments.state[ key ], "all" );
+				}
+			}
+		}
+
+		if ( IsStruct( arguments.args ) ) {
+			for( var key in arguments.args ) {
+				arguments.args[ key ] = substituteStateArgs( arguments.args[ key ], arguments.state );
+			}
+		}
+
+		if ( IsArray( arguments.args ) ) {
+			for( var i=1; i<=ArrayLen( arguments.args ); i++ ) {
+				arguments.args[ i ] = substituteStateArgs( arguments.args[ i ], arguments.state );
+			}
+		}
+
+		return arguments.args;
 	}
 
 // PRIVATE HELPERS

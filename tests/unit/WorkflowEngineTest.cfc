@@ -337,9 +337,11 @@ component extends="testbox.system.BaseSpec" {
 					var condition = _getCondition("some.condition", args );
 					var testCondition = createMock( "tests.resources.TestCondition" );
 
+					_instance.$( "getState", {} );
 					_implFactory.$( "getCondition" ).$args( "some.condition" ).$results( testCondition );
 
-					testCondition.$( "evaluate" ).$args( wfInstance=_instance, args=args ).$results( true, false );
+					testCondition.$( "evaluate" ).$results( true, false );
+					_engine.$( "substituteStateArgs", args );
 
 					expect( _engine.evaluateCondition( condition, _instance ) ).toBeTrue();
 					expect( _engine.evaluateCondition( condition, _instance ) ).toBeFalse();
@@ -362,10 +364,13 @@ component extends="testbox.system.BaseSpec" {
 					_implFactory.$( "getCondition" ).$args( "some.condition.3" ).$results( testCondition3 );
 					_implFactory.$( "getCondition" ).$args( "some.condition.4" ).$results( testCondition4 );
 
-					testCondition1.$( "evaluate" ).$args( wfInstance=_instance, args=args ).$results( false );
-					testCondition2.$( "evaluate" ).$args( wfInstance=_instance, args=args ).$results( false );
-					testCondition3.$( "evaluate" ).$args( wfInstance=_instance, args=args ).$results( true );
-					testCondition4.$( "evaluate" ).$args( wfInstance=_instance, args=args ).$results( false );
+					testCondition1.$( "evaluate" ).$results( false );
+					testCondition2.$( "evaluate" ).$results( false );
+					testCondition3.$( "evaluate" ).$results( true );
+					testCondition4.$( "evaluate" ).$results( false );
+
+					_engine.$( "substituteStateArgs", args );
+					_instance.$( "getState", {} );
 
 					expect( _engine.evaluateCondition( condition1, _instance ) ).toBeTrue();
 				} );
@@ -387,12 +392,35 @@ component extends="testbox.system.BaseSpec" {
 					_implFactory.$( "getCondition" ).$args( "some.condition.3" ).$results( testCondition3 );
 					_implFactory.$( "getCondition" ).$args( "some.condition.4" ).$results( testCondition4 );
 
-					testCondition1.$( "evaluate" ).$args( wfInstance=_instance, args=args ).$results( true );
-					testCondition2.$( "evaluate" ).$args( wfInstance=_instance, args=args ).$results( true );
-					testCondition3.$( "evaluate" ).$args( wfInstance=_instance, args=args ).$results( true );
-					testCondition4.$( "evaluate" ).$args( wfInstance=_instance, args=args ).$results( false );
+					testCondition1.$( "evaluate" ).$results( true );
+					testCondition2.$( "evaluate" ).$results( true );
+					testCondition3.$( "evaluate" ).$results( true );
+					testCondition4.$( "evaluate" ).$results( false );
+
+					_engine.$( "substituteStateArgs", args );
+					_instance.$( "getState", {} );
 
 					expect( _engine.evaluateCondition( condition1, _instance ) ).toBeFalse();
+				} );
+			} );
+
+			describe( "substituteStateArgs( args, state )", function(){
+				it( "should substitute any simple values in args that match a $var pattern with the corresponding variable in the instance's state", function(){
+					var state = {
+						  test = CreateUUId()
+						, fubar = CreateUUId()
+					};
+					var args = {
+						  test = "$test"
+						, arr = [ "$fubar", "$test" ]
+						, stct = { test="$fubar", this=true }
+					};
+
+					expect( _engine.substituteStateArgs( args, state) ).toBe( {
+						  test = state.test
+						, arr  = [ state.fubar, state.test ]
+						, stct = { test=state.fubar, this=true }
+					} );
 				} );
 			} );
 
