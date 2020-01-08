@@ -47,6 +47,10 @@ component extends="testbox.system.BaseSpec" {
 					result.setId( resultId );
 					action.setId( actionId );
 
+					_instance.$( "isComplete", false );
+					_impl.$( "setComplete" );
+					_impl.$( "recordTransition" );
+
 					_engine.$( "getResultToExecute" ).$args( _instance, action ).$results( result );
 					_engine.$( "doResult" );
 
@@ -56,6 +60,62 @@ component extends="testbox.system.BaseSpec" {
 					expect( callLog.len()  ).toBe( 1 );
 					expect( callLog[ 1 ].wfInstance.getWorkflowId() ).toBe( _instance.getWorkflowId() );
 					expect( callLog[ 1 ].wfResult.getId() ).toBe( result.getId() );
+				} );
+
+				it( "should call setComplete() on the workflow implementation when the flow is complete after action execution", function(){
+					var result   = CreateMock( "cfflow.models.definition.spec.WorkflowResult" );
+					var action   = CreateMock( "cfflow.models.definition.spec.WorkflowAction" );
+					var actionId = CreateUUId();
+					var resultId = CreateUUId();
+
+					result.setId( resultId );
+					action.setId( actionId );
+
+					_instance.$( "isComplete", true );
+					_impl.$( "setComplete" );
+					_impl.$( "recordTransition" );
+
+					_engine.$( "getResultToExecute" ).$args( _instance, action ).$results( result );
+					_engine.$( "doResult" );
+
+					_engine.doAction( _instance, action );
+
+					var callLog = _impl.$callLog().setComplete;
+					expect( callLog.len() ).toBe( 1 );
+					expect( callLog[ 1 ].workflowId ).toBe( _wfId );
+					expect( callLog[ 1 ].instanceArgs ).toBe( _instanceArgs );
+				} );
+
+				it( "should call recordTransition() on the workflow implementation", function(){
+					var result   = CreateMock( "cfflow.models.definition.spec.WorkflowResult" );
+					var action   = CreateMock( "cfflow.models.definition.spec.WorkflowAction" );
+					var actionId = CreateUUId();
+					var resultId = CreateUUId();
+					var transitions = [ CreateUUId() ];
+
+					result.setId( resultId );
+					action.setId( actionId );
+
+					_instance.$( "isComplete", false );
+					_impl.$( "setComplete" );
+					_impl.$( "recordTransition" );
+					result.$( "getTransitions", transitions );
+
+					_engine.$( "getResultToExecute" ).$args( _instance, action ).$results( result );
+					_engine.$( "doResult" );
+
+					_engine.doAction( _instance, action );
+
+					var callLog = _impl.$callLog().setComplete;
+					expect( callLog.len() ).toBe( 0 );
+
+					var callLog = _impl.$callLog().recordTransition;
+					expect( callLog.len() ).toBe( 1 );
+					expect( callLog[ 1 ].workflowId ).toBe( _wfId );
+					expect( callLog[ 1 ].instanceArgs ).toBe( _instanceArgs );
+					expect( callLog[ 1 ].actionId ).toBe( actionId );
+					expect( callLog[ 1 ].resultId ).toBe( resultId );
+					expect( callLog[ 1 ].transitions ).toBe( transitions );
 				} );
 			} );
 

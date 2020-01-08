@@ -16,4 +16,8 @@ component implements="cfflow.models.implementation.interfaces.IWorkflowInstanceS
 
 	public struct function getAllStepStatuses( required string workflowId, required struct instanceArgs ){ return {}; }
 
+	public void function setComplete( required string workflowId, required struct instanceArgs ){}
+
+	public void function recordTransition( required string workflowId, required struct instanceArgs, required string actionId, required string resultId, required array transitions ){}
+
 }

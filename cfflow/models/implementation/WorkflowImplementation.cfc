@@ -29,6 +29,14 @@ component accessors=true {
 		return getStorageClass().getAllStepStatuses( argumentCollection=arguments );
 	}
 
+	public void function setComplete( required string workflowId, required struct instanceArgs ){
+		return getStorageClass().setComplete( argumentCollection=arguments );
+	}
+
+	public void function recordTransition( required string workflowId, required struct instanceArgs, required string actionId, required string resultId, required array transitions ){
+		return getStorageClass().recordTransition( argumentCollection=arguments );
+	}
+
 // SCHEDULER PROXIES
 	public void function scheduleAutoActions(
 		  required string workflowId

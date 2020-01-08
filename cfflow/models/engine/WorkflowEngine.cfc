@@ -57,10 +57,28 @@ component singleton {
 	}
 
 	public void function doAction( required WorkflowInstance wfInstance, required WorkflowAction wfAction ) {
+		var wfResult = getResultToExecute( arguments.wfInstance, arguments.wfAction );
+		var impl = arguments.wfInstance.getWorkflowImplementation();
+
 		doResult(
 			  wfInstance = arguments.wfInstance
-			, wfResult   = getResultToExecute( arguments.wfInstance, arguments.wfAction )
+			, wfResult   = wfResult
 		);
+
+		impl.recordTransition(
+			  workflowId   = arguments.wfInstance.getWorkflowId()
+			, instanceArgs = arguments.wfInstance.getInstanceArgs()
+			, actionId     = arguments.wfAction.getId()
+			, resultId     = wfResult.getId()
+			, transitions  = wfResult.getTransitions()
+		);
+
+		if ( arguments.wfInstance.isComplete() ) {
+			impl.setComplete(
+				  workflowId   = arguments.wfInstance.getWorkflowId()
+				, instanceArgs = arguments.wfInstance.getInstanceArgs()
+			);
+		}
 	}
 
 	public WorkflowImplementation function getImplementation( required Workflow wf ) {
