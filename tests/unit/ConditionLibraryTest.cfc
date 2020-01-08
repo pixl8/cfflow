@@ -323,6 +323,158 @@ component extends="testbox.system.BaseSpec" {
 					} );
 				} );
 			} );
+
+			describe( "Bool", function(){
+				describe( "bool.isTrue", function(){
+					beforeEach( function(){
+						variables.condition = new cfflow.models.implementation.conditions.bool.IsTrue();
+					} );
+					it( "should return true when the value is 'true' exactly", function(){
+						var args = { value="true" };
+
+						expect( condition.evaluate( _instance, args ) ).toBeTrue();
+						args.value = true;
+						expect( condition.evaluate( _instance, args ) ).toBeTrue();
+					} );
+					it( "should return false when the value is 'false' exactly", function(){
+						var args = { value="false" };
+
+						expect( condition.evaluate( _instance, args ) ).toBeFalse();
+						args.value = false;
+						expect( condition.evaluate( _instance, args ) ).toBeFalse();
+					} );
+					it( "should return false when the value is neither 'true' nor 'false' exactly", function(){
+						var args = { value=0 };
+
+						expect( condition.evaluate( _instance, args ) ).toBeFalse();
+
+						args.value = 1;
+						expect( condition.evaluate( _instance, args ) ).toBeFalse();
+
+						args.value = "yes";
+						expect( condition.evaluate( _instance, args ) ).toBeFalse();
+
+						args.value = "no";
+						expect( condition.evaluate( _instance, args ) ).toBeFalse();
+					} );
+
+				} );
+
+				describe( "bool.IsFalse", function(){
+					beforeEach( function(){
+						variables.condition = new cfflow.models.implementation.conditions.bool.IsFalse();
+					} );
+					it( "should return true when the value is 'false' exactly", function(){
+						var args = { value="false" };
+
+						expect( condition.evaluate( _instance, args ) ).toBeTrue();
+						args.value = false;
+						expect( condition.evaluate( _instance, args ) ).toBeTrue();
+					} );
+					it( "should return false when the value is 'true' exactly", function(){
+						var args = { value="true" };
+
+						expect( condition.evaluate( _instance, args ) ).toBeFalse();
+						args.value = true;
+						expect( condition.evaluate( _instance, args ) ).toBeFalse();
+					} );
+					it( "should return false when the value is neither 'true' nor 'false' exactly", function(){
+						var args = { value=0 };
+
+						expect( condition.evaluate( _instance, args ) ).toBeFalse();
+
+						args.value = 1;
+						expect( condition.evaluate( _instance, args ) ).toBeFalse();
+
+						args.value = "yes";
+						expect( condition.evaluate( _instance, args ) ).toBeFalse();
+
+						args.value = "no";
+						expect( condition.evaluate( _instance, args ) ).toBeFalse();
+					} );
+
+				} );
+
+				describe( "bool.isTruthy", function(){
+					beforeEach( function(){
+						variables.condition = new cfflow.models.implementation.conditions.bool.IsTruthy();
+					} );
+					it( "should return true when the value anything like true", function(){
+						var args = { value="true" };
+						expect( condition.evaluate( _instance, args ) ).toBeTrue();
+
+						args.value = true;
+						expect( condition.evaluate( _instance, args ) ).toBeTrue();
+						args.value = "yes";
+						expect( condition.evaluate( _instance, args ) ).toBeTrue();
+
+						args.value = 1;
+						expect( condition.evaluate( _instance, args ) ).toBeTrue();
+
+						args.value = "3";
+						expect( condition.evaluate( _instance, args ) ).toBeTrue();
+					} );
+					it( "should return false when the value is not true", function(){
+						var args = { value=0 };
+
+						expect( condition.evaluate( _instance, args ) ).toBeFalse();
+
+						args.value = false;
+						expect( condition.evaluate( _instance, args ) ).toBeFalse();
+
+						args.value = "false";
+						expect( condition.evaluate( _instance, args ) ).toBeFalse();
+
+						args.value = "no";
+						expect( condition.evaluate( _instance, args ) ).toBeFalse();
+
+						args.value = "lksdjflaksjdf";
+						expect( condition.evaluate( _instance, args ) ).toBeFalse();
+					} );
+
+				} );
+
+				describe( "bool.isFalsey", function(){
+					beforeEach( function(){
+						variables.condition = new cfflow.models.implementation.conditions.bool.IsFalsey();
+					} );
+					it( "should return true when the value is not truthy", function(){
+						var args = { value=0 };
+
+						expect( condition.evaluate( _instance, args ) ).toBeTrue();
+
+						args.value = false;
+						expect( condition.evaluate( _instance, args ) ).toBeTrue();
+
+						args.value = "false";
+						expect( condition.evaluate( _instance, args ) ).toBeTrue();
+
+						args.value = "no";
+						expect( condition.evaluate( _instance, args ) ).toBeTrue();
+
+						args.value = "lksdjflaksjdf";
+						expect( condition.evaluate( _instance, args ) ).toBeTrue();
+
+
+					} );
+					it( "should return false when the value is truthy", function(){
+						var args = { value="true" };
+						expect( condition.evaluate( _instance, args ) ).toBeFalse();
+
+						args.value = true;
+						expect( condition.evaluate( _instance, args ) ).toBeFalse();
+						args.value = "yes";
+						expect( condition.evaluate( _instance, args ) ).toBeFalse();
+
+						args.value = 1;
+						expect( condition.evaluate( _instance, args ) ).toBeFalse();
+
+						args.value = "3";
+						expect( condition.evaluate( _instance, args ) ).toBeFalse();
+					} );
+
+				} );
+			} );
 		} );
 	}
 
