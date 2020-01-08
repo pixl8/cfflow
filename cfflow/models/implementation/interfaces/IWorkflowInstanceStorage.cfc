@@ -9,5 +9,5 @@ interface {
 	public void    function setStepStatus( required string workflowId, required struct instanceArgs, required string step, required string status );
 	public struct  function getAllStepStatuses( required string workflowId, required struct instanceArgs );
 	public void    function setComplete( required string workflowId, required struct instanceArgs );
-	public void    function recordTransition( required string workflowId, required struct instanceArgs, required string actionId, required string resultId, required array transitions );
+	public void    function recordAction( required string workflowId, required struct instanceArgs, required struct state, required string actionId, required string resultId, required array transitions );
 }

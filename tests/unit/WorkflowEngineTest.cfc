@@ -43,13 +43,14 @@ component extends="testbox.system.BaseSpec" {
 					var action   = CreateMock( "cfflow.models.definition.spec.WorkflowAction" );
 					var actionId = CreateUUId();
 					var resultId = CreateUUId();
-
+					var state    = {};
 					result.setId( resultId );
 					action.setId( actionId );
 
 					_instance.$( "isComplete", false );
+					_instance.$( "getState", state );
 					_impl.$( "setComplete" );
-					_impl.$( "recordTransition" );
+					_impl.$( "recordAction" );
 
 					_engine.$( "getResultToExecute" ).$args( _instance, action ).$results( result );
 					_engine.$( "doResult" );
@@ -67,13 +68,15 @@ component extends="testbox.system.BaseSpec" {
 					var action   = CreateMock( "cfflow.models.definition.spec.WorkflowAction" );
 					var actionId = CreateUUId();
 					var resultId = CreateUUId();
+					var state    = {};
 
 					result.setId( resultId );
 					action.setId( actionId );
 
 					_instance.$( "isComplete", true );
+					_instance.$( "getState", state );
 					_impl.$( "setComplete" );
-					_impl.$( "recordTransition" );
+					_impl.$( "recordAction" );
 
 					_engine.$( "getResultToExecute" ).$args( _instance, action ).$results( result );
 					_engine.$( "doResult" );
@@ -86,19 +89,21 @@ component extends="testbox.system.BaseSpec" {
 					expect( callLog[ 1 ].instanceArgs ).toBe( _instanceArgs );
 				} );
 
-				it( "should call recordTransition() on the workflow implementation", function(){
+				it( "should call recordAction() on the workflow implementation", function(){
 					var result   = CreateMock( "cfflow.models.definition.spec.WorkflowResult" );
 					var action   = CreateMock( "cfflow.models.definition.spec.WorkflowAction" );
 					var actionId = CreateUUId();
 					var resultId = CreateUUId();
 					var transitions = [ CreateUUId() ];
+					var state = { test=CreateUUId() };
 
 					result.setId( resultId );
 					action.setId( actionId );
 
 					_instance.$( "isComplete", false );
+					_instance.$( "getState", state );
 					_impl.$( "setComplete" );
-					_impl.$( "recordTransition" );
+					_impl.$( "recordAction" );
 					result.$( "getTransitions", transitions );
 
 					_engine.$( "getResultToExecute" ).$args( _instance, action ).$results( result );
@@ -109,12 +114,13 @@ component extends="testbox.system.BaseSpec" {
 					var callLog = _impl.$callLog().setComplete;
 					expect( callLog.len() ).toBe( 0 );
 
-					var callLog = _impl.$callLog().recordTransition;
+					var callLog = _impl.$callLog().recordAction;
 					expect( callLog.len() ).toBe( 1 );
 					expect( callLog[ 1 ].workflowId ).toBe( _wfId );
 					expect( callLog[ 1 ].instanceArgs ).toBe( _instanceArgs );
 					expect( callLog[ 1 ].actionId ).toBe( actionId );
 					expect( callLog[ 1 ].resultId ).toBe( resultId );
+					expect( callLog[ 1 ].state ).toBe( state );
 					expect( callLog[ 1 ].transitions ).toBe( transitions );
 				} );
 			} );

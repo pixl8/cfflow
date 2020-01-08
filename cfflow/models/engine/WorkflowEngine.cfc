@@ -65,9 +65,10 @@ component singleton {
 			, wfResult   = wfResult
 		);
 
-		impl.recordTransition(
+		impl.recordAction(
 			  workflowId   = arguments.wfInstance.getWorkflowId()
 			, instanceArgs = arguments.wfInstance.getInstanceArgs()
+			, state        = arguments.wfInstance.getState()
 			, actionId     = arguments.wfAction.getId()
 			, resultId     = wfResult.getId()
 			, transitions  = wfResult.getTransitions()

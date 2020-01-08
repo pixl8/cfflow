@@ -33,8 +33,8 @@ component accessors=true {
 		return getStorageClass().setComplete( argumentCollection=arguments );
 	}
 
-	public void function recordTransition( required string workflowId, required struct instanceArgs, required string actionId, required string resultId, required array transitions ){
-		return getStorageClass().recordTransition( argumentCollection=arguments );
+	public void function recordAction( required string workflowId, required struct instanceArgs, required struct state, required string actionId, required string resultId, required array transitions ){
+		return getStorageClass().recordAction( argumentCollection=arguments );
 	}
 
 // SCHEDULER PROXIES
