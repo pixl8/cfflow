@@ -126,10 +126,30 @@ component singleton {
 	public boolean function evaluateCondition( required  WorkflowCondition wfCondition, required WorkflowInstance wfInstance ) {
 		var condition = _getImplementationFactory().getCondition( id=arguments.wfCondition.getId() );
 
-		return condition.evaluate(
+		var result = condition.evaluate(
 			  wfInstance = arguments.wfInstance
 			, args       = arguments.wfCondition.getArgs()
 		);
+
+		if ( !result && ArrayLen( arguments.wfCondition.getOrConditions() ) ) {
+			for( var orCondition in arguments.wfCondition.getOrConditions() ) {
+				if ( evaluateCondition( orCondition, arguments.wfInstance ) ) {
+					result = true;
+					break;
+				}
+			}
+		}
+
+		if ( result && ArrayLen( arguments.wfCondition.getAndConditions() ) ) {
+			for( var andCondition in arguments.wfCondition.getAndConditions() ) {
+				if ( !evaluateCondition( andCondition, arguments.wfInstance ) ) {
+					result = false;
+					break;
+				}
+			}
+		}
+
+		return result;
 	}
 
 	public void function doFunction( required WorkflowInstance wfInstance, required WorkflowFunction wfFunction ) {

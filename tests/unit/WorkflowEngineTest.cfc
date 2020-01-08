@@ -344,6 +344,56 @@ component extends="testbox.system.BaseSpec" {
 					expect( _engine.evaluateCondition( condition, _instance ) ).toBeTrue();
 					expect( _engine.evaluateCondition( condition, _instance ) ).toBeFalse();
 				} );
+
+				it( "should return true if the condition evaluates false but has one or more or conditions that evaluate true", function(){
+					var args = { test=CreateUUId() };
+					var condition1 = _getCondition("some.condition.1", args );
+					var testCondition1 = createMock( "tests.resources.TestCondition" );
+					var testCondition2 = createMock( "tests.resources.TestCondition" );
+					var testCondition3 = createMock( "tests.resources.TestCondition" );
+					var testCondition4 = createMock( "tests.resources.TestCondition" );
+
+					condition1.addOrCondition( id="some.condition.2", args=args );
+					condition1.addOrCondition( id="some.condition.3", args=args );
+					condition1.addOrCondition( id="some.condition.4", args=args );
+
+					_implFactory.$( "getCondition" ).$args( "some.condition.1" ).$results( testCondition1 );
+					_implFactory.$( "getCondition" ).$args( "some.condition.2" ).$results( testCondition2 );
+					_implFactory.$( "getCondition" ).$args( "some.condition.3" ).$results( testCondition3 );
+					_implFactory.$( "getCondition" ).$args( "some.condition.4" ).$results( testCondition4 );
+
+					testCondition1.$( "evaluate" ).$args( wfInstance=_instance, args=args ).$results( false );
+					testCondition2.$( "evaluate" ).$args( wfInstance=_instance, args=args ).$results( false );
+					testCondition3.$( "evaluate" ).$args( wfInstance=_instance, args=args ).$results( true );
+					testCondition4.$( "evaluate" ).$args( wfInstance=_instance, args=args ).$results( false );
+
+					expect( _engine.evaluateCondition( condition1, _instance ) ).toBeTrue();
+				} );
+
+				it( "should return false if the condition evaluates true but has one or more AND conditions that evaluate false", function(){
+					var args = { test=CreateUUId() };
+					var condition1 = _getCondition("some.condition.1", args );
+					var testCondition1 = createMock( "tests.resources.TestCondition" );
+					var testCondition2 = createMock( "tests.resources.TestCondition" );
+					var testCondition3 = createMock( "tests.resources.TestCondition" );
+					var testCondition4 = createMock( "tests.resources.TestCondition" );
+
+					condition1.addAndCondition( id="some.condition.2", args=args );
+					condition1.addAndCondition( id="some.condition.3", args=args );
+					condition1.addAndCondition( id="some.condition.4", args=args );
+
+					_implFactory.$( "getCondition" ).$args( "some.condition.1" ).$results( testCondition1 );
+					_implFactory.$( "getCondition" ).$args( "some.condition.2" ).$results( testCondition2 );
+					_implFactory.$( "getCondition" ).$args( "some.condition.3" ).$results( testCondition3 );
+					_implFactory.$( "getCondition" ).$args( "some.condition.4" ).$results( testCondition4 );
+
+					testCondition1.$( "evaluate" ).$args( wfInstance=_instance, args=args ).$results( true );
+					testCondition2.$( "evaluate" ).$args( wfInstance=_instance, args=args ).$results( true );
+					testCondition3.$( "evaluate" ).$args( wfInstance=_instance, args=args ).$results( true );
+					testCondition4.$( "evaluate" ).$args( wfInstance=_instance, args=args ).$results( false );
+
+					expect( _engine.evaluateCondition( condition1, _instance ) ).toBeFalse();
+				} );
 			} );
 
 			describe( "filterFunctionsToExecute( wfInstance, functions )", function(){

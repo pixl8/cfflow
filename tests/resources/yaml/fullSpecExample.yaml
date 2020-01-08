@@ -30,6 +30,9 @@ workflow:
         title: Action 1
       condition:
         id: action1.condition.handler
+        args:
+          val1: $state_var_1
+          val2: $state_var_2
         and:
         - id: action1.condition.handler.2
           or:
