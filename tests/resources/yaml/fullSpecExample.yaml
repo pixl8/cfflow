@@ -30,6 +30,12 @@ workflow:
         title: Action 1
       condition:
         id: action1.condition.handler
+        and:
+        - id: action1.condition.handler.2
+          or:
+          - id: action.condition.handler.3
+        or:
+        - id: action1.condition.handler.4
       isAutomatic: true
       defaultResult:
         id: result-1
