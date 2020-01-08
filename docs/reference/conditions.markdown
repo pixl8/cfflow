@@ -527,7 +527,7 @@ condition:
 
 ```
 
-## Boolean
+## Boolean conditions
 
 ### bool.IsTrue
 
