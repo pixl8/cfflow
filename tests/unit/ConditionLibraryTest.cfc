@@ -475,6 +475,89 @@ component extends="testbox.system.BaseSpec" {
 
 				} );
 			} );
+
+			describe( "Number", function(){
+				describe( "number.IsEqual", function(){
+					beforeEach( function(){
+						variables.condition = new cfflow.models.implementation.conditions.number.IsEqual();
+					} );
+					it( "should compare numbers", function(){
+						var args = { value=45, match=45 };
+
+						expect( condition.evaluate( _instance, args ) ).toBeTrue();
+						args.value = 31;
+						expect( condition.evaluate( _instance, args ) ).toBeFalse();
+					} );
+				} );
+				describe( "number.IsLessThan", function(){
+					beforeEach( function(){
+						variables.condition = new cfflow.models.implementation.conditions.number.IsLessThan();
+					} );
+					it( "should compare numbers", function(){
+						var args = { value=31, match=45 };
+
+						expect( condition.evaluate( _instance, args ) ).toBeTrue();
+						args.value = 45;
+						expect( condition.evaluate( _instance, args ) ).toBeFalse();
+					} );
+				} );
+				describe( "number.IsGreaterThan", function(){
+					beforeEach( function(){
+						variables.condition = new cfflow.models.implementation.conditions.number.IsGreaterThan();
+					} );
+					it( "should compare numbers", function(){
+						var args = { value=50, match=45 };
+
+						expect( condition.evaluate( _instance, args ) ).toBeTrue();
+						args.value = 45;
+						expect( condition.evaluate( _instance, args ) ).toBeFalse();
+					} );
+				} );
+				describe( "number.IsLessThanOrEqualTo", function(){
+					beforeEach( function(){
+						variables.condition = new cfflow.models.implementation.conditions.number.IsLessThanOrEqualTo();
+					} );
+					it( "should compare numbers", function(){
+						var args = { value=31, match=45 };
+
+						expect( condition.evaluate( _instance, args ) ).toBeTrue();
+						args.value = 45;
+						expect( condition.evaluate( _instance, args ) ).toBeTrue();
+						args.value = 46;
+						expect( condition.evaluate( _instance, args ) ).toBeFalse();
+					} );
+				} );
+				describe( "number.IsGreaterThanOrEqualTo", function(){
+					beforeEach( function(){
+						variables.condition = new cfflow.models.implementation.conditions.number.IsGreaterThanOrEqualTo();
+					} );
+					it( "should compare numbers", function(){
+						var args = { value=50, match=45 };
+
+						expect( condition.evaluate( _instance, args ) ).toBeTrue();
+						args.value = 45;
+						expect( condition.evaluate( _instance, args ) ).toBeTrue();
+						args.value = 44;
+						expect( condition.evaluate( _instance, args ) ).toBeFalse();
+					} );
+				} );
+				describe( "number.IsWithin", function(){
+					beforeEach( function(){
+						variables.condition = new cfflow.models.implementation.conditions.number.IsWithin();
+					} );
+					it( "should compare numbers", function(){
+						var args = { value=50, match=45, range=5 };
+
+						expect( condition.evaluate( _instance, args ) ).toBeTrue();
+						args.range = 10;
+						expect( condition.evaluate( _instance, args ) ).toBeTrue();
+						args.range = 4;
+						expect( condition.evaluate( _instance, args ) ).toBeFalse();
+						args.value = 43;
+						expect( condition.evaluate( _instance, args ) ).toBeTrue();
+					} );
+				} );
+			} );
 		} );
 	}
 

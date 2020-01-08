@@ -612,3 +612,145 @@ condition:
   args:
     value: $state_variable
 ```
+
+## Numeric conditions
+
+### number.IsEqual
+
+The `number.IsEqual` condition compares two numbers, a `value` against a `match`. It returns `true` if the numbers are equal.
+
+#### Args
+{: .no_toc }
+
+| Name | Description |
+|-------|-------|
+| `value` | Required. The value to compare against the `match` value. |
+| `match` | Required. The value to compare against the `value` value. |
+
+#### Example
+{: .no_toc }
+
+```yaml
+condition:
+  id: number.IsEqual
+  args:
+    value: $state_variable
+    match: 10
+```
+
+### number.IsLessThan
+
+The `number.IsLessThan` condition compares two numbers, a `value` against a `match`. It returns `true` if the `value` arg is less than the `match` arg.
+
+#### Args
+{: .no_toc }
+
+| Name | Description |
+|-------|-------|
+| `value` | Required. The value to compare against the `match` value. |
+| `match` | Required. The value to compare against the `value` value. |
+
+#### Example
+{: .no_toc }
+
+```yaml
+condition:
+  id: number.IsLessThan
+  args:
+    value: $state_variable
+    match: 10
+```
+
+### number.IsLessThanOrEqualTo
+
+The `number.IsLessThanOrEqualTo` condition compares two numbers, a `value` against a `match`. It returns `true` if the `value` arg is less or equal to the `match` arg.
+
+#### Args
+{: .no_toc }
+
+| Name | Description |
+|-------|-------|
+| `value` | Required. The value to compare against the `match` value. |
+| `match` | Required. The value to compare against the `value` value. |
+
+#### Example
+{: .no_toc }
+
+```yaml
+condition:
+  id: number.IsLessThanOrEqualTo
+  args:
+    value: $state_variable
+    match: 10
+```
+
+### number.IsGreaterThan
+
+The `number.IsGreaterThan` condition compares two numbers, a `value` against a `match`. It returns `true` if the `value` arg is greater than the `match` arg.
+
+#### Args
+{: .no_toc }
+
+| Name | Description |
+|-------|-------|
+| `value` | Required. The value to compare against the `match` value. |
+| `match` | Required. The value to compare against the `value` value. |
+
+#### Example
+{: .no_toc }
+
+```yaml
+condition:
+  id: number.IsGreaterThan
+  args:
+    value: $state_variable
+    match: 10
+```
+
+### number.IsGreaterThanOrEqualTo
+
+The `number.IsGreaterThanOrEqualTo` condition compares two numbers, a `value` against a `match`. It returns `true` if the `value` arg is greater than or equal to the `match` arg.
+
+#### Args
+{: .no_toc }
+
+| Name | Description |
+|-------|-------|
+| `value` | Required. The value to compare against the `match` value. |
+| `match` | Required. The value to compare against the `value` value. |
+
+#### Example
+{: .no_toc }
+
+```yaml
+condition:
+  id: number.IsGreaterThanOrEqualTo
+  args:
+    value: $state_variable
+    match: 10
+```
+
+### number.IsWithin
+
+The `number.IsWithin` condition compares two numbers, `value` and `match` and returns true if the difference between them is less than or equal to a given `range`.
+
+#### Args
+{: .no_toc }
+
+| Name | Description |
+|-------|-------|
+| `value` | Required. The value to compare against the `match` value. |
+| `match` | Required. The value to compare against the `value` value. |
+| `range` | Required. The acceptable difference between `match` and `value`. |
+
+#### Example
+{: .no_toc }
+
+```yaml
+condition:
+  id: number.IsWithin
+  args:
+    value: $state_variable
+    match: $another_state_variable
+    range: 5
+```
