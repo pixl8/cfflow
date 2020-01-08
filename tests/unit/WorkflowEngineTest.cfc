@@ -458,12 +458,16 @@ component extends="testbox.system.BaseSpec" {
 					var testFunction = CreateMock( "tests.resources.TestFunction" );
 					var fnId = CreateUUId();
 					var args = { test=CreateUUId() };
+					var subbedArgs = { test=CreateUUId() };
+					var state = { test=CreateUUId() };
 
 					fn.setId( fnId );
 					fn.setArgs( args );
 
 					testFunction.$( "do" );
 					_implFactory.$( "getFunction" ).$args( id=fnId ).$results( testFunction );
+					_instance.$( "getState", state );
+					_engine.$( "substituteStateArgs" ).$args( args, state ).$results( subbedArgs );
 
 					_engine.doFunction( _instance, fn );
 
@@ -471,7 +475,7 @@ component extends="testbox.system.BaseSpec" {
 
 					expect( callLog.len() ).toBe( 1 );
 					expect( callLog[ 1 ].wfInstance ).toBe( _instance );
-					expect( callLog[ 1 ].args ).toBe( args );
+					expect( callLog[ 1 ].args ).toBe( subbedArgs );
 				} );
 			} );
 
