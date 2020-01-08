@@ -24,6 +24,8 @@ component singleton {
 			, yamlParser      = new util.YamlParser()
 		) );
 
+		_registerBuiltInConditions();
+
 		return this;
 	}
 
@@ -142,8 +144,8 @@ component singleton {
 		_getImplementationFactory().registerFunction( argumentCollection=arguments );
 	}
 	public void function registerCondition(
-		  required string            id
-		, required IWorkflowFunction implementation
+		  required string             id
+		, required IWorkflowCondition implementation
 	) {
 		_getImplementationFactory().registerCondition( argumentCollection=arguments );
 	}
@@ -151,6 +153,21 @@ component singleton {
 // PRIVATE HELPERS
 	private any function _getWorkflowDefinition( required string workflowId ) {
 		return _getWorkflowLibrary().getWorkflow( arguments.workflowId );
+	}
+
+	private void function _registerBuiltInConditions() {
+		var root = GetDirectoryFromPath( GetCurrentTemplatePath() ) & "/implementation/conditions";
+		var rootCfcPath = "implementation.conditions";
+		var conditionCfcs = DirectoryList( root, true, "path", "*.cfc" );
+
+		for( var conditionCfc in conditionCfcs ) {
+			var relPath = Right( conditionCfc, Len( conditionCfc ) - Len( root ) );
+			    relPath = Replace( relPath, "/", ".", "all" );
+			    relPath = Replace( relPath, "\", ".", "all" );
+			    relPath = ReReplaceNoCase( relPath, ".cfc$", "", "all" );
+
+			registerCondition( id=relPath, implementation=CreateObject( rootCfcPath & "." & relPath ) );
+		}
 	}
 
 // GETTERS AND SETTERS
