@@ -7,9 +7,10 @@
     "description":"A condition represents a decision and will evaluate to either true or false when executed.",
     "required":[ "id"],
     "properties":{
-        "id":{"type":"string", "description":"Unique identifier for a condition evaluator that has been registered with the workflow engine." },
-        "args":{"type":"object","description":"Arbitrary set of arguments that will be passed to the condition handler." },
+        "id":{ "type":"string", "description":"Unique identifier for a condition evaluator that has been registered with the workflow engine." },
+        "args":{ "type":"object","description":"Arbitrary set of arguments that will be passed to the condition handler." },
         "meta":{ "type":"object", "description": "Abitrary metadata that you may use to describe the condition." },
+        "not":{ "type":"boolean", "description": "If set to true (default is false), condition must be false." },
         "and":{
             "type":"array",
             "description": "Optional array of conditions that also must evaluate true for the parent condition to be true",

@@ -1,21 +1,24 @@
 component accessors=true {
 
-	property name="id"            type="string" required=true;
-	property name="args"          type="struct" required=false;
-	property name="meta"          type="struct" required=false;
-	property name="andConditions" type="array"  required=false;
-	property name="orConditions"  type="array"  required=false;
+	property name="id"            type="string"  required=true;
+	property name="args"          type="struct"  required=false;
+	property name="meta"          type="struct"  required=false;
+	property name="not"           type="boolean" required=false default=false;
+	property name="andConditions" type="array"   required=false;
+	property name="orConditions"  type="array"   required=false;
 
 	public WorkflowCondition function init(
-		  string id   = ""
-		, struct args = {}
-		, struct meta = {}
-		, array  and  = []
-		, array  or   = []
+		  string  id    = ""
+		, struct  args  = {}
+		, struct  meta  = {}
+		, boolean not   = false
+		, array   and   = []
+		, array   or    = []
 	) {
 		setId( arguments.id );
 		setArgs( arguments.args );
 		setMeta( arguments.meta );
+		setNot( arguments.not );
 
 		for( var condition in arguments.and ) {
 			addAndCondition( argumentCollection=condition );

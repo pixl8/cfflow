@@ -172,6 +172,10 @@ component singleton {
 			}
 		}
 
+		if ( wfCondition.getNot() ) {
+			return !result;
+		}
+
 		return result;
 	}
 

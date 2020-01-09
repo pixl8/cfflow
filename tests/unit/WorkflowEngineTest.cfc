@@ -468,6 +468,35 @@ component extends="testbox.system.BaseSpec" {
 
 					expect( _engine.evaluateCondition( condition1, _instance ) ).toBeFalse();
 				} );
+
+				it( "should inverse the result when the condition is set to be NOT", function(){
+					var args = { test=CreateUUId() };
+					var condition1 = _getCondition("some.condition.1", args );
+					var testCondition1 = createMock( "tests.resources.TestCondition" );
+					var testCondition2 = createMock( "tests.resources.TestCondition" );
+					var testCondition3 = createMock( "tests.resources.TestCondition" );
+					var testCondition4 = createMock( "tests.resources.TestCondition" );
+
+					condition1.setNot( true );
+					condition1.addAndCondition( id="some.condition.2", args=args );
+					condition1.addAndCondition( id="some.condition.3", args=args );
+					condition1.addAndCondition( id="some.condition.4", args=args );
+
+					_implFactory.$( "getCondition" ).$args( "some.condition.1" ).$results( testCondition1 );
+					_implFactory.$( "getCondition" ).$args( "some.condition.2" ).$results( testCondition2 );
+					_implFactory.$( "getCondition" ).$args( "some.condition.3" ).$results( testCondition3 );
+					_implFactory.$( "getCondition" ).$args( "some.condition.4" ).$results( testCondition4 );
+
+					testCondition1.$( "evaluate" ).$results( true );
+					testCondition2.$( "evaluate" ).$results( true );
+					testCondition3.$( "evaluate" ).$results( true );
+					testCondition4.$( "evaluate" ).$results( false );
+
+					_engine.$( "substituteStateArgs", args );
+					_instance.$( "getState", {} );
+
+					expect( _engine.evaluateCondition( condition1, _instance ) ).toBeTrue();
+				} );
 			} );
 
 			describe( "substituteStateArgs( args, state )", function(){
