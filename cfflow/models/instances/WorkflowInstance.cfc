@@ -33,24 +33,38 @@ component accessors=true {
 		return statuses;
 	}
 
-	public array function getActiveSteps() {
+	public array function getActiveSteps( boolean includeMeta=false ) {
 		var statuses = getAllStepStatuses();
 		var activeSteps = [];
 
 		for( var step in statuses ) {
 			if ( step.status == "active" ) {
-				ArrayAppend( activeSteps, step.step );
+				if ( arguments.includeMeta ) {
+					var wfStep = _getStep( step.step );
+					ArrayAppend( activeSteps, {
+						  id   = step.step
+						, meta = wfStep.getMeta()
+					} );
+				} else {
+					ArrayAppend( activeSteps, step.step );
+				}
 			}
 		}
 
 		return activeSteps;
 	}
 
-	public string function getActiveStep() {
+	public any function getActiveStep( boolean includeMeta=false ) {
 		var statuses = getAllStepStatuses();
 
 		for( var step in statuses ) {
 			if ( step.status == "active" ) {
+				if ( arguments.includeMeta ) {
+					return {
+						  id   = step.step
+						, meta = _getStep( step.step ).getMeta()
+					};
+				}
 				return step.step;
 			}
 		}
@@ -75,10 +89,18 @@ component accessors=true {
 	}
 
 // STEP PROXIES
-	public array function getSteps() {
+	public array function getSteps( boolean includeMeta=false ) {
 		var steps = [];
 		for( var step in getWorkflowDefinition().getSteps() ) {
-			steps.append( step.getId() );
+			if ( arguments.includeMeta ) {
+				steps.append( {
+					  id   = step.getId()
+					, meta = step.getMeta()
+				} );
+
+			} else {
+				steps.append( step.getId() );
+			}
 		}
 
 		return steps;

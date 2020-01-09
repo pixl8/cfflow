@@ -115,6 +115,33 @@ component extends="testbox.system.BaseSpec" {
 
 						expect( _instance.getActiveSteps() ).toBe( [] );
 					} );
+
+					it( "should include id and metadata when includeMeta passed true", function(){
+						var step3Meta = { test=CreateUUId() };
+						var step4Meta = { test=CreateUUId() };
+						var step3 = CreateMock( "cfflow.models.definition.spec.WorkflowStep" );
+						var step4 = CreateMock( "cfflow.models.definition.spec.WorkflowStep" );
+
+						_instance.$( "getAllStepStatuses", [
+							  { step="step1", status="complete" }
+							, { step="step2", status="skipped"  }
+							, { step="step3", status="active"   }
+							, { step="step4", status="active"  }
+							, { step="step5", status="pending"  }
+						] );
+
+						_instance.$( "_getStep" ).$args( "step3" ).$results( step3 );
+						_instance.$( "_getStep" ).$args( "step4" ).$results( step4 );
+						step3.setId( "step3" );
+						step3.setMeta( step3Meta );
+						step4.setId( "step4" );
+						step4.setMeta( step4Meta );
+
+						expect( _instance.getActiveSteps( includeMeta=true ) ).toBe( [
+							{id="step3", meta=step3Meta },
+							{id="step4", meta=step4Meta }
+						 ] );
+					} );
 				} );
 
 				describe( "getActiveStep()", function(){
@@ -140,6 +167,25 @@ component extends="testbox.system.BaseSpec" {
 						] );
 
 						expect( _instance.getActiveStep() ).toBe( "" );
+					} );
+
+					it( "should include id and metadata when includeMeta passed true", function(){
+						var step3Meta = { test=CreateUUId() };
+						var step3 = CreateMock( "cfflow.models.definition.spec.WorkflowStep" );
+
+						_instance.$( "getAllStepStatuses", [
+							  { step="step1", status="complete" }
+							, { step="step2", status="skipped"  }
+							, { step="step3", status="active"   }
+							, { step="step4", status="active"  }
+							, { step="step5", status="pending"  }
+						] );
+
+						_instance.$( "_getStep" ).$args( "step3" ).$results( step3 );
+						step3.setId( "step3" );
+						step3.setMeta( step3Meta );
+
+						expect( _instance.getActiveStep( includeMeta=true ) ).toBe( {id="step3", meta=step3Meta } );
 					} );
 				} );
 
@@ -206,6 +252,27 @@ component extends="testbox.system.BaseSpec" {
 						_definition.$( "getSteps", steps );
 
 						expect( _instance.getSteps() ).toBe( [ "step1", "step2", "step3", "step4", "step5" ] );
+					} );
+
+					it( "should include meta data when includeMeta is passed as true", function(){
+						var steps = [];
+						var meta = [];
+						for( var i=1; i<=5; i++ ) {
+							meta.append( { test=CreateUUId() } );
+							steps.append( CreateStub() );
+							steps[ i ].$( "getId", "step#i#" );
+							steps[ i ].$( "getMeta", meta[ i ] );
+						}
+
+						_definition.$( "getSteps", steps );
+
+						expect( _instance.getSteps( includeMeta=true ) ).toBe( [
+							{ id="step1", meta=meta[ 1 ] },
+							{ id="step2", meta=meta[ 2 ] },
+							{ id="step3", meta=meta[ 3 ] },
+							{ id="step4", meta=meta[ 4 ] },
+							{ id="step5", meta=meta[ 5 ] }
+						] );
 					} );
 				} );
 			} );
