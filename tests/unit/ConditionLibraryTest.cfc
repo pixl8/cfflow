@@ -82,6 +82,30 @@ component extends="testbox.system.BaseSpec" {
 						expect( condition.evaluate( _instance, args ) ).toBeFalse();
 					} );
 				} );
+
+				describe( "isEmpty", function(){
+					beforeEach( function(){
+						variables.condition = new cfflow.models.implementation.conditions.string.IsEmpty();
+					} );
+					it( "should evaluate true for empty or whitespace strings", function(){
+						var args = { value="" };
+
+						expect( condition.evaluate( _instance, args ) ).toBeTrue();
+
+						args.value = "    ";
+						expect( condition.evaluate( _instance, args ) ).toBeTrue();
+
+						args.value = "	";
+						expect( condition.evaluate( _instance, args ) ).toBeTrue();
+
+						args.value = "
+";
+						expect( condition.evaluate( _instance, args ) ).toBeTrue();
+
+						args.value = "Test";
+						expect( condition.evaluate( _instance, args ) ).toBeFalse();
+					} );
+				} );
 				describe( "isGreaterThan", function(){
 					beforeEach( function(){
 						variables.condition = new cfflow.models.implementation.conditions.string.IsGreaterThan();

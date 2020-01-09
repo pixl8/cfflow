@@ -49,6 +49,27 @@ condition:
 
 ## String conditions
 
+### string.IsEmpty
+
+The `string.IsEmpty` condition allows you to evaluate whether the given string `value` is empty or not.
+
+#### Args
+{: .no_toc }
+
+| Name | Description |
+|-------|-------|
+| `value` | Required. The input value to check. Remember that you may use `$var` subsitution for state values |
+
+#### Example
+{: .no_toc }
+
+
+```yaml
+condition:
+  id: string.IsEmpty
+  args:
+    value: $state_var
+```
 
 ### string.IsEqual
 
