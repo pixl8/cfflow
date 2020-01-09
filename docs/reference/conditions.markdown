@@ -812,3 +812,230 @@ condition:
     value: $date_of_birth
     offset: -18y
 ```
+
+### date.IsToday
+
+The `date.IsToday` condition allows you to validate whether the given date `value` is today. You may optionally provide an offset to offset the current date for the calculation.
+
+#### Args
+{: .no_toc }
+
+| Name | Description |
+|-------|-------|
+| `value` | Required. The value to compare against the current date. |
+| `offset` | Optional. Offset the current date. Must be in CfFlow friendly date format. e.g. `-2d`, or `3w`, or `-18y` |
+
+#### Examples
+{: .no_toc }
+
+```yaml
+condition:
+  id: number.IsToday
+  args:
+    value: $event_date
+
+condition:
+  id: number.IsToday
+  args:
+    value: $event_date
+    offset: 5d
+```
+
+### date.IsBefore
+
+The `date.IsBefore` condition allows you to validate whether the given date `value` is before the given date `match`.
+
+#### Args
+{: .no_toc }
+
+| Name | Description |
+|-------|-------|
+| `value` | Required. The value to compare against the `match` date. |
+| `match` | Required. The value to compare against the `value` date. |
+
+#### Examples
+{: .no_toc }
+
+```yaml
+condition:
+  id: number.IsBefore
+  args:
+    value: $event_date
+    match: $booking_open_date
+
+condition:
+  id: number.IsBefore
+  args:
+    value: $dob
+    match: 2018-01-01
+```
+
+### date.IsOnOrBefore
+
+The `date.IsOnOrBefore` condition allows you to validate whether the given date `value` is on or before the given date `match`.
+
+#### Args
+{: .no_toc }
+
+| Name | Description |
+|-------|-------|
+| `value` | Required. The value to compare against the `match` date. |
+| `match` | Required. The value to compare against the `value` date. |
+
+#### Examples
+{: .no_toc }
+
+```yaml
+condition:
+  id: number.IsOnOrBefore
+  args:
+    value: $event_date
+    match: $booking_open_date
+
+condition:
+  id: number.IsOnOrBefore
+  args:
+    value: $dob
+    match: 2018-01-01
+```
+
+### date.IsAfter
+
+The `date.IsAfter` condition allows you to validate whether the given date `value` is after the given date `match`.
+
+#### Args
+{: .no_toc }
+
+| Name | Description |
+|-------|-------|
+| `value` | Required. The value to compare against the `match` date. |
+| `match` | Required. The value to compare against the `value` date. |
+
+#### Examples
+{: .no_toc }
+
+```yaml
+condition:
+  id: number.IsAfter
+  args:
+    value: $event_date
+    match: $booking_open_date
+
+condition:
+  id: number.IsAfter
+  args:
+    value: $dob
+    match: 2018-01-01
+```
+
+### date.IsOnOrAfter
+
+The `date.IsOnOrAfter` condition allows you to validate whether the given date `value` is on or after the given date `match`.
+
+#### Args
+{: .no_toc }
+
+| Name | Description |
+|-------|-------|
+| `value` | Required. The value to compare against the `match` date. |
+| `match` | Required. The value to compare against the `value` date. |
+
+#### Examples
+{: .no_toc }
+
+```yaml
+condition:
+  id: number.IsOnOrAfter
+  args:
+    value: $event_date
+    match: $booking_open_date
+
+condition:
+  id: number.IsOnOrAfter
+  args:
+    value: $dob
+    match: 2018-01-01
+```
+
+### date.IsEqual
+
+The `date.IsEqual` condition allows you to validate whether the given date `value` is exactly the same as the given date `match`.
+
+#### Args
+{: .no_toc }
+
+| Name | Description |
+|-------|-------|
+| `value` | Required. The value to compare against the `match` date. |
+| `match` | Required. The value to compare against the `value` date. |
+
+#### Examples
+{: .no_toc }
+
+```yaml
+condition:
+  id: number.IsEqual
+  args:
+    value: $event_date
+    match: $booking_open_date
+
+condition:
+  id: number.IsEqual
+  args:
+    value: $dob
+    match: 2018-01-01
+```
+
+### date.IsSameDay
+
+The `date.IsSameDay` condition allows you to validate whether the given date `value` is the same _day_ as the given date `match`.
+
+#### Args
+{: .no_toc }
+
+| Name | Description |
+|-------|-------|
+| `value` | Required. The value to compare against the `match` date. |
+| `match` | Required. The value to compare against the `value` date. |
+
+#### Examples
+{: .no_toc }
+
+```yaml
+condition:
+  id: number.IsSameDay
+  args:
+    value: $event_date
+    match: $booking_open_date
+
+condition:
+  id: number.IsSameDay
+  args:
+    value: $dob
+    match: 2018-01-01
+```
+
+### date.IsWithin
+
+The `date.IsWithin` condition allows you to validate whether the given date `value` and the given date `match` are within a given `range` of each other.
+
+#### Args
+{: .no_toc }
+
+| Name | Description |
+|-------|-------|
+| `value` | Required. The value to compare against the `match` date. |
+| `match` | Required. The value to compare against the `value` date. |
+| `range` | Required. Allowable difference between the dates. Must be in CfFlow friendly date format. e.g. `2d`, or `3w`, or `18y` |
+
+#### Examples
+{: .no_toc }
+
+```yaml
+condition:
+  id: number.IsWithin
+  args:
+    value: $event_date
+    match: 2020-12-25
+    range: 7d
+```

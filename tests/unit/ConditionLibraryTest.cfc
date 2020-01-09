@@ -600,6 +600,157 @@ component extends="testbox.system.BaseSpec" {
 						expect( condition.evaluate( _instance, args ) ).toBeFalse();
 					} );
 				} );
+				describe( "date.IsToday", function(){
+					beforeEach( function(){
+						variables.condition = new cfflow.models.implementation.conditions.date.IsToday();
+					} );
+					it( "should compare date to Now()", function(){
+						var args = { value=Now() };
+
+						expect( condition.evaluate( _instance, args ) ).toBeTrue();
+
+						args.value = DateAdd( 'd', 1, Now() );
+						expect( condition.evaluate( _instance, args ) ).toBeFalse();
+
+						args.value = DateAdd( 'd', -1, Now() );
+						expect( condition.evaluate( _instance, args ) ).toBeFalse();
+					} );
+
+					it( "should offset Now() when offset provided", function(){
+						var args = { value=DateAdd( 'd', 9, Now() ), offset="9d" };
+
+						expect( condition.evaluate( _instance, args ) ).toBeTrue();
+						args.value = DateAdd( 'd', 10, Now() );
+						expect( condition.evaluate( _instance, args ) ).toBeFalse();
+
+						args.value = DateAdd( 'd', 8, Now() );
+						expect( condition.evaluate( _instance, args ) ).toBeFalse();
+					} );
+				} );
+				describe( "date.IsAfter", function(){
+					beforeEach( function(){
+						variables.condition = new cfflow.models.implementation.conditions.date.IsAfter();
+					} );
+					it( "should compare two dates", function(){
+						var args = { value=Now(), match=DateAdd( 'd', -1, Now() ) };
+
+						expect( condition.evaluate( _instance, args ) ).toBeTrue();
+
+						args.value = args.match;
+						expect( condition.evaluate( _instance, args ) ).toBeFalse();
+
+						args.value = DateAdd( 'd', -1, args.match );
+						expect( condition.evaluate( _instance, args ) ).toBeFalse();
+					} );
+				} );
+				describe( "date.IsOnOrAfter", function(){
+					beforeEach( function(){
+						variables.condition = new cfflow.models.implementation.conditions.date.IsOnOrAfter();
+					} );
+					it( "should compare two dates", function(){
+						var args = { value=Now(), match=DateAdd( 'd', -1, Now() ) };
+
+						expect( condition.evaluate( _instance, args ) ).toBeTrue();
+
+						args.value = args.match;
+						expect( condition.evaluate( _instance, args ) ).toBeTrue();
+
+						args.value = DateAdd( 'd', -1, args.match );
+						expect( condition.evaluate( _instance, args ) ).toBeFalse();
+					} );
+				} );
+				describe( "date.IsBefore", function(){
+					beforeEach( function(){
+						variables.condition = new cfflow.models.implementation.conditions.date.IsBefore();
+					} );
+					it( "should compare two dates", function(){
+						var args = { value=Now(), match=DateAdd( 'd', 1, Now() ) };
+
+						expect( condition.evaluate( _instance, args ) ).toBeTrue();
+
+						args.value = args.match;
+						expect( condition.evaluate( _instance, args ) ).toBeFalse();
+
+						args.value = DateAdd( 'd', 1, args.match );
+						expect( condition.evaluate( _instance, args ) ).toBeFalse();
+					} );
+				} );
+				describe( "date.IsOnOrBefore", function(){
+					beforeEach( function(){
+						variables.condition = new cfflow.models.implementation.conditions.date.IsOnOrBefore();
+					} );
+					it( "should compare two dates", function(){
+						var args = { value=Now(), match=DateAdd( 'd', 1, Now() ) };
+
+						expect( condition.evaluate( _instance, args ) ).toBeTrue();
+
+						args.value = args.match;
+						expect( condition.evaluate( _instance, args ) ).toBeTrue();
+
+						args.value = DateAdd( 'd', 1, args.match );
+						expect( condition.evaluate( _instance, args ) ).toBeFalse();
+					} );
+				} );
+				describe( "date.IsEqual", function(){
+					beforeEach( function(){
+						variables.condition = new cfflow.models.implementation.conditions.date.IsEqual();
+					} );
+					it( "should compare two dates", function(){
+						var args = { value=Now(), match=DateAdd( 'd', 1, Now() ) };
+
+						expect( condition.evaluate( _instance, args ) ).toBeFalse();
+
+						args.value = args.match;
+						expect( condition.evaluate( _instance, args ) ).toBeTrue();
+
+						args.value = DateAdd( 'd', 1, args.match );
+						expect( condition.evaluate( _instance, args ) ).toBeFalse();
+					} );
+				} );
+				describe( "date.IsSameDay", function(){
+					beforeEach( function(){
+						variables.condition = new cfflow.models.implementation.conditions.date.IsSameDay();
+					} );
+					it( "should compare two dates", function(){
+						var args = { value=Now(), match=DateAdd( 's', 10, Now() ) };
+
+						expect( condition.evaluate( _instance, args ) ).toBeTrue();
+
+						args.value = args.match;
+						expect( condition.evaluate( _instance, args ) ).toBeTrue();
+
+						args.value = DateAdd( 's', -10, args.match );
+						expect( condition.evaluate( _instance, args ) ).toBeTrue();
+
+						args.value = DateAdd( 'd', -1, args.match );
+						expect( condition.evaluate( _instance, args ) ).toBeFalse();
+						args.value = DateAdd( 'd', 1, args.match );
+						expect( condition.evaluate( _instance, args ) ).toBeFalse();
+					} );
+				} );
+				describe( "date.IsWithin", function(){
+					beforeEach( function(){
+						variables.condition = new cfflow.models.implementation.conditions.date.IsWithin();
+					} );
+					it( "should compare two dates for a given range", function(){
+						var args = { value=Now(), match=DateAdd( 'd', 10, Now() ), range="10d" };
+
+						expect( condition.evaluate( _instance, args ) ).toBeTrue();
+
+						args.value = args.match;
+						expect( condition.evaluate( _instance, args ) ).toBeTrue();
+
+						args.value = DateAdd( 'd', 20, Now() );
+						expect( condition.evaluate( _instance, args ) ).toBeTrue();
+
+						args.value = DateAdd( 'd', 21, Now() );
+						expect( condition.evaluate( _instance, args ) ).toBeFalse();
+
+						args.value = DateAdd( 'd', -1, Now() );
+						expect( condition.evaluate( _instance, args ) ).toBeFalse();
+
+					} );
+				} );
 			} );
 		} );
 	}
