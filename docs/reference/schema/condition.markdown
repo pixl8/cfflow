@@ -10,7 +10,7 @@ grand_parent: Reference
 ## Summary
 
 ```yaml
-id: string
+ref: string
 meta: object
 args: object
 not: boolean
@@ -26,7 +26,7 @@ or
 
 | Name | Required | Type | Description |
 |-------|--------|--------|
-| `id` | `true` | `string` | Identifier of the registered condition class to use  |
+| `ref` | `true` | `string` | Identifier of the registered condition class to use  |
 | `meta` | `false` | `object` | Arbitrary data to help describe your condition. Not used by the engine. |
 | `args` | `false` | `object` | Arbitrary data to pass to the condition class when evaluating the condition |
 | `not` | `false` | `boolean` | Whether or not the condition result should be inveresed. |
@@ -46,7 +46,7 @@ or
     "description":"A condition represents a decision and will evaluate to either true or false when executed.",
     "required":[ "id"],
     "properties":{
-        "id":{ "type":"string", "description":"Unique identifier for a condition evaluator that has been registered with the workflow engine." },
+        "ref":{ "type":"string", "description":"Unique identifier for a condition evaluator that has been registered with the workflow engine." },
         "args":{ "type":"object","description":"Arbitrary set of arguments that will be passed to the condition handler." },
         "meta":{ "type":"object", "description": "Abitrary metadata that you may use to describe the condition." },
         "not":{ "type":"boolean", "description": "If set to true (default is false), condition must be false." },

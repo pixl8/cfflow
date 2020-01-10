@@ -1,6 +1,6 @@
 component accessors=true {
 
-	property name="id"            type="string"  required=true;
+	property name="ref"           type="string"  required=true;
 	property name="args"          type="struct"  required=false;
 	property name="meta"          type="struct"  required=false;
 	property name="not"           type="boolean" required=false default=false;
@@ -8,14 +8,14 @@ component accessors=true {
 	property name="orConditions"  type="array"   required=false;
 
 	public WorkflowCondition function init(
-		  string  id    = ""
+		  string  ref   = ""
 		, struct  args  = {}
 		, struct  meta  = {}
 		, boolean not   = false
 		, array   and   = []
 		, array   or    = []
 	) {
-		setId( arguments.id );
+		setRef( arguments.ref );
 		setArgs( arguments.args );
 		setMeta( arguments.meta );
 		setNot( arguments.not );
@@ -31,7 +31,7 @@ component accessors=true {
 	}
 
 	public string function getSignature() {
-		return LCase( Hash( getId() & SerializeJson( getArgs() ) ) );
+		return LCase( Hash( getRef() & SerializeJson( getArgs() ) ) );
 	}
 
 	public struct function getArgs() {

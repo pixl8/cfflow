@@ -37,7 +37,7 @@ component accessors=true {
 	}
 
 	public any function addPreFunction(
-		  required string            id
+		  required string            ref
 		,          struct            meta = {}
 		,          struct            args = {}
 		,          WorkflowCondition condition
@@ -61,7 +61,7 @@ component accessors=true {
 	}
 
 	public any function addPostFunction(
-		  required string            id
+		  required string            ref
 		,          struct            meta = {}
 		,          struct            args = {}
 		,          WorkflowCondition condition

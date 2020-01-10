@@ -61,7 +61,7 @@ component extends="testbox.system.BaseSpec" {
 					expect( newAction.getId() ).toBe( "test-id" );
 					expect( newAction.getMeta() ).toBe( { title="test-title" } );
 					expect( newAction.getScreen() ).toBe( "test-screen" );
-					expect( newAction.getCondition().getId() ).toBe( conditionId );
+					expect( newAction.getCondition().getRef() ).toBe( conditionId );
 				} );
 			} );
 
@@ -150,7 +150,7 @@ component extends="testbox.system.BaseSpec" {
 					expect( newAction.getId() ).toBe( "test-id" );
 					expect( newAction.getMeta() ).toBe( { title="test-title" } );
 					expect( newAction.getScreen() ).toBe( "test-screen" );
-					expect( newAction.getCondition().getId() ).toBe( conditionId );
+					expect( newAction.getCondition().getRef() ).toBe( conditionId );
 				} );
 			} );
 
@@ -273,7 +273,7 @@ component extends="testbox.system.BaseSpec" {
 				it( "should return the set condition object", function(){
 					_workflowAction.setCondition( _getCondition() );
 
-					expect( _workflowAction.getCondition().getId() ).toBe( conditionId );
+					expect( _workflowAction.getCondition().getRef() ).toBe( conditionId );
 				} );
 				it( "should return NULL when no condition set", function(){
 					expect( _workflowAction.getCondition() ).toBeNull();
@@ -334,7 +334,7 @@ component extends="testbox.system.BaseSpec" {
 					expect( newResult.getMeta() ).toBe( { title="test-title" } );
 					expect( newResult.getType() ).toBe( "join" );
 					expect( newResult.getIsDefault() ).toBe( false );
-					expect( newResult.getCondition().getId() ).toBe( conditionId );
+					expect( newResult.getCondition().getRef() ).toBe( conditionId );
 				} );
 			} );
 
@@ -462,7 +462,7 @@ component extends="testbox.system.BaseSpec" {
 				it( "should return the set condition object", function(){
 					_workflowResult.setCondition( _getCondition() );
 
-					expect( _workflowResult.getCondition().getId() ).toBe( conditionId );
+					expect( _workflowResult.getCondition().getRef() ).toBe( conditionId );
 				} );
 				it( "should return NULL when no condition set", function(){
 					expect( _workflowResult.getCondition() ).toBeNull();
@@ -513,34 +513,34 @@ component extends="testbox.system.BaseSpec" {
 			describe( "addPreFunction()", function() {
 				it( "should register and create a new pre function with the supplied arguments", function(){
 					var newPreFunction = _workflowResult.addPreFunction(
-						  id        = "test-id"
+						  ref       = "test-id"
 						, meta      = { title="test-title" }
 						, handler   = "test-functionId"
 						, condition = _getCondition()
 					);
 
 					expect( _workflowResult.getPreFunctions() ).toBe( [ newPreFunction ] );
-					expect( newPreFunction.getId() ).toBe( "test-id" );
+					expect( newPreFunction.getRef() ).toBe( "test-id" );
 					expect( newPreFunction.getMeta() ).toBe( {title="test-title"} );
 					expect( newPreFunction.getPreOrPost() ).toBe( "pre" );
-					expect( newPreFunction.getCondition().getId() ).toBe( conditionId );
+					expect( newPreFunction.getCondition().getRef() ).toBe( conditionId );
 				} );
 			} );
 
 			describe( "addPostFunction()", function() {
 				it( "should register and create a new Post function with the supplied arguments", function(){
 					var newPostFunction = _workflowResult.addPostFunction(
-						  id        = "test-id"
+						  ref       = "test-id"
 						, meta      = { title="test-title" }
 						, handler   = "test-functionId"
 						, condition = _getCondition()
 					);
 
 					expect( _workflowResult.getPostFunctions() ).toBe( [ newPostFunction ] );
-					expect( newPostFunction.getId() ).toBe( "test-id" );
+					expect( newPostFunction.getRef() ).toBe( "test-id" );
 					expect( newPostFunction.getMeta() ).toBe( {title="test-title"} );
 					expect( newPostFunction.getPreOrPost() ).toBe( "post" );
-					expect( newPostFunction.getCondition().getId() ).toBe( conditionId );
+					expect( newPostFunction.getCondition().getRef() ).toBe( conditionId );
 				} );
 			} );
 
@@ -652,15 +652,15 @@ component extends="testbox.system.BaseSpec" {
 
 			beforeEach( body=function(){
 				_function = new cfflow.models.definition.spec.WorkflowFunction(
-					  id        = functionId
+					  ref       = functionId
 					, meta      = { title=functionTitle }
 					, preOrPost = functionPreOrPost
 				);
 			} );
 
-			describe( "getId()", function(){
+			describe( "getRef()", function(){
 				it( "should return the function id", function(){
-					expect( _function.getId() ).toBe( functionId );
+					expect( _function.getRef() ).toBe( functionId );
 				} );
 			} );
 			describe( "getMeta()", function(){
@@ -677,7 +677,7 @@ component extends="testbox.system.BaseSpec" {
 				it( "should return the set condition object", function(){
 					_function.setCondition( _getCondition() );
 
-					expect( _function.getCondition().getId() ).toBe( conditionId );
+					expect( _function.getCondition().getRef() ).toBe( conditionId );
 				} );
 				it( "should return NULL when no condition set", function(){
 					expect( _function.getCondition() ).toBeNull();
@@ -727,12 +727,12 @@ component extends="testbox.system.BaseSpec" {
 			var handler    = CreateUUId();
 
 			beforeEach( function(){
-				_condition = new cfflow.models.definition.spec.WorkflowCondition( id=handler );
+				_condition = new cfflow.models.definition.spec.WorkflowCondition( ref=handler );
 			} );
 
-			describe( "getId()", function() {
-				it( "should return the id", function(){
-					expect( _condition.getId() ).toBe( handler );
+			describe( "getRef()", function() {
+				it( "should return the ref", function(){
+					expect( _condition.getRef() ).toBe( handler );
 				} );
 			} );
 
@@ -751,7 +751,7 @@ component extends="testbox.system.BaseSpec" {
 			describe( "getSignature()", function(){
 				it( "should return a hash checksum of the id and args", function(){
 					expect( _condition.getSignature() ).toBe( LCase( Hash(
-						_condition.getId() &
+						_condition.getRef() &
 						SerializeJson( _condition.getArgs() )
 					) ) );
 				} );
@@ -792,7 +792,7 @@ component extends="testbox.system.BaseSpec" {
 		variables.conditionId = CreateUUId();
 		variables.conditionArgs    = { test=true, another=CreateUUId() };
 
-		condition.setId( conditionId );
+		condition.setRef( conditionId );
 		condition.setArgs( conditionArgs );
 
 		return condition;

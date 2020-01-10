@@ -4,9 +4,9 @@
     "type": "object",
     "title": "Workflow function",
     "additionalProperties": false,
-    "required":["id"],
+    "required":["ref"],
     "properties":{
-        "id":{ "type":"string", "description":"ID of function that has been registered with the workflow engine." },
+        "ref":{ "type":"string", "description":"ID of function that has been registered with the workflow engine." },
         "meta":{ "type":"object", "description":"Abitrary meta data that you may use to describe the function."},
         "args":{"type":"object", "description":"Abitrary object of data that will be passed to the function handler when executued (along with the instance state, etc.)" },
         "condition":{

@@ -1,6 +1,6 @@
 component accessors=true {
 
-	property name="id"        type="string" required=true;
+	property name="ref"       type="string" required=true;
 	property name="preOrPost" type="string" required=true;
 	property name="meta"      type="struct";
 	property name="args"      type="struct";

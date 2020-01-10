@@ -96,57 +96,6 @@ component singleton {
 						}
 						resultConditions[ serializedCondition ] = result.condition;
 					}
-
-					var preFunctions = result.functions.pre ?: [];
-					var postFunctions = result.functions.post ?: [];
-					var functionIds = {};
-					for( var fn in preFunctions ) {
-						if ( Len( Trim( fn.id ?: "" ) ) ) {
-							if ( StructKeyExists( functionIds, fn.id ) ) {
-								arguments.result.valid = false;
-								arguments.result.allMessages = arguments.result.allMessages ?: [];
-								arguments.result.allMessages.append( "Pre Function IDs are not unique. Two or more pre functions share the same id: [#fn.id#] in the conditional result [#( step.id ?: '' )#.#( action.id ?: '' )#.#( result.id ?: '' )#]" );
-							}
-							functionIds[ fn.id ] = fn.id;
-						}
-					}
-					functionIds = {};
-					for( var fn in postFunctions ) {
-						if ( Len( Trim( fn.id ?: "" ) ) ) {
-							if ( StructKeyExists( functionIds, fn.id ) ) {
-								arguments.result.valid = false;
-								arguments.result.allMessages = arguments.result.allMessages ?: [];
-								arguments.result.allMessages.append( "Post Function IDs are not unique. Two or more post functions share the same id: [#fn.id#] in the conditional result [#( step.id ?: '' )#.#( action.id ?: '' )#.#( result.id ?: '' )#]" );
-							}
-							functionIds[ fn.id ] = fn.id;
-						}
-					}
-				}
-
-
-				var preFunctions = action.defaultResult.functions.pre ?: [];
-				var postFunctions = action.defaultResult.functions.post ?: [];
-				var functionIds = {};
-				for( var fn in preFunctions ) {
-					if ( Len( Trim( fn.id ?: "" ) ) ) {
-						if ( StructKeyExists( functionIds, fn.id ) ) {
-							arguments.result.valid = false;
-							arguments.result.allMessages = arguments.result.allMessages ?: [];
-							arguments.result.allMessages.append( "Pre Function IDs are not unique. Two or more pre functions share the same id: [#fn.id#] in the default result for action [#( step.id ?: '' )#.#( action.id ?: '' )#]" );
-						}
-						functionIds[ fn.id ] = fn.id;
-					}
-				}
-				functionIds = {};
-				for( var fn in postFunctions ) {
-					if ( Len( Trim( fn.id ?: "" ) ) ) {
-						if ( StructKeyExists( functionIds, fn.id ) ) {
-							arguments.result.valid = false;
-							arguments.result.allMessages = arguments.result.allMessages ?: [];
-							arguments.result.allMessages.append( "Post Function IDs are not unique. Two or more post functions share the same id: [#fn.id#] in the default result for action [#( step.id ?: '' )#.#( action.id ?: '' )#]" );
-						}
-						functionIds[ fn.id ] = fn.id;
-					}
 				}
 			}
 		}

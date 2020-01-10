@@ -45,7 +45,7 @@ action:
   id: next
   functions:
     pre:
-      id: my.custom.function
+      ref: my.custom.function
       args:
         arg1: $variable_from_state
         arg2: $variable_from_state2
@@ -113,7 +113,7 @@ action:
   id: next
   functions:
     post:
-      id: preside.SendEmail
+      ref: preside.SendEmail
       args:
         template: eventBookingConfirmation
         recipient: $userid

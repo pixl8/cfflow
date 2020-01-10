@@ -421,9 +421,9 @@ component extends="testbox.system.BaseSpec" {
 					var testCondition3 = createMock( "tests.resources.TestCondition" );
 					var testCondition4 = createMock( "tests.resources.TestCondition" );
 
-					condition1.addOrCondition( id="some.condition.2", args=args );
-					condition1.addOrCondition( id="some.condition.3", args=args );
-					condition1.addOrCondition( id="some.condition.4", args=args );
+					condition1.addOrCondition( ref="some.condition.2", args=args );
+					condition1.addOrCondition( ref="some.condition.3", args=args );
+					condition1.addOrCondition( ref="some.condition.4", args=args );
 
 					_implFactory.$( "getCondition" ).$args( "some.condition.1" ).$results( testCondition1 );
 					_implFactory.$( "getCondition" ).$args( "some.condition.2" ).$results( testCondition2 );
@@ -449,9 +449,9 @@ component extends="testbox.system.BaseSpec" {
 					var testCondition3 = createMock( "tests.resources.TestCondition" );
 					var testCondition4 = createMock( "tests.resources.TestCondition" );
 
-					condition1.addAndCondition( id="some.condition.2", args=args );
-					condition1.addAndCondition( id="some.condition.3", args=args );
-					condition1.addAndCondition( id="some.condition.4", args=args );
+					condition1.addAndCondition( ref="some.condition.2", args=args );
+					condition1.addAndCondition( ref="some.condition.3", args=args );
+					condition1.addAndCondition( ref="some.condition.4", args=args );
 
 					_implFactory.$( "getCondition" ).$args( "some.condition.1" ).$results( testCondition1 );
 					_implFactory.$( "getCondition" ).$args( "some.condition.2" ).$results( testCondition2 );
@@ -478,9 +478,9 @@ component extends="testbox.system.BaseSpec" {
 					var testCondition4 = createMock( "tests.resources.TestCondition" );
 
 					condition1.setNot( true );
-					condition1.addAndCondition( id="some.condition.2", args=args );
-					condition1.addAndCondition( id="some.condition.3", args=args );
-					condition1.addAndCondition( id="some.condition.4", args=args );
+					condition1.addAndCondition( ref="some.condition.2", args=args );
+					condition1.addAndCondition( ref="some.condition.3", args=args );
+					condition1.addAndCondition( ref="some.condition.4", args=args );
 
 					_implFactory.$( "getCondition" ).$args( "some.condition.1" ).$results( testCondition1 );
 					_implFactory.$( "getCondition" ).$args( "some.condition.2" ).$results( testCondition2 );
@@ -527,11 +527,11 @@ component extends="testbox.system.BaseSpec" {
 						, _getCondition( "handler.5" )
 					];
 					var functions = [
-						  new cfflow.models.definition.spec.WorkflowFunction( id="fn1"  )
-						, new cfflow.models.definition.spec.WorkflowFunction( id="fn2"  )
-						, new cfflow.models.definition.spec.WorkflowFunction( id="fn3", condition=conditions[ 1 ] )
-						, new cfflow.models.definition.spec.WorkflowFunction( id="fn4", condition=conditions[ 2 ] )
-						, new cfflow.models.definition.spec.WorkflowFunction( id="fn5", condition=conditions[ 3 ] )
+						  new cfflow.models.definition.spec.WorkflowFunction( ref="fn1"  )
+						, new cfflow.models.definition.spec.WorkflowFunction( ref="fn2"  )
+						, new cfflow.models.definition.spec.WorkflowFunction( ref="fn3", condition=conditions[ 1 ] )
+						, new cfflow.models.definition.spec.WorkflowFunction( ref="fn4", condition=conditions[ 2 ] )
+						, new cfflow.models.definition.spec.WorkflowFunction( ref="fn5", condition=conditions[ 3 ] )
 					];
 
 					_engine.$( "evaluateCondition" ).$args( conditions[1], _instance ).$results( false );
@@ -541,9 +541,9 @@ component extends="testbox.system.BaseSpec" {
 					var filtered = _engine.filterFunctionsToExecute( _instance, functions );
 
 					expect( filtered.len() ).toBe( 3 );
-					expect( filtered[ 1 ].getId() ).toBe( "fn1" );
-					expect( filtered[ 2 ].getId() ).toBe( "fn2" );
-					expect( filtered[ 3 ].getId() ).toBe( "fn5" );
+					expect( filtered[ 1 ].getRef() ).toBe( "fn1" );
+					expect( filtered[ 2 ].getRef() ).toBe( "fn2" );
+					expect( filtered[ 3 ].getRef() ).toBe( "fn5" );
 				} );
 			} );
 
@@ -556,7 +556,7 @@ component extends="testbox.system.BaseSpec" {
 					var subbedArgs = { test=CreateUUId() };
 					var state = { test=CreateUUId() };
 
-					fn.setId( fnId );
+					fn.setRef( fnId );
 					fn.setArgs( args );
 
 					testFunction.$( "do" );
@@ -788,7 +788,7 @@ component extends="testbox.system.BaseSpec" {
 					_wf.$( "getInitialActions", actions );
 
 					_engine.$( method="evaluateCondition", callback=function(){
-						return arguments.wfCondition.getId() != "handler.1";
+						return arguments.wfCondition.getRef() != "handler.1";
 					} );
 
 					_engine.$( "doAction" );
@@ -864,7 +864,7 @@ component extends="testbox.system.BaseSpec" {
 					_wf.$( "getInitialActions", actions );
 
 					_engine.$( method="evaluateCondition", callBack=function(){
-						return arguments.wfCondition.getId() == "handler.3";
+						return arguments.wfCondition.getRef() == "handler.3";
 					} );
 
 					_engine.$( "doAction" );
@@ -913,7 +913,7 @@ component extends="testbox.system.BaseSpec" {
 					_wf.$( "getInitialActions", actions );
 
 					_engine.$( method="evaluateCondition", callBack=function(){
-						return arguments.wfCondition.getId() != "handler.1";
+						return arguments.wfCondition.getRef() != "handler.1";
 					} );
 					_engine.$( "doAction" );
 
@@ -926,7 +926,7 @@ component extends="testbox.system.BaseSpec" {
 	}
 
 // helpers
-	private any function _getCondition( required string id, struct args={} ) {
+	private any function _getCondition( required string ref, struct args={} ) {
 		return new cfflow.models.definition.spec.WorkflowCondition( argumentCollection=arguments );
 	}
 }

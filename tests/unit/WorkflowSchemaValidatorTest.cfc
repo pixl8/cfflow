@@ -177,26 +177,26 @@ component extends="testbox.system.BaseSpec" {
 						validator.validate( workflow );
 					} ).toThrow( "preside.workflow.definition.validation.error" );
 				} );
-				it( "should raise an error when one or more default result pre function has no id", function(){
-					workflow.workflow.steps[1].actions[1].defaultResult.functions.pre[1].delete( "id" );
+				it( "should raise an error when one or more default result pre function has no ref", function(){
+					workflow.workflow.steps[1].actions[1].defaultResult.functions.pre[1].delete( "ref" );
 					expect( function(){
 						validator.validate( workflow );
 					} ).toThrow( "preside.workflow.definition.validation.error" );
 				} );
-				it( "should raise an error when one or more default result post function has no id", function(){
-					workflow.workflow.steps[1].actions[1].defaultResult.functions.post[1].delete( "id" );
+				it( "should raise an error when one or more default result post function has no ref", function(){
+					workflow.workflow.steps[1].actions[1].defaultResult.functions.post[1].delete( "ref" );
 					expect( function(){
 						validator.validate( workflow );
 					} ).toThrow( "preside.workflow.definition.validation.error" );
 				} );
-				it( "should raise an error when one or more conditional result pre function has no id", function(){
-					workflow.workflow.steps[1].actions[1].conditionalResults[1].functions.pre[1].delete( "id" );
+				it( "should raise an error when one or more conditional result pre function has no ref", function(){
+					workflow.workflow.steps[1].actions[1].conditionalResults[1].functions.pre[1].delete( "ref" );
 					expect( function(){
 						validator.validate( workflow );
 					} ).toThrow( "preside.workflow.definition.validation.error" );
 				} );
-				it( "should raise an error when one or more conditional result post function has no id", function(){
-					workflow.workflow.steps[1].actions[1].conditionalResults[2].functions.post[1].delete( "id" );
+				it( "should raise an error when one or more conditional result post function has no ref", function(){
+					workflow.workflow.steps[1].actions[1].conditionalResults[2].functions.post[1].delete( "ref" );
 					expect( function(){
 						validator.validate( workflow );
 					} ).toThrow( "preside.workflow.definition.validation.error" );
@@ -226,30 +226,6 @@ component extends="testbox.system.BaseSpec" {
 					} ).toThrow( "preside.workflow.definition.validation.error" );
 				} );
 
-				it( "should raise an error when one or more default result pre functions share the same id", function(){
-					workflow.workflow.steps[1].actions[1].defaultResult.functions.pre[2].id = workflow.workflow.steps[1].actions[1].defaultResult.functions.pre[1].id;
-					expect( function(){
-						validator.validate( workflow );
-					} ).toThrow( "preside.workflow.definition.validation.error" );
-				} );
-				it( "should raise an error when one or more default result post functions share the same id", function(){
-					workflow.workflow.steps[1].actions[1].defaultResult.functions.post[2].id = workflow.workflow.steps[1].actions[1].defaultResult.functions.post[1].id;
-					expect( function(){
-						validator.validate( workflow );
-					} ).toThrow( "preside.workflow.definition.validation.error" );
-				} );
-				it( "should raise an error when one or more conditional result pre functions share the same id", function(){
-					workflow.workflow.steps[1].actions[1].conditionalResults[1].functions.pre[2].id = workflow.workflow.steps[1].actions[1].conditionalResults[1].functions.pre[1].id;
-					expect( function(){
-						validator.validate( workflow );
-					} ).toThrow( "preside.workflow.definition.validation.error" );
-				} );
-				it( "should raise an error when one or more conditional result post functions share the same id", function(){
-					workflow.workflow.steps[1].actions[1].conditionalResults[2].functions.post[2].id = workflow.workflow.steps[1].actions[1].conditionalResults[2].functions.post[1].id;
-					expect( function(){
-						validator.validate( workflow );
-					} ).toThrow( "preside.workflow.definition.validation.error" );
-				} );
 				it( "should raise an error when one or more transitions in conditional results refers to a non-existant step", function(){
 					workflow.workflow.steps[1].actions[1].conditionalResults[2].transitions[1].step = "asdlkfjlaskdjf";
 					expect( function(){
@@ -313,7 +289,7 @@ component extends="testbox.system.BaseSpec" {
 						"id":"action-1",
 						"meta":{"title":"Action 1"},
 						"condition":{
-							"id":"some.handler",
+							"ref":"some.handler",
 							"args":{
 								"test":true,
 								"this":[1,2,3,4]
@@ -333,37 +309,37 @@ component extends="testbox.system.BaseSpec" {
 							}],
 							"functions":{
 								"pre":[{
-									"id":"function.id",
+									"ref":"function.id",
 									"meta":{"title":"Function title"},
 									"args":{
 										"anything":"goes",
 										"here":true
 									},
 									"condition":{
-										"id":"function.condition",
+										"ref":"function.condition",
 										"args":{
 											"test":false,
 											"thisIsInteresting":[1,2,3,4]
 										}
 									}
 								},{
-									"id":"function.id.2",
+									"ref":"function.id.2",
 									"meta":{"title":"Function title"},
 									"condition":{
-										"id":"function.condition"
+										"ref":"function.condition"
 									}
 								}],
 								"post":[{
-									"id":"function.id",
+									"ref":"function.id",
 									"meta":{"title":"Function title"},
 									"condition":{
-										"id":"function.condition"
+										"ref":"function.condition"
 									}
 								},{
-									"id":"function.id.2",
+									"ref":"function.id.2",
 									"meta":{"title":"Function title"},
 									"condition":{
-										"id":"function.condition",
+										"ref":"function.condition",
 										"args":{
 											"test":false,
 											"thisIsInteresting":[1,2,3,4]
@@ -377,7 +353,7 @@ component extends="testbox.system.BaseSpec" {
 							"meta":{"title":"Result 2"},
 							"type":"join",
 							"condition":{
-								"id":"test.condition.one",
+								"ref":"test.condition.one",
 								"args":{
 									"test":false,
 									"thisIsInteresting":[1,2,3,4]
@@ -392,20 +368,20 @@ component extends="testbox.system.BaseSpec" {
 							}],
 							"functions":{
 								"pre":[{
-									"id":"function.id",
+									"ref":"function.id",
 									"meta":{"title":"Function title"},
 									"condition":{
-										"id":"function.condition",
+										"ref":"function.condition",
 										"args":{
 											"test":false,
 											"thisIsInteresting":[1,2,3,4]
 										}
 									}
 								},{
-									"id":"function.id.2",
+									"ref":"function.id.2",
 									"meta":{"title":"Function title"},
 									"condition":{
-										"id":"function.condition"
+										"ref":"function.condition"
 									}
 								}]
 							}
@@ -414,7 +390,7 @@ component extends="testbox.system.BaseSpec" {
 							"meta":{"title":"Result 3"},
 							"type":"split",
 							"condition":{
-								"id":"test.condition.two",
+								"ref":"test.condition.two",
 								"args":{
 									"test":false,
 									"thisIsInteresting":[1,2,3,4]
@@ -429,16 +405,16 @@ component extends="testbox.system.BaseSpec" {
 							}],
 							"functions":{
 								"post":[{
-									"id":"function.id",
+									"ref":"function.id",
 									"meta":{"title":"Function title"},
 									"condition":{
-										"id":"function.condition"
+										"ref":"function.condition"
 									}
 								},{
-									"id":"function.id.2",
+									"ref":"function.id.2",
 									"meta":{"title":"Function title"},
 									"condition":{
-										"id":"function.condition"
+										"ref":"function.condition"
 									}
 								}]
 							}

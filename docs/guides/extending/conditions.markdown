@@ -42,7 +42,7 @@ Once a condition is registered, you can use it in your workflow definition. Any 
 
 ```yaml
 condition:
-  id: my.custom.condition
+  ref: my.custom.condition
   args:
     arg1: $variable_from_state
     arg2: $variable_from_state2
@@ -97,6 +97,6 @@ Finally, we could then use it in our workflow definitions:
 
 ```yaml
 condition:
-  id: preside.IsLoggedIn
+  ref: preside.IsLoggedIn
   not: true
 ```
