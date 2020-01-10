@@ -12,8 +12,9 @@ component singleton=true accessors=true {
 		};
 
 		try {
-			validator.validate( _obj( "org.json.JSONObject" ).init( arguments.json ) );
-		} catch ( org.everit.json.schema.ValidationException e ) {
+			results = validator.isValid( arguments.json );
+			results = DeSerializeJson( results );
+		} catch ( any e ) {
 			results.valid = false;
 			results.error = {
 				  "violationCount"     = e.violationCount          ?: ""
@@ -29,14 +30,9 @@ component singleton=true accessors=true {
 
 // PRIVATE HELPERS
 	private any function _setupSchemaValidator() {
-		var schema    = FileRead( getSchemaFilePath() );
-		var schemaObj = _obj( "org.json.JSONObject" ).init( _obj( "org.json.JSONTokener" ).init( schema ) );
-		var schemaLoader = _obj( "org.everit.json.schema.loader.SchemaLoader" ).builder()
-			.schemaJson( schemaObj )
-			.resolutionScope( getSchemaBaseUri() )
-			.build();
+		var schema = FileRead( getSchemaFilePath() );
 
-		_setValidator( schemaLoader.load().build() );
+		_setValidator( _obj( "ca.vanmulligen.json.schema.Validator" ).init( schema, getSchemaBaseUri() ) );
 
 		return _getValidator();
 	}
