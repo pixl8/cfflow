@@ -59,8 +59,8 @@ The following example is for a Preside application. The CFC below resides at `/a
 
 ```cfc
 /**
- * A CfFlow function to evaluate whether or not the current
- * Preside website visitor is logged in or not.
+ * A CfFlow function to send an email using the Preside
+ * email templating system.
  *
  * @singleton
  * @presideService
@@ -81,6 +81,7 @@ component implements="cfflow.models.implementation.interfaces.IWorkflowFunction"
             , args      = arguments.args.args      ?: {}
         };
 
+        // get the current state of the workflow instance and make it available to the email template
         StructAppend( emailArgs.args, arguments.wfInstance.getState() );
 
         $sendEmail( argumentCollection=emailArgs );
