@@ -9,9 +9,10 @@ component singleton {
 
 // PUBLIC API METHODS
 	public boolean function validate( required struct workflow ) {
-		var result = _validateSchema( SerializeJson( workflow ) );
+		var result = _getValidator().validate( SerializeJson( arguments.workflow ) );
 
 		_validateUniquenessAndReferences( workflow, result );
+
 		if ( !result.valid ) {
 			var message = result.message ?: "Your workflow definition is invalid. Please see error detail for details.";
 			var type    = "preside.workflow.definition.validation.error";
@@ -19,30 +20,8 @@ component singleton {
 
 			throw( message, type, detail );
 		}
+
 		return true;
-	}
-
-// PRIVATE HELPERS
-	private struct function _validateSchema( required string json ) {
-		var results = {
-			"error" = {},
-			"valid" = true
-		};
-
-		try {
-			_getValidator().validate( _obj( "org.json.JSONObject" ).init( arguments.json ) );
-		} catch ( org.everit.json.schema.ValidationException e ) {
-			results.valid = false;
-			results.error = {
-				  "violationCount"     = e.violationCount          ?: ""
-				, "pointerToViolation" = e.pointerToViolation      ?: "##"
-				, "message"            = e.message                 ?: ""
-				, "keyword"            = e.keyWord                 ?: ""
-				, "allMessages"        = _toCfArray( e.allMessages ?: [] )
-			};
-		}
-
-		return results;
 	}
 
 // PRIVATE HELPERS
@@ -132,33 +111,12 @@ component singleton {
 
 	private void function _setupSchemaValidator() {
 		var schemaDir = GetDirectoryFromPath( GetCurrentTemplatePath() ) & "schema/v1/"
-		var schema    = FileRead( schemaDir & "workflow.schema.json" );
-		var schemaObj = _obj( "org.json.JSONObject" ).init( _obj( "org.json.JSONTokener" ).init( schema ) );
-		var schemaLoader = _obj( "org.everit.json.schema.loader.SchemaLoader" ).builder()
-            .schemaJson( schemaObj )
-            .resolutionScope( "file://" & schemaDir )
-            .build();
+		var validator = new cfflow.models.util.JsonSchemaValidator(
+			  schemaFilePath = schemaDir & "workflow.schema.json"
+			, schemaBaseUri  = "file://#schemaDir#"
+		);
 
-        _setValidator( schemaLoader.load().build() );
-	}
-
-	private any function _obj( required string class ) {
-		return CreateObject( "java", arguments.class, _getLib() );
-	}
-
-	private array function _getLib() {
-		var libDir = GetDirectoryFromPath( GetCurrentTemplatePath() ) & "lib";
-		return DirectoryList( libDir, false, "path", "*.jar" );
-	}
-
-	private array function _toCfArray( javaArr ) {
-		var cfArray = [];
-
-		for( var entry in arguments.javaArr ) {
-			ArrayAppend( cfArray, entry );
-		}
-
-		return cfArray;
+		_setValidator( validator );
 	}
 
 // GETTERS AND SETTERS
