@@ -7,15 +7,19 @@ parent: Guides
 
 # Defining a workflow
 
-Workflows can be defined in several ways. Our recommendation is to define them as `.yaml` files and register them with the `cfflow` engine:
+## Register with the engine
+
+Workflows can be defined in several ways. Our recommendation is to define them as `.yaml` files and register them with the `cfflow` engine using the following method:
 
 ```cfc
 cfflow.registerWorkflow( pathToYamlFile );
 ```
 
-Alternatively, you can pass a `struct` that you build in some other way:
+Alternatively, you can pass a `struct` that you build in some other way (e.g. this struct could be made dynamically from entries in a database):
 
 ```cfc
+var structWorkflowDefinition = myCustomService.generateWorkflowDefinition( wfid );
+
 cfflow.registerWorkflow( structWorkflowDefinition );
 ```
 

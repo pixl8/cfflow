@@ -32,7 +32,7 @@ workflow:
 | `workflow` | `true` | `object` | Object containing workflow definition. |
 | `workflow.id` | `true` | `string` | Unique identifier for the workflow. |
 | `workflow.meta` | `false` | `object` | Arbitrary data to help describe your flow. Not used by the engine. |
-| `workflow.class` | `true` | `string` | ID of a registered class that defines the storage interface and scheduler for the workflow. |
+| `workflow.class` | `true` | `string` | ID of a registered class that defines the storage interface and scheduler for the workflow. See [Creating a workflow class](../guides/extending/workflowclass.html). |
 | `workflow.initialActions` | `true` | `array` | Array of [initialAction](schema/initialAction.html) objects. Must have one or more initial actions. |
 | `workflow.steps` | `true` | `array` | Array of [step](schema/step.html) objects. Must have two or more steps. |
 
