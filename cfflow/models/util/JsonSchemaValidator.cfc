@@ -1,14 +1,7 @@
-component singleton {
+component singleton=true accessors=true {
 
-// CONSTRUCTOR
-	public any function init(
-		  required string schemaFilePath
-		, required string schemaBaseUri
-	) {
-		_setupSchemaValidator( argumentCollection=arguments );
-
-		return this;
-	}
+	property name="schemaFilePath" type="string" default="";
+	property name="schemaBaseUri"  type="string" default="";
 
 // PUBLIC API METHODS
 	public struct function validate( required string json ) {
@@ -35,19 +28,17 @@ component singleton {
 	}
 
 // PRIVATE HELPERS
-	private void function _setupSchemaValidator(
-		  required string schemaFilePath
-		, required string schemaBaseUri
-	) {
-
-		var schema    = FileRead( arguments.schemaFilePath );
+	private any function _setupSchemaValidator() {
+		var schema    = FileRead( getSchemaFilePath() );
 		var schemaObj = _obj( "org.json.JSONObject" ).init( _obj( "org.json.JSONTokener" ).init( schema ) );
 		var schemaLoader = _obj( "org.everit.json.schema.loader.SchemaLoader" ).builder()
 			.schemaJson( schemaObj )
-			.resolutionScope( arguments.schemaBaseUri )
+			.resolutionScope( getSchemaBaseUri() )
 			.build();
 
 		_setValidator( schemaLoader.load().build() );
+
+		return _getValidator();
 	}
 
 	private any function _obj( required string class ) {
@@ -71,7 +62,7 @@ component singleton {
 
 // GETTERS AND SETTERS
 	private any function _getValidator() {
-		return _validator;
+		return _validator ?: _setupSchemaValidator();
 	}
 	private void function _setValidator( required any validator ) {
 		_validator = arguments.validator;
