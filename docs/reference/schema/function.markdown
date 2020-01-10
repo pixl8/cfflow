@@ -2,6 +2,7 @@
 layout: page
 title: Function
 parent: Workflow schema
+grand_parent: Reference
 ---
 
 # Function

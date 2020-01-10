@@ -2,6 +2,7 @@
 layout: page
 title: Conditional result
 parent: Workflow schema
+grand_parent: Reference
 ---
 
 # Conditional result

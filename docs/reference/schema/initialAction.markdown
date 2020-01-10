@@ -2,6 +2,7 @@
 layout: page
 title: Initial action
 parent: Workflow schema
+grand_parent: Reference
 ---
 
 # Initial action

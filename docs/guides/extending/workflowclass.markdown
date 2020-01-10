@@ -2,7 +2,8 @@
 layout: page
 title: Creating a workflow class
 nav_order: 2
-parent: Guides
+parent: Extending CfFlow
+grand_parent: Guides
 ---
 
 # Creating a workflow class
