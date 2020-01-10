@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Built in conditions
-nav_order: 1
+nav_order: 2
 parent: Reference
 ---
 
@@ -33,7 +33,7 @@ The `state.Exists` condition allows you to check for the existance a variable wi
 {: .no_toc }
 
 | Name | Description |
-|-------|--------|---------
+|-------|--------|
 | `key` | Required. The name of the variable to check the existance of. |
 
 #### Example
