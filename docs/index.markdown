@@ -15,5 +15,5 @@ CfFlow is an open source workflow engine for the CFML language. It is inspired b
 
 ## Getting started
 
-We suggest that you familiarize yourself with the [concepts](concepts.markdown) and follow through the [quick start tutorial](tutorials/quick-start.markdown).
+We suggest that you familiarize yourself with the [core terms and concepts](guides/concepts.markdown) and follow through the [quick start tutorial](tutorials/quick-start.markdown).
 

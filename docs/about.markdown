@@ -20,7 +20,7 @@ We use [SemVer](https://semver.org) for versioning. For the versions available, 
 
 ## License
 
-This project is licensed under the GPLv2 License - see the [LICENSE.txt](https://github.com/pixl8/Preside-CMS/blob/master/LICENSE.txt) file for details.
+This project is licensed under the GPLv2 License - see the [LICENSE.txt](https://github.com/pixl8/cfflow/blob/master/LICENSE.txt) file for details.
 
 ## Code of conduct
 

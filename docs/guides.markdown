@@ -1,8 +1,8 @@
 ---
 layout: page
-title: Tutorials
-nav_order: 4
+title: Guides
+nav_order: 2
 has_children: true
 ---
 
-# Tutorials
+# Guides
