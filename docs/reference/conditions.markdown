@@ -12,7 +12,7 @@ CfFlow comes with a set of pre-built conditions that you may use in your workflo
 
 ```yaml
 condition:
-  id: state.Exists
+  ref: state.Exists
   args:
     key: product_id
 ```
@@ -42,7 +42,7 @@ The `state.Exists` condition allows you to check for the existance a variable wi
 
 ```yaml
 condition:
-  id: state.Exists
+  ref: state.Exists
   args:
     key: product_id
 ```
@@ -66,7 +66,7 @@ The `string.IsEmpty` condition allows you to evaluate whether the given string `
 
 ```yaml
 condition:
-  id: string.IsEmpty
+  ref: string.IsEmpty
   args:
     value: $state_var
 ```
@@ -89,13 +89,13 @@ The `string.IsEqual` condition allows you to compare an input string against a p
 
 ```yaml
 condition:
-  id: string.IsEqual
+  ref: string.IsEqual
   args:
     pattern: test
     value: $state_var
 
 condition:
-  id: string.IsEqual
+  ref: string.IsEqual
   args:
     pattern: 
     - pattern_1
@@ -123,13 +123,13 @@ The `string.IsEqualNoCase` condition allows you to compare an input string again
 
 ```yaml
 condition:
-  id: string.IsEqualNoCase
+  ref: string.IsEqualNoCase
   args:
     pattern: test
     value: $state_var
 
 condition:
-  id: string.IsEqualNoCase
+  ref: string.IsEqualNoCase
   args:
     pattern: 
     - pattern_1
@@ -157,13 +157,13 @@ The `string.IsGreaterThan` condition allows you to compare an input string again
 
 ```yaml
 condition:
-  id: string.IsGreaterThan
+  ref: string.IsGreaterThan
   args:
     pattern: test
     value: $state_var
 
 condition:
-  id: string.IsGreaterThan
+  ref: string.IsGreaterThan
   args:
     pattern: 
     - pattern_1
@@ -191,13 +191,13 @@ The `string.IsGreaterThanNoCase` condition allows you to compare an input string
 
 ```yaml
 condition:
-  id: string.IsGreaterThanNoCase
+  ref: string.IsGreaterThanNoCase
   args:
     pattern: test
     value: $state_var
 
 condition:
-  id: string.IsGreaterThanNoCase
+  ref: string.IsGreaterThanNoCase
   args:
     pattern: 
     - pattern_1
@@ -225,13 +225,13 @@ The `string.IsLessThan` condition allows you to compare an input string against 
 
 ```yaml
 condition:
-  id: string.IsLessThan
+  ref: string.IsLessThan
   args:
     pattern: test
     value: $state_var
 
 condition:
-  id: string.IsLessThan
+  ref: string.IsLessThan
   args:
     pattern: 
     - pattern_1
@@ -259,13 +259,13 @@ The `string.IsLessThanNoCase` condition allows you to compare an input string ag
 
 ```yaml
 condition:
-  id: string.IsLessThanNoCase
+  ref: string.IsLessThanNoCase
   args:
     pattern: test
     value: $state_var
 
 condition:
-  id: string.IsLessThanNoCase
+  ref: string.IsLessThanNoCase
   args:
     pattern: 
     - pattern_1
@@ -293,13 +293,13 @@ The `string.RegexMatch` condition allows you to compare an input string against 
 
 ```yaml
 condition:
-  id: string.RegexMatch
+  ref: string.RegexMatch
   args:
     pattern: test
     value: $state_var
 
 condition:
-  id: string.RegexMatch
+  ref: string.RegexMatch
   args:
     pattern: 
     - pattern_1
@@ -327,13 +327,13 @@ The `string.RegexMatchNoCase` condition allows you to compare an input string ag
 
 ```yaml
 condition:
-  id: string.RegexMatchNoCase
+  ref: string.RegexMatchNoCase
   args:
     pattern: test
     value: $state_var
 
 condition:
-  id: string.RegexMatchNoCase
+  ref: string.RegexMatchNoCase
   args:
     pattern: 
     - pattern_1
@@ -361,13 +361,13 @@ The `string.Contains` condition allows you to compare an input string against a 
 
 ```yaml
 condition:
-  id: string.Contains
+  ref: string.Contains
   args:
     pattern: test
     value: $state_var
 
 condition:
-  id: string.Contains
+  ref: string.Contains
   args:
     pattern: 
     - pattern_1
@@ -395,13 +395,13 @@ The `string.ContainsNoCase` condition allows you to compare an input string agai
 
 ```yaml
 condition:
-  id: string.ContainsNoCase
+  ref: string.ContainsNoCase
   args:
     pattern: test
     value: $state_var
 
 condition:
-  id: string.ContainsNoCase
+  ref: string.ContainsNoCase
   args:
     pattern: 
     - pattern_1
@@ -429,13 +429,13 @@ The `string.StartsWith` condition allows you to compare an input string against 
 
 ```yaml
 condition:
-  id: string.StartsWith
+  ref: string.StartsWith
   args:
     pattern: test
     value: $state_var
 
 condition:
-  id: string.StartsWith
+  ref: string.StartsWith
   args:
     pattern: 
     - pattern_1
@@ -463,13 +463,13 @@ The `string.StartsWithNoCase` condition allows you to compare an input string ag
 
 ```yaml
 condition:
-  id: string.StartsWithNoCase
+  ref: string.StartsWithNoCase
   args:
     pattern: test
     value: $state_var
 
 condition:
-  id: string.StartsWithNoCase
+  ref: string.StartsWithNoCase
   args:
     pattern: 
     - pattern_1
@@ -497,13 +497,13 @@ The `string.EndsWith` condition allows you to compare an input string against a 
 
 ```yaml
 condition:
-  id: string.EndsWith
+  ref: string.EndsWith
   args:
     pattern: test
     value: $state_var
 
 condition:
-  id: string.EndsWith
+  ref: string.EndsWith
   args:
     pattern: 
     - pattern_1
@@ -531,14 +531,14 @@ The `string.EndsWithNoCase` condition allows you to compare an input string agai
 
 ```yaml
 condition:
-  id: string.EndsWithNoCase
+  ref: string.EndsWithNoCase
   args:
     pattern: test
     value: $state_var
 
 ```yaml
 condition:
-  id: string.EndsWithNoCase
+  ref: string.EndsWithNoCase
   args:
   	pattern:  
 	  - pattern_1
@@ -566,7 +566,7 @@ The `bool.IsTrue` condition allows you to evaluate whether a given value is true
 
 ```yaml
 condition:
-  id: bool.IsTrue
+  ref: bool.IsTrue
   args:
     value: $state_variable
 ```
@@ -587,7 +587,7 @@ The `bool.IsFalse` condition allows you to evaluate whether a given value is tru
 
 ```yaml
 condition:
-  id: bool.IsFalse
+  ref: bool.IsFalse
   args:
     value: $state_variable
 ```
@@ -608,7 +608,7 @@ The `bool.IsTruthy` condition allows you to evaluate whether a given value is tr
 
 ```yaml
 condition:
-  id: bool.IsTruthy
+  ref: bool.IsTruthy
   args:
     value: $state_variable
 ```
@@ -629,7 +629,7 @@ The `bool.IsFalsey` condition allows you to evaluate whether a given value is tr
 
 ```yaml
 condition:
-  id: bool.IsFalsey
+  ref: bool.IsFalsey
   args:
     value: $state_variable
 ```
@@ -653,7 +653,7 @@ The `number.IsEqual` condition compares two numbers, a `value` against a `match`
 
 ```yaml
 condition:
-  id: number.IsEqual
+  ref: number.IsEqual
   args:
     value: $state_variable
     match: 10
@@ -676,7 +676,7 @@ The `number.IsLessThan` condition compares two numbers, a `value` against a `mat
 
 ```yaml
 condition:
-  id: number.IsLessThan
+  ref: number.IsLessThan
   args:
     value: $state_variable
     match: 10
@@ -699,7 +699,7 @@ The `number.IsLessThanOrEqualTo` condition compares two numbers, a `value` again
 
 ```yaml
 condition:
-  id: number.IsLessThanOrEqualTo
+  ref: number.IsLessThanOrEqualTo
   args:
     value: $state_variable
     match: 10
@@ -722,7 +722,7 @@ The `number.IsGreaterThan` condition compares two numbers, a `value` against a `
 
 ```yaml
 condition:
-  id: number.IsGreaterThan
+  ref: number.IsGreaterThan
   args:
     value: $state_variable
     match: 10
@@ -745,7 +745,7 @@ The `number.IsGreaterThanOrEqualTo` condition compares two numbers, a `value` ag
 
 ```yaml
 condition:
-  id: number.IsGreaterThanOrEqualTo
+  ref: number.IsGreaterThanOrEqualTo
   args:
     value: $state_variable
     match: 10
@@ -769,7 +769,7 @@ The `number.IsWithin` condition compares two numbers, `value` and `match` and re
 
 ```yaml
 condition:
-  id: number.IsWithin
+  ref: number.IsWithin
   args:
     value: $state_variable
     match: $another_state_variable
@@ -795,12 +795,12 @@ The `date.IsFuture` condition allows you to validate whether the given date `val
 
 ```yaml
 condition:
-  id: number.IsFuture
+  ref: number.IsFuture
   args:
     value: $event_date
 
 condition:
-  id: number.IsFuture
+  ref: number.IsFuture
   args:
     value: $date_of_birth
     offset: -18y
@@ -823,12 +823,12 @@ The `date.IsPast` condition allows you to validate whether the given date `value
 
 ```yaml
 condition:
-  id: number.IsPast
+  ref: number.IsPast
   args:
     value: $event_date
 
 condition:
-  id: number.IsPast
+  ref: number.IsPast
   args:
     value: $date_of_birth
     offset: -18y
@@ -851,12 +851,12 @@ The `date.IsToday` condition allows you to validate whether the given date `valu
 
 ```yaml
 condition:
-  id: number.IsToday
+  ref: number.IsToday
   args:
     value: $event_date
 
 condition:
-  id: number.IsToday
+  ref: number.IsToday
   args:
     value: $event_date
     offset: 5d
@@ -879,13 +879,13 @@ The `date.IsBefore` condition allows you to validate whether the given date `val
 
 ```yaml
 condition:
-  id: number.IsBefore
+  ref: number.IsBefore
   args:
     value: $event_date
     match: $booking_open_date
 
 condition:
-  id: number.IsBefore
+  ref: number.IsBefore
   args:
     value: $dob
     match: 2018-01-01
@@ -908,13 +908,13 @@ The `date.IsOnOrBefore` condition allows you to validate whether the given date 
 
 ```yaml
 condition:
-  id: number.IsOnOrBefore
+  ref: number.IsOnOrBefore
   args:
     value: $event_date
     match: $booking_open_date
 
 condition:
-  id: number.IsOnOrBefore
+  ref: number.IsOnOrBefore
   args:
     value: $dob
     match: 2018-01-01
@@ -937,13 +937,13 @@ The `date.IsAfter` condition allows you to validate whether the given date `valu
 
 ```yaml
 condition:
-  id: number.IsAfter
+  ref: number.IsAfter
   args:
     value: $event_date
     match: $booking_open_date
 
 condition:
-  id: number.IsAfter
+  ref: number.IsAfter
   args:
     value: $dob
     match: 2018-01-01
@@ -966,13 +966,13 @@ The `date.IsOnOrAfter` condition allows you to validate whether the given date `
 
 ```yaml
 condition:
-  id: number.IsOnOrAfter
+  ref: number.IsOnOrAfter
   args:
     value: $event_date
     match: $booking_open_date
 
 condition:
-  id: number.IsOnOrAfter
+  ref: number.IsOnOrAfter
   args:
     value: $dob
     match: 2018-01-01
@@ -995,13 +995,13 @@ The `date.IsEqual` condition allows you to validate whether the given date `valu
 
 ```yaml
 condition:
-  id: number.IsEqual
+  ref: number.IsEqual
   args:
     value: $event_date
     match: $booking_open_date
 
 condition:
-  id: number.IsEqual
+  ref: number.IsEqual
   args:
     value: $dob
     match: 2018-01-01
@@ -1024,13 +1024,13 @@ The `date.IsSameDay` condition allows you to validate whether the given date `va
 
 ```yaml
 condition:
-  id: number.IsSameDay
+  ref: number.IsSameDay
   args:
     value: $event_date
     match: $booking_open_date
 
 condition:
-  id: number.IsSameDay
+  ref: number.IsSameDay
   args:
     value: $dob
     match: 2018-01-01
@@ -1054,7 +1054,7 @@ The `date.IsWithin` condition allows you to validate whether the given date `val
 
 ```yaml
 condition:
-  id: number.IsWithin
+  ref: number.IsWithin
   args:
     value: $event_date
     match: 2020-12-25
