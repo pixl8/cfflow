@@ -148,7 +148,7 @@ component singleton {
 		,          struct            args
 	) {
 		var condition       = _getImplementationFactory().getCondition( id=arguments.wfCondition.getRef() );
-		var substitutedArgs = arguments.args ?: substituteStateArgs( arguments.wfCondition.getArgs(), arguments.wfInstance.getState() );
+		var substitutedArgs = arguments.args ?: substituteStateArgs( StructCopy( arguments.wfCondition.getArgs() ), arguments.wfInstance.getState() );
 		var result          = condition.evaluate(
 			  wfInstance = arguments.wfInstance
 			, args       = substitutedArgs
@@ -181,7 +181,7 @@ component singleton {
 
 	public void function doFunction( required WorkflowInstance wfInstance, required WorkflowFunction wfFunction ) {
 		var fn   = _getImplementationFactory().getFunction( id=arguments.wfFunction.getRef() );
-		var args = substituteStateArgs( arguments.wfFunction.getArgs(), arguments.wfInstance.getState() );
+		var args = substituteStateArgs( StructCopy( arguments.wfFunction.getArgs() ), arguments.wfInstance.getState() );
 
 		fn.do(
 			  wfInstance = arguments.wfInstance
