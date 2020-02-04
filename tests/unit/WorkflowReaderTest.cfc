@@ -70,7 +70,6 @@ component extends="testbox.system.BaseSpec" {
 					expect( step1Actions[1].getIsAutomatic() ).toBe( true );
 					expect( step1Actions[2].getId() ).toBe( "action-2" );
 					expect( step1Actions[2].getMeta() ).toBe( {title="Action 2"} );
-					expect( step1Actions[2].getScreen() ).toBe( "" );
 					expect( step1Actions[2].getCondition().getRef() ).toBe( "action2.condition" );
 					expect( step1Actions[2].getIsAutomatic() ).toBe( false );
 				} );

@@ -8,7 +8,7 @@ component accessors=true {
 	property name="conditionalResults" type="array";
 
 	public string function getSignature() {
-		var rawInput = getId() & getScreen() & getDefaultResult().getSignature();
+		var rawInput = getId() & getDefaultResult().getSignature();
 
 		if ( hasCondition() ) {
 			rawInput &= getCondition().getSignature();

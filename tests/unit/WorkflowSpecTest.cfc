@@ -52,7 +52,6 @@ component extends="testbox.system.BaseSpec" {
 					var newAction = _workflowDef.addInitialAction(
 						  id          = "test-id"
 						, meta        = { title="test-title" }
-						, screen      = "test-screen"
 						, condition   = _getCondition()
 					);
 
@@ -60,7 +59,6 @@ component extends="testbox.system.BaseSpec" {
 
 					expect( newAction.getId() ).toBe( "test-id" );
 					expect( newAction.getMeta() ).toBe( { title="test-title" } );
-					expect( newAction.getScreen() ).toBe( "test-screen" );
 					expect( newAction.getCondition().getRef() ).toBe( conditionId );
 				} );
 			} );
@@ -141,7 +139,6 @@ component extends="testbox.system.BaseSpec" {
 					var newAction = _workflowStep.addAction(
 						  id          = "test-id"
 						, meta        = { title="test-title" }
-						, screen      = "test-screen"
 						, condition   = _getCondition()
 					);
 
@@ -149,7 +146,6 @@ component extends="testbox.system.BaseSpec" {
 
 					expect( newAction.getId() ).toBe( "test-id" );
 					expect( newAction.getMeta() ).toBe( { title="test-title" } );
-					expect( newAction.getScreen() ).toBe( "test-screen" );
 					expect( newAction.getCondition().getRef() ).toBe( conditionId );
 				} );
 			} );
@@ -378,7 +374,6 @@ component extends="testbox.system.BaseSpec" {
 
 					expect( _workflowAction.getSignature() ).toBe( LCase( Hash(
 						_workflowAction.getId() &
-						_workflowAction.getScreen() &
 						defaultResultSig &
 						resultSigs[ 1 ] &
 						resultSigs[ 2 ] &
@@ -409,7 +404,6 @@ component extends="testbox.system.BaseSpec" {
 
 					expect( _workflowAction.getSignature() ).toBe( LCase( Hash(
 						_workflowAction.getId() &
-						_workflowAction.getScreen() &
 						defaultResultSig &
 						condition.getSignature() &
 						resultSigs[ 1 ] &
