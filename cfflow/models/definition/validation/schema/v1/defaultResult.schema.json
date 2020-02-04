@@ -4,7 +4,7 @@
     "type": "object",
     "title": "Workflow result (default)",
     "additionalProperties": false,
-    "required":[ "id", "meta", "type", "transitions" ],
+    "required":[ "id", "type", "transitions" ],
     "properties":{
         "id"    : { "type":"string", "description":"Unique identifier for the result within the action" },
         "meta" : { "type":"object", "description":"Abitrary metadata that you may use to describe the result."},

@@ -1,7 +1,6 @@
 component accessors=true {
 
 	property name="id"                 type="string" required=true;
-	property name="screen"             type="string"  default="";
 	property name="isAutomatic"        type="boolean" default=false;
 	property name="meta"               type="struct";
 	property name="condition"          type="WorkflowCondition";
