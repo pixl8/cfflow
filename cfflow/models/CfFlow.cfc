@@ -9,8 +9,8 @@ component singleton {
 		_setWorkflowLibrary( new definition.WorkflowLibrary() );
 		_setImplementationFactory( new implementation.WorkflowImplementationFactory() );
 		_setWorkflowEngine( new engine.WorkflowEngine(
-			  implementationFactory = _getImplementationFactory()
-			, workflowLibrary       = _getWorkflowLibrary()
+			  implementationFactory = getImplementationFactory()
+			, workflowLibrary       = getWorkflowLibrary()
 		) );
 		_setWorkflowReader( new definition.readers.WorkflowReader(
 			  workflowFactory = new definition.WorkflowFactory()
@@ -32,13 +32,13 @@ component singleton {
 // INSTANCES
 	public boolean function instanceExists( required string workflowId, struct instanceArgs={} ) {
 		var wf   = _getWorkflowDefinition( arguments.workflowId );
-		var impl = _getWorkflowEngine().getImplementation( wf );
+		var impl = getWorkflowEngine().getImplementation( wf );
 
 		return impl.instanceExists( workflowId=arguments.workflowId, instanceArgs=arguments.instanceArgs );
 	}
 
 	public any function getInstance( required string workflowId, struct instanceArgs={} ) {
-		var engine         = _getWorkflowEngine();
+		var engine         = getWorkflowEngine();
 		var wf             = _getWorkflowDefinition( arguments.workflowId );
 		var impl           = engine.getImplementation( wf );
 		var instanceExists = impl.instanceExists( workflowId=arguments.workflowId, instanceArgs=arguments.instanceArgs );
@@ -57,8 +57,7 @@ component singleton {
 	}
 
 	public WorkflowInstance function createInstance( required string workflowId, struct instanceArgs={}, struct initialState={}, string initialActionId ) {
-		var engine     =  _getWorkflowEngine();
-		var engine     =  _getWorkflowEngine();
+		var engine     =  getWorkflowEngine();
 		var wf         = _getWorkflowDefinition( arguments.workflowId );
 		var impl       = engine.getImplementation( wf );
 		var wfInstance = "";
@@ -94,7 +93,7 @@ component singleton {
 
 // LIBRARY PROXIES
 	public void function registerWorkflow( required any wf ) {
-		var lib = _getWorkflowLibrary();
+		var lib = getWorkflowLibrary();
 
 		// given a workflow object already parsed
 		if ( IsInstanceOf( arguments.wf, "Workflow" ) ) {
@@ -102,17 +101,17 @@ component singleton {
 
 		// given a simple struct, ready for parsing
 		} else if ( IsStruct( arguments.wf ) && !IsObject( arguments.wf ) ) {
-			lib.registerWorkflow( wf=_getWorkflowReader().read( arguments.wf ) );
+			lib.registerWorkflow( wf=getWorkflowReader().read( arguments.wf ) );
 
 		// given a string
 		} else if ( IsSimpleValue( arguments.wf ) ) {
 			// if a file path, presume a YAML file with workflow definition
 			if ( FileExists( arguments.wf ) ) {
-				lib.registerWorkflow( wf=_getYamlWorkflowReader().read( FileRead( arguments.wf ) ) );
+				lib.registerWorkflow( wf=getYamlWorkflowReader().read( FileRead( arguments.wf ) ) );
 
 			// otherwise, presume YAML string
 			} else {
-				lib.registerWorkflow( wf=_getYamlWorkflowReader().read( arguments.wf ) );
+				lib.registerWorkflow( wf=getYamlWorkflowReader().read( arguments.wf ) );
 			}
 		}
 	}
@@ -123,36 +122,36 @@ component singleton {
 		, required string storageClass
 		, required string scheduler
 	) {
-		_getImplementationFactory().registerWorkflowClass( argumentCollection=arguments );
+		getImplementationFactory().registerWorkflowClass( argumentCollection=arguments );
 	}
 	public void function registerStorageClass(
 		  required string                   className
 		, required IWorkflowInstanceStorage implementation
 	) {
-		_getImplementationFactory().registerStorageClass( argumentCollection=arguments );
+		getImplementationFactory().registerStorageClass( argumentCollection=arguments );
 	}
 	public void function registerScheduler(
 		  required string             className
 		, required IWorkflowScheduler implementation
 	) {
-		_getImplementationFactory().registerScheduler( argumentCollection=arguments );
+		getImplementationFactory().registerScheduler( argumentCollection=arguments );
 	}
 	public void function registerFunction(
 		  required string            id
 		, required IWorkflowFunction implementation
 	) {
-		_getImplementationFactory().registerFunction( argumentCollection=arguments );
+		getImplementationFactory().registerFunction( argumentCollection=arguments );
 	}
 	public void function registerCondition(
 		  required string             id
 		, required IWorkflowCondition implementation
 	) {
-		_getImplementationFactory().registerCondition( argumentCollection=arguments );
+		getImplementationFactory().registerCondition( argumentCollection=arguments );
 	}
 
 // PRIVATE HELPERS
 	private any function _getWorkflowDefinition( required string workflowId ) {
-		return _getWorkflowLibrary().getWorkflow( arguments.workflowId );
+		return getWorkflowLibrary().getWorkflow( arguments.workflowId );
 	}
 
 	private void function _registerBuiltInConditions() {
@@ -171,35 +170,35 @@ component singleton {
 	}
 
 // GETTERS AND SETTERS
-	private any function _getWorkflowLibrary() {
+	public any function getWorkflowLibrary() {
 	    return _workflowLibrary;
 	}
 	private void function _setWorkflowLibrary( required any workflowLibrary ) {
 	    _workflowLibrary = arguments.workflowLibrary;
 	}
 
-	private any function _getImplementationFactory() {
+	public any function getImplementationFactory() {
 	    return _implementationFactory;
 	}
 	private void function _setImplementationFactory( required any implementationFactory ) {
 	    _implementationFactory = arguments.implementationFactory;
 	}
 
-	private any function _getWorkflowEngine() {
+	public any function getWorkflowEngine() {
 	    return _workflowEngine;
 	}
 	private void function _setWorkflowEngine( required any workflowEngine ) {
 	    _workflowEngine = arguments.workflowEngine;
 	}
 
-	private any function _getWorkflowReader() {
+	public any function getWorkflowReader() {
 	    return _workflowReader;
 	}
 	private void function _setWorkflowReader( required any workflowReader ) {
 	    _workflowReader = arguments.workflowReader;
 	}
 
-	private any function _getYamlWorkflowReader() {
+	public any function getYamlWorkflowReader() {
 	    return _yamlWorkflowReader;
 	}
 	private void function _setYamlWorkflowReader( required any yamlWorkflowReader ) {
