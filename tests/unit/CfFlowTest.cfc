@@ -27,11 +27,11 @@ component extends="testbox.system.BaseSpec" {
 				_yamlReader  = CreateMock( "cfflow.models.definition.readers.WorkflowYamlReader" );
 				_steps       = [];
 
-				_cfflow.$( "_getWorkflowLibrary", _library );
-				_cfflow.$( "_getImplementationFactory", _implFactory );
-				_cfflow.$( "_getWorkflowEngine", _engine );
-				_cfflow.$( "_getWorkflowReader", _reader );
-				_cfflow.$( "_getYamlWorkflowReader", _yamlReader );
+				_cfflow.$( "getWorkflowLibrary", _library );
+				_cfflow.$( "getImplementationFactory", _implFactory );
+				_cfflow.$( "getWorkflowEngine", _engine );
+				_cfflow.$( "getWorkflowReader", _reader );
+				_cfflow.$( "getYamlWorkflowReader", _yamlReader );
 
 				for( var i=1; i<=5; i++ ) {
 					_steps.append( CreateMock( "cfflow.models.definition.spec.WorkflowStep" ) );
