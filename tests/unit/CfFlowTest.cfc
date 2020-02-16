@@ -18,7 +18,8 @@ component extends="testbox.system.BaseSpec" {
 				_library     = CreateEmptyMock( "cfflow.models.definition.WorkflowLibrary" );
 				_implFactory = CreateEmptyMock( "cfflow.models.implementation.WorkflowImplementationFactory" );
 				_impl        = CreateMock( "cfflow.models.implementation.WorkflowImplementation" );
-				_engine      = CreateMock( object=new cfflow.models.engine.WorkflowEngine( implementationFactory=_implFactory, workflowLibrary=_library ) );
+				_substitutor = CreateEmptyMock( "cfflow.models.substitution.WorkflowArgSubstitutor" );
+				_engine      = CreateMock( object=new cfflow.models.engine.WorkflowEngine( implementationFactory=_implFactory, workflowLibrary=_library, workflowArgSubstitutor=_substitutor ) );
 				_cfflow      = CreateMock( object=new cfflow.models.CfFlow() );
 				_wfId        = CreateUUId();
 				_instance    = CreateMock( "cfflow.models.instances.WorkflowInstance" );
@@ -32,6 +33,7 @@ component extends="testbox.system.BaseSpec" {
 				_cfflow.$( "getWorkflowEngine", _engine );
 				_cfflow.$( "getWorkflowReader", _reader );
 				_cfflow.$( "getYamlWorkflowReader", _yamlReader );
+				_cfflow.$( "getWorkflowArgSubstitutor", _substitutor );
 
 				for( var i=1; i<=5; i++ ) {
 					_steps.append( CreateMock( "cfflow.models.definition.spec.WorkflowStep" ) );

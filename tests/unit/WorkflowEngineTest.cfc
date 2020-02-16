@@ -15,8 +15,13 @@ component extends="testbox.system.BaseSpec" {
 			beforeEach( function(){
 				_library     = CreateEmptyMock( "cfflow.models.definition.WorkflowLibrary" );
 				_implFactory = CreateEmptyMock( "cfflow.models.implementation.WorkflowImplementationFactory" );
+				_substitutor = CreateEmptyMock( "cfflow.models.substitution.WorkflowArgSubstitutor" );
 				_impl        = CreateMock( "cfflow.models.implementation.WorkflowImplementation" );
-				_engine      = CreateMock( object=new cfflow.models.engine.WorkflowEngine( implementationFactory=_implFactory, workflowLibrary=_library ) );
+				_engine      = CreateMock( object=new cfflow.models.engine.WorkflowEngine(
+					  implementationFactory  = _implFactory
+					, workflowLibrary        = _library
+					, workflowArgSubstitutor = _substitutor
+				) );
 				_wfId        = CreateUUId();
 				_instance    = CreateMock( "cfflow.models.instances.WorkflowInstance" );
 				_wf          = CreateMock( "cfflow.models.definition.spec.Workflow" );
@@ -407,7 +412,7 @@ component extends="testbox.system.BaseSpec" {
 					_implFactory.$( "getCondition" ).$args( "some.condition" ).$results( testCondition );
 
 					testCondition.$( "evaluate" ).$results( true, false );
-					_engine.$( "substituteStateArgs", args );
+					_engine.$( "substituteArgs", args );
 
 					expect( _engine.evaluateCondition( condition, _instance ) ).toBeTrue();
 					expect( _engine.evaluateCondition( condition, _instance ) ).toBeFalse();
@@ -435,7 +440,7 @@ component extends="testbox.system.BaseSpec" {
 					testCondition3.$( "evaluate" ).$results( true );
 					testCondition4.$( "evaluate" ).$results( false );
 
-					_engine.$( "substituteStateArgs", args );
+					_engine.$( "substituteArgs", args );
 					_instance.$( "getState", {} );
 
 					expect( _engine.evaluateCondition( condition1, _instance ) ).toBeTrue();
@@ -463,7 +468,7 @@ component extends="testbox.system.BaseSpec" {
 					testCondition3.$( "evaluate" ).$results( true );
 					testCondition4.$( "evaluate" ).$results( false );
 
-					_engine.$( "substituteStateArgs", args );
+					_engine.$( "substituteArgs", args );
 					_instance.$( "getState", {} );
 
 					expect( _engine.evaluateCondition( condition1, _instance ) ).toBeFalse();
@@ -492,30 +497,10 @@ component extends="testbox.system.BaseSpec" {
 					testCondition3.$( "evaluate" ).$results( true );
 					testCondition4.$( "evaluate" ).$results( false );
 
-					_engine.$( "substituteStateArgs", args );
+					_engine.$( "substituteArgs", args );
 					_instance.$( "getState", {} );
 
 					expect( _engine.evaluateCondition( condition1, _instance ) ).toBeTrue();
-				} );
-			} );
-
-			describe( "substituteStateArgs( args, state )", function(){
-				it( "should substitute any simple values in args that match a $var pattern with the corresponding variable in the instance's state", function(){
-					var state = {
-						  test = CreateUUId()
-						, fubar = CreateUUId()
-					};
-					var args = {
-						  test = "$test"
-						, arr = [ "$fubar", "$test" ]
-						, stct = { test="$fubar", this=true }
-					};
-
-					expect( _engine.substituteStateArgs( args, state) ).toBe( {
-						  test = state.test
-						, arr  = [ state.fubar, state.test ]
-						, stct = { test=state.fubar, this=true }
-					} );
 				} );
 			} );
 
@@ -562,7 +547,7 @@ component extends="testbox.system.BaseSpec" {
 					testFunction.$( "do" );
 					_implFactory.$( "getFunction" ).$args( id=fnId ).$results( testFunction );
 					_instance.$( "getState", state );
-					_engine.$( "substituteStateArgs" ).$args( args, state ).$results( subbedArgs );
+					_engine.$( "substituteArgs" ).$args( args, _instance ).$results( subbedArgs );
 
 					_engine.doFunction( _instance, fn );
 

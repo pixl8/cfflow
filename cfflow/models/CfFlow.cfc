@@ -7,10 +7,12 @@ component singleton {
 
 	public any function init() {
 		_setWorkflowLibrary( new definition.WorkflowLibrary() );
+		_setWorkflowArgSubstitutor( new substitution.workflowArgSubstitutor() );
 		_setImplementationFactory( new implementation.WorkflowImplementationFactory() );
 		_setWorkflowEngine( new engine.WorkflowEngine(
-			  implementationFactory = getImplementationFactory()
-			, workflowLibrary       = getWorkflowLibrary()
+			  implementationFactory  = getImplementationFactory()
+			, workflowLibrary        = getWorkflowLibrary()
+			, workflowArgSubstitutor = getWorkflowArgSubstitutor()
 		) );
 		_setWorkflowReader( new definition.readers.WorkflowReader(
 			  workflowFactory = new definition.WorkflowFactory()
@@ -148,6 +150,9 @@ component singleton {
 	) {
 		getImplementationFactory().registerCondition( argumentCollection=arguments );
 	}
+	public void function registerTokenProvider( required IWorkflowArgSubstitutionProvider provider ) {
+		getWorkflowArgSubstitutor().registerTokenProvider( arguments.provider );
+	}
 
 // PRIVATE HELPERS
 	private any function _getWorkflowDefinition( required string workflowId ) {
@@ -203,6 +208,13 @@ component singleton {
 	}
 	private void function _setYamlWorkflowReader( required any yamlWorkflowReader ) {
 	    _yamlWorkflowReader = arguments.yamlWorkflowReader;
+	}
+
+	public any function getWorkflowArgSubstitutor() {
+	    return _workflowArgSubstitutor;
+	}
+	private void function _setWorkflowArgSubstitutor( required any workflowArgSubstitutor ) {
+	    _workflowArgSubstitutor = arguments.workflowArgSubstitutor;
 	}
 
 }

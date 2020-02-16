@@ -8,9 +8,11 @@ component singleton {
 	public any function init(
 		  required WorkflowImplementationFactory implementationFactory
 		, required WorkflowLibrary               workflowLibrary
+		, required WorkflowArgSubstitutor        workflowArgSubstitutor
 	) {
 		_setImplementationFactory( arguments.implementationFactory );
 		_setWorkflowLibrary( arguments.workflowLibrary );
+		_setWorkflowArgSubstitutor( arguments.workflowArgSubstitutor );
 
 		return this;
 	}
@@ -148,7 +150,7 @@ component singleton {
 		,          struct            args
 	) {
 		var condition       = _getImplementationFactory().getCondition( id=arguments.wfCondition.getRef() );
-		var substitutedArgs = arguments.args ?: substituteStateArgs( StructCopy( arguments.wfCondition.getArgs() ), arguments.wfInstance.getState() );
+		var substitutedArgs = arguments.args ?: substituteArgs( arguments.wfCondition.getArgs(), arguments.wfInstance );
 		var result          = condition.evaluate(
 			  wfInstance = arguments.wfInstance
 			, args       = substitutedArgs
@@ -181,7 +183,7 @@ component singleton {
 
 	public void function doFunction( required WorkflowInstance wfInstance, required WorkflowFunction wfFunction ) {
 		var fn   = _getImplementationFactory().getFunction( id=arguments.wfFunction.getRef() );
-		var args = substituteStateArgs( StructCopy( arguments.wfFunction.getArgs() ), arguments.wfInstance.getState() );
+		var args = substituteArgs( arguments.wfFunction.getArgs(), arguments.wfInstance );
 
 		fn.do(
 			  wfInstance = arguments.wfInstance
@@ -259,28 +261,8 @@ component singleton {
 		return false;
 	}
 
-	public any function substituteStateArgs( required any args, required struct state ) {
-		if ( IsSimpleValue( arguments.args ) ) {
-			for( var key in arguments.state ) {
-				if ( IsSimpleValue( arguments.state[ key ] ) ) {
-					arguments.args = ReplaceNoCase( arguments.args, "$#key#", arguments.state[ key ], "all" );
-				}
-			}
-		}
-
-		if ( IsStruct( arguments.args ) ) {
-			for( var key in arguments.args ) {
-				arguments.args[ key ] = substituteStateArgs( arguments.args[ key ], arguments.state );
-			}
-		}
-
-		if ( IsArray( arguments.args ) ) {
-			for( var i=1; i<=ArrayLen( arguments.args ); i++ ) {
-				arguments.args[ i ] = substituteStateArgs( arguments.args[ i ], arguments.state );
-			}
-		}
-
-		return arguments.args;
+	public any function substituteArgs( required any args, required WorkflowInstnace wfInstance ) {
+		return _getWorkflowArgSubstitutor().substitute( arguments.args, arguments.wfInstance );
 	}
 
 // PRIVATE HELPERS
@@ -301,6 +283,13 @@ component singleton {
 	}
 	private void function _setWorkflowLibrary( required any workflowLibrary ) {
 	    _workflowLibrary = arguments.workflowLibrary;
+	}
+
+	private any function _getWorkflowArgSubstitutor() {
+	    return _workflowArgSubstitutor;
+	}
+	private void function _setWorkflowArgSubstitutor( required any workflowArgSubstitutor ) {
+	    _workflowArgSubstitutor = arguments.workflowArgSubstitutor;
 	}
 
 }
