@@ -38,7 +38,7 @@ interface {
 For example:
 
 ```cfc
-component {
+component implements="cfflow.models.substitution.IWorkflowArgSubstitutionProvider" {
 
   public struct function getTokens( 
       required array            requiredTokens
@@ -46,6 +46,9 @@ component {
   ) {
     var tokens = {};
 
+    // the array of requiredTokens are tokens
+    // parsed from the args. This allows you to 
+    // only generate the tokens that are necessary
     if ( ArrayFindNoCase( requiredTokens, "$my.custom.token" ) ) {
       tokens[ "$my.custom.token" ] = "a hardcoded example";
     }
