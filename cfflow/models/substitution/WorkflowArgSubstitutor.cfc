@@ -13,7 +13,6 @@ component {
 	public struct function substitute( required struct args, required WorkflowInstance wfInstance ) {
 		var discoveredTokens = discoverTokens( args );
 		var substituted = StructCopy( args );
-		var tokenRegex = "\$[a-zA-Z_][a-zA-Z_\-\.0-9]*\b";
 
 		if ( ArrayLen( discoveredTokens ) ) {
 			var tokens = {};
@@ -22,16 +21,7 @@ component {
 			}
 
 			if ( StructCount( tokens ) ) {
-				for( var key in substituted ) {
-					var value = substituted[ key ];
-					if ( IsSimpleValue( value ) && ReFind( tokenRegex, value ) ) {
-						for( var token in tokens ) {
-							var regexForThisToken = ReReplace( token, "([\$\-\.])", "\\1", "all" );
-
-							value = substituted[ key ] = ReReplaceNoCase( value, regexForThisToken, tokens[ token ], "all" );
-						}
-					}
-				}
+				_substituteRecursively( substituted, tokens );
 			}
 		}
 
@@ -50,6 +40,11 @@ component {
 				for( var token in matches ) {
 					tokens[ token ] = 0;
 				}
+			} else if ( IsStruct( value ) ) {
+				var subTokens = discoverTokens( value );
+				for( var subToken in subTokens ) {
+					tokens[ subToken ] = 0;
+				}
 			}
 		}
 
@@ -63,6 +58,22 @@ component {
 	}
 
 // PRIVATE HELPERS
+	private void function _substituteRecursively( substituted, tokens ) {
+		var tokenRegex = "\$[a-zA-Z_][a-zA-Z_\-\.0-9]*\b";
+
+		for( var key in substituted ) {
+			var value = substituted[ key ];
+			if ( IsSimpleValue( value ) && ReFind( tokenRegex, value ) ) {
+				for( var token in tokens ) {
+					var regexForThisToken = ReReplace( token, "([\$\-\.])", "\\1", "all" );
+
+					value = substituted[ key ] = ReReplaceNoCase( value, regexForThisToken, tokens[ token ], "all" );
+				}
+			} else if ( IsStruct( value ) ) {
+				_substituteRecursively( substituted[ key ], tokens );
+			}
+		}
+	}
 
 // GETTERS AND SETTERS
 	private array function _getTokenProviders() {

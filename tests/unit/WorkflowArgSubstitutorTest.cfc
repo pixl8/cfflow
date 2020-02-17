@@ -13,6 +13,9 @@ component extends="testbox.system.BaseSpec" {
 						  test   = "this is a $_test.token"
 						, simple = "$token"
 						, multi  = "$token another $fubar.here"
+						, nested = {
+							test = "$token"
+						}
 					};
 					var state = {
 						  token = "this"
@@ -26,6 +29,7 @@ component extends="testbox.system.BaseSpec" {
 						  test   = "this is a yes"
 						, simple = "this"
 						, multi  = "this another no"
+						, nested = { test="this" }
 					} );
 				} );
 			} );
