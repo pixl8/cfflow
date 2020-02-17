@@ -23,3 +23,9 @@ Functions and conditions are [core concepts](concepts.html) of CfFlow. The engin
 
 See [Creating a custom function](extending/functions.html) and [Creating a custom condition](extending/conditions.html).
 
+## Registering token providers
+
+Token providers allow you to customize how CfFlow provides dynamic argument values to functions and conditions.
+
+See [Creating a custom token provider](extending/tokenproviders.html).
+
