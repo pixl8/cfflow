@@ -261,7 +261,7 @@ component singleton {
 		return false;
 	}
 
-	public any function substituteArgs( required any args, required WorkflowInstnace wfInstance ) {
+	public any function substituteArgs( required any args, required WorkflowInstance wfInstance ) {
 		return _getWorkflowArgSubstitutor().substitute( arguments.args, arguments.wfInstance );
 	}
 
