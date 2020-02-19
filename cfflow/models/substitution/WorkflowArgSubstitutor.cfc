@@ -70,6 +70,7 @@ component {
 					value = substituted[ key ] = ReReplaceNoCase( value, regexForThisToken, tokens[ token ], "all" );
 				}
 			} else if ( IsStruct( value ) ) {
+				substituted[ key ] = StructCopy( value );
 				_substituteRecursively( substituted[ key ], tokens );
 			}
 		}

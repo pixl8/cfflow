@@ -32,6 +32,36 @@ component extends="testbox.system.BaseSpec" {
 						, nested = { test="this" }
 					} );
 				} );
+
+				it( "should not modify the passed in args", function(){
+					var wfInstance = CreateEmptyMock( "cfflow.models.instances.WorkflowInstance" );
+					var args = {
+						  test   = "this is a $_test.token"
+						, simple = "$token"
+						, multi  = "$token another $fubar.here"
+						, nested = {
+							test = "$token"
+						}
+					};
+					var state = {
+						  token = "this"
+						, _test = { token="yes" }
+						, fubar  = { here="no" }
+					};
+
+					wfInstance.$( "getState", state );
+
+					_subst.substitute( args, wfinstance )
+
+					expect( args ).toBe( {
+						  test   = "this is a $_test.token"
+						, simple = "$token"
+						, multi  = "$token another $fubar.here"
+						, nested = {
+							test = "$token"
+						}
+					} );
+				} );
 			} );
 
 			describe( "discoverTokens( args )", function(){
