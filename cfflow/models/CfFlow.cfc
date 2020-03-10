@@ -27,6 +27,7 @@ component singleton {
 		) );
 
 		_registerBuiltInConditions();
+		_registerBuiltInFunctions();
 
 		return this;
 	}
@@ -171,6 +172,21 @@ component singleton {
 			    relPath = ReReplaceNoCase( relPath, ".cfc$", "", "all" );
 
 			registerCondition( id=relPath, implementation=CreateObject( rootCfcPath & "." & relPath ) );
+		}
+	}
+
+	private void function _registerBuiltInFunctions() {
+		var root = GetDirectoryFromPath( GetCurrentTemplatePath() ) & "/implementation/functions";
+		var rootCfcPath = "implementation.functions";
+		var functionCfcs = DirectoryList( root, true, "path", "*.cfc" );
+
+		for( var functionCfc in functionCfcs ) {
+			var relPath = Right( functionCfc, Len( functionCfc ) - Len( root ) );
+			    relPath = Replace( relPath, "/", ".", "all" );
+			    relPath = Replace( relPath, "\", ".", "all" );
+			    relPath = ReReplaceNoCase( relPath, ".cfc$", "", "all" );
+
+			registerFunction( id=relPath, implementation=CreateObject( rootCfcPath & "." & relPath ) );
 		}
 	}
 
