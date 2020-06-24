@@ -20,9 +20,11 @@ component {
 				StructAppend( tokens, provider.getTokens( discoveredTokens, wfInstance ) );
 			}
 
-			if ( StructCount( tokens ) ) {
-				_substituteRecursively( substituted, tokens );
+			for( var discoveredToken in discoveredTokens ) {
+				tokens[ discoveredToken ] = tokens[ discoveredToken ] ?: "";
 			}
+
+			_substituteRecursively( substituted, tokens );
 		}
 
 		return substituted;

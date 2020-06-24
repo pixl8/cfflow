@@ -33,6 +33,28 @@ component extends="testbox.system.BaseSpec" {
 					} );
 				} );
 
+				it( "should substitute empty strings for variables that could not be substituted", function(){
+					var wfInstance = CreateEmptyMock( "cfflow.models.instances.WorkflowInstance" );
+					var args = {
+						  test   = "this is a $_test.token"
+						, simple = "$token"
+						, multi  = "$token another $fubar.here"
+						, nested = {
+							test = "$token"
+						}
+					};
+					var state = {};
+
+					wfInstance.$( "getState", state );
+
+					expect( _subst.substitute( args, wfinstance ) ).toBe( {
+						  test   = "this is a "
+						, simple = ""
+						, multi  = " another "
+						, nested = { test="" }
+					} );
+				} );
+
 				it( "should not modify the passed in args", function(){
 					var wfInstance = CreateEmptyMock( "cfflow.models.instances.WorkflowInstance" );
 					var args = {
