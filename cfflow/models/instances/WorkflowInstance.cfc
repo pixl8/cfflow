@@ -72,6 +72,10 @@ component accessors=true {
 		return "";
 	}
 
+	public void function setComplete() {
+		getWorkflowImplementation().setComplete( workflowId=getWorkflowId(), instanceArgs=getInstanceArgs() );
+	}
+
 	public boolean function isComplete() {
 		for( var step in getActiveSteps() ) {
 			var stepHasActions = ArrayLen( _getStep( step ).getActions() );
