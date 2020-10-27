@@ -158,7 +158,7 @@ component singleton {
 
 		if ( !result && ArrayLen( arguments.wfCondition.getOrConditions() ) ) {
 			for( var orCondition in arguments.wfCondition.getOrConditions() ) {
-				if ( evaluateCondition( orCondition, arguments.wfInstance, substitutedArgs ) ) {
+				if ( evaluateCondition( orCondition, arguments.wfInstance ) ) {
 					result = true;
 					break;
 				}
@@ -167,7 +167,7 @@ component singleton {
 
 		if ( result && ArrayLen( arguments.wfCondition.getAndConditions() ) ) {
 			for( var andCondition in arguments.wfCondition.getAndConditions() ) {
-				if ( !evaluateCondition( andCondition, arguments.wfInstance, substitutedArgs ) ) {
+				if ( !evaluateCondition( andCondition, arguments.wfInstance ) ) {
 					result = false;
 					break;
 				}
