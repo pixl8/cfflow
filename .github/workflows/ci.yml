@@ -16,7 +16,7 @@ jobs:
               publish=true
             fi
           fi
-          echo "PUBLISH_PRESIDE=$publish" >> $GITHUB_ENV
+          echo "PUBLISH=$publish" >> $GITHUB_ENV
 
       - name: Checkout code
         uses: actions/checkout@v2
@@ -40,14 +40,14 @@ jobs:
           path: tests/test-results.txt
 
       - name: Generate release version number
-        if: "env.PUBLISH_PRESIDE == 'true'"
+        if: "env.PUBLISH == 'true'"
         id: versiongen
         uses: pixl8/github-action-twgit-release-version-generator@v1
         with:
           build_number_start: 8000
 
       - name: Package
-        if: "env.PUBLISH_PRESIDE == 'true'"
+        if: "env.PUBLISH == 'true'"
         run: ./.github/scripts/package.sh
         shell: bash
         env:
@@ -56,8 +56,8 @@ jobs:
           AWS_REGION: 'eu-west-2'
           RELEASE_VERSION: ${{ steps.versiongen.outputs.semver_release_string }}
 
-      - if: "env.PUBLISH_PRESIDE == 'true'"
-        name: Publish to forgebox
+      - name: Publish to forgebox
+        if: "env.PUBLISH == 'true'"
         uses: pixl8/github-action-box-publish@v3
         with:
           forgebox_user: pixl8

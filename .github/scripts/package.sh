@@ -20,6 +20,7 @@ cd $BUILD_DIR
 echo "Inserting version number..."
 sed -i "s/VERSION_NUMBER/$VERSION_NUMBER/" box.json
 sed -i "s/DOWNLOAD_LOCATION/$ZIP_FILE/" box.json
+cp box.json ../box.json
 echo "Done."
 
 echo "Zipping up..."
