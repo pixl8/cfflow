@@ -1,8 +1,8 @@
 {
     "name":"CFFlow",
     "type":"modules",
-    "version":"VERSION_NUMBER",
-    "location":"https://s3.eu-west-2.amazonaws.com/pixl8-public-packages/cfflow/DOWNLOAD_LOCATION",
+    "version":"$VERSION_NUMBER",
+    "location":"https://s3.eu-west-2.amazonaws.com/pixl8-public-packages/cfflow/$DOWNLOAD_LOCATION",
     "private":false,
     "author":"Pixl8 Group",
     "repository":{
