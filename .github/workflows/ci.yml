@@ -47,6 +47,7 @@ jobs:
           build_number_start: 8000
 
       - name: Package
+        if: "env.PUBLISH_PRESIDE == 'true'"
         run: ./.github/scripts/package.sh
         shell: bash
         env:
