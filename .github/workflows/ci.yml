@@ -44,15 +44,26 @@ jobs:
         id: versiongen
         uses: pixl8/github-action-twgit-release-version-generator@v1
 
-      - name: Package
+      - name: Zip project
         if: "env.PUBLISH == 'true'"
-        run: ./.github/scripts/package.sh
+        run: |
+          sed -i "s/VERSION_NUMBER/$VERSION_NUMBER/" box.json && \
+          sed -i "s/DOWNLOAD_LOCATION/$ZIP_FILE/" box.json && \
+          zip -rq $ZIP_FILE * -x jmimemagic.log -x .* -x *.sh -x *.log -x tests/**\* -x docs/**\*
         shell: bash
+        env:
+          VERSION_NUMBER: ${{ steps.versiongen.outputs.semver_release_string }}
+          ZIP_FILE: ${{ steps.versiongen.outputs.semver_release_number }}.zip
+
+      - name: Push to S3
+        run: aws s3 cp $ZIP_FILE s3://pixl8-public-packages/cfflow/$ZIP_FILE --acl public-read
+        shell: bash
+        if: "env.PUBLISH == 'true'"
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: 'eu-west-2'
-          RELEASE_VERSION: ${{ steps.versiongen.outputs.semver_release_string }}
+          ZIP_FILE: ${{ steps.versiongen.outputs.semver_release_number }}.zip
 
       - name: Publish to forgebox
         if: "env.PUBLISH == 'true'"
