@@ -3,7 +3,7 @@ CfFlow
 
 CfFlow is an open source workflow engine for the CFML language. It is inspired by the work and concepts of Open Symphony Workflow (OSWorkflow), an unmaintained Java workflow engine that is used in JIRA and many other java projects.
 
-[![Build Status](https://travis-ci.org/pixl8/cfflow.svg "Latest")](https://travis-ci.org/pixl8/cfflow)
+[![Continuous Integration](https://github.com/pixl8/cfflow/workflows/Continuous%20Integration/badge.svg)](https://github.com/pixl8/cfflow/actions?query=workflow%3A%22Continuous+Integration%22)
 
 [![Latest version](https://forgebox.io/api/v1/entry/cfflow/badges/version)](https://forgebox.io/view/cfflow)
 
