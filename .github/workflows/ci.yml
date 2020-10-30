@@ -43,8 +43,6 @@ jobs:
         if: "env.PUBLISH == 'true'"
         id: versiongen
         uses: pixl8/github-action-twgit-release-version-generator@v1
-        with:
-          build_number_start: 8000
 
       - name: Package
         if: "env.PUBLISH == 'true'"
