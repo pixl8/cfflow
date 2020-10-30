@@ -1,0 +1,71 @@
+name: Continuous Integration
+on:
+  push:
+  pull_request:
+jobs:
+  ci:
+    name: CI for CfFlow
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, '[twgit] Init') && github.ref != 'refs/heads/stable'"
+    services:
+      mysql:
+          image: mysql:5.7
+          env:
+              MYSQL_ALLOW_EMPTY_PASSWORD: yes
+              MYSQL_DATABASE: preside_test
+          ports:
+              - 3306:3306
+          options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+    steps:
+      - name: Setup flow variables
+        run: |
+          branch=${GITHUB_REF##*/}
+          publish=false
+          if [[ "{{ env.event.name }}" != "pull_request" ]] ; then
+            if [[ $branch == v* ]] ; then
+              publish=true
+            fi
+          fi
+          echo "PUBLISH_PRESIDE=$publish" >> $GITHUB_ENV
+
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Run tests
+        uses: pixl8/github-action-box-test@v3
+        with:
+          test_dir: /tests
+          test_server_json: /tests/server-cfflowtests.json
+          output_file: /tests/test-results.txt
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v1
+        with:
+          name: test-results
+          path: tests/test-results.txt
+
+      - name: Generate release version number
+        if: "env.PUBLISH_PRESIDE == 'true'"
+        id: versiongen
+        uses: pixl8/github-action-twgit-release-version-generator@v1
+        with:
+          build_number_start: 8000
+
+      - name: Package
+        run: ./.github/scripts/package.sh
+        shell: bash
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: 'eu-west-2'
+          RELEASE_VERSION: ${{ steps.versiongen.outputs.semver_release_string }}
+
+      - if: "env.PUBLISH_PRESIDE == 'true'"
+        name: Publish to forgebox
+        uses: pixl8/github-action-box-publish@v3
+        with:
+          forgebox_user: pixl8
+          forgebox_pass: ${{ secrets.FORGEBOX_PASS }}
