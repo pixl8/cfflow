@@ -62,7 +62,7 @@ component accessors=true {
 		for( var step in statuses ) {
 			if ( step.status == "active" ) {
 				if ( arguments.includeMeta ) {
-					var wfStep = _getStep( step );
+					var wfStep = _getStep( step.step );
 					if( !IsNull( wfStep ) ) {
 						return {
 							  id   = step.step
