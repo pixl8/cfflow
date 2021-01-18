@@ -56,6 +56,8 @@ jobs:
         if: "env.PUBLISH == 'true'"
         run: zip -rq $ZIP_FILE * -x jmimemagic.log -x .* -x *.sh -x *.log -x tests/**\* -x docs/**\*
         shell: bash
+        env:
+          ZIP_FILE: ${{ steps.versiongen.outputs.semver_release_number }}.zip
 
       - name: Push to S3
         run: aws s3 cp $ZIP_FILE s3://pixl8-public-packages/cfflow/$ZIP_FILE --acl public-read
