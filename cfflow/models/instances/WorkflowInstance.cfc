@@ -66,7 +66,7 @@ component accessors=true {
 					if( !IsNull( wfStep ) ) {
 						return {
 							  id   = step.step
-							, meta =  _getStep( step.step ).getMeta()
+							, meta =  wfStep.getMeta()
 						};
 					}
 				}
