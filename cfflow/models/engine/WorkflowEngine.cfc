@@ -216,7 +216,7 @@ component singleton {
 	public void function scheduleAutoActions( required WorkflowInstance wfInstance, required string stepId ) {
 		var wfStep = getStepForInstance( wfInstance=arguments.wfInstance, stepId=arguments.stepId );
 
-		if ( wfStep.hasAutoActions() ) {
+		if ( !IsNull( wfStep ) && wfStep.hasAutoActions() ) {
 			if ( wfStep.hasAutoActionTimers() ) {
 				arguments.wfInstance.getWorkflowImplementation().scheduleAutoActions(
 					  workflowId   = arguments.wfInstance.getWorkflowId()
@@ -234,7 +234,7 @@ component singleton {
 	public void function unScheduleAutoActions() {
 		var wfStep = getStepForInstance( wfInstance=arguments.wfInstance, stepId=arguments.stepId );
 
-		if ( wfStep.hasAutoActions() ) {
+		if ( !IsNull( wfStep ) && wfStep.hasAutoActions() ) {
 			if ( wfStep.hasAutoActionTimers() ) {
 				arguments.wfInstance.getWorkflowImplementation().unScheduleAutoActions(
 					  workflowId   = arguments.wfInstance.getWorkflowId()
@@ -250,11 +250,13 @@ component singleton {
 		,          string           stepId = ""
 		,          WorkflowStep     wfStep = getStepForInstance( arguments.wfInstance, arguments.stepId )
 	) {
-		for( var action in arguments.wfStep.getActions() ) {
-			if ( action.getIsAutomatic() ) {
-				if ( !action.hasCondition() || evaluateCondition( wfInstance=arguments.wfInstance, wfCondition=action.getCondition() ) ) {
-					doAction( wfInstance=arguments.wfInstance, wfAction=action );
-					return true;
+		if( !IsNull( arguments.wfStep ) ) {
+			for( var action in arguments.wfStep.getActions() ) {
+				if ( action.getIsAutomatic() ) {
+					if ( !action.hasCondition() || evaluateCondition( wfInstance=arguments.wfInstance, wfCondition=action.getCondition() ) ) {
+						doAction( wfInstance=arguments.wfInstance, wfAction=action );
+						return true;
+					}
 				}
 			}
 		}

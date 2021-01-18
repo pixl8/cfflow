@@ -41,10 +41,12 @@ component accessors=true {
 			if ( step.status == "active" ) {
 				if ( arguments.includeMeta ) {
 					var wfStep = _getStep( step.step );
-					ArrayAppend( activeSteps, {
-						  id   = step.step
-						, meta = wfStep.getMeta()
-					} );
+					if( !IsNull( wfStep ) ) {
+						ArrayAppend( activeSteps, {
+							  id   = step.step
+							, meta = wfStep.getMeta()
+						} );
+					}
 				} else {
 					ArrayAppend( activeSteps, step.step );
 				}
@@ -60,10 +62,13 @@ component accessors=true {
 		for( var step in statuses ) {
 			if ( step.status == "active" ) {
 				if ( arguments.includeMeta ) {
-					return {
-						  id   = step.step
-						, meta = _getStep( step.step ).getMeta()
-					};
+					var wfStep = _getStep( step );
+					if( !IsNull( wfStep ) ) {
+						return {
+							  id   = step.step
+							, meta =  _getStep( step.step ).getMeta()
+						};
+					}
 				}
 				return step.step;
 			}
@@ -78,10 +83,13 @@ component accessors=true {
 
 	public boolean function isComplete() {
 		for( var step in getActiveSteps() ) {
-			var stepHasActions = ArrayLen( _getStep( step ).getActions() );
+			var wfStep = _getStep( step );
+			if( !IsNull( wfStep ) ) {
+				var stepHasActions = ArrayLen( wfStep.getActions() );
 
-			if ( stepHasActions ) {
-				return false;
+				if ( stepHasActions ) {
+					return false;
+				}
 			}
 		}
 
@@ -113,23 +121,26 @@ component accessors=true {
 // ACTION PROXIES
 	public array function getManualActions( string stepId=getActiveStep() ) {
 		var step          = _getStep( arguments.stepId );
-		var actions       = step.getActions();
 		var manualActions = [];
 
-		for( var action in actions ) {
-			if ( action.getIsManual() ) {
-				if ( action.hasCondition() ) {
-					var conditionPasses = getWorkflowEngine().evaluateCondition(
-						  wfCondition = action.getCondition()
-						, wfInstance  = this
-					);
+		if( !IsNull( step ) ) {
+			var actions = step.getActions();
 
-					if ( !conditionPasses ) {
-						continue;
+			for( var action in actions ) {
+				if ( action.getIsManual() ) {
+					if ( action.hasCondition() ) {
+						var conditionPasses = getWorkflowEngine().evaluateCondition(
+							  wfCondition = action.getCondition()
+							, wfInstance  = this
+						);
+
+						if ( !conditionPasses ) {
+							continue;
+						}
 					}
-				}
 
-				ArrayAppend( manualActions, action.getId() );
+					ArrayAppend( manualActions, action.getId() );
+				}
 			}
 		}
 
@@ -145,13 +156,15 @@ component accessors=true {
 		}
 
 		var step = _getStep( arguments.stepId );
-		for( var action in step.getActions() ) {
-			if ( action.getId() == arguments.actionId ) {
-				getWorkflowEngine().doAction(
-					  wfInstance = this
-					, wfAction   = action
-				);
-				return;
+		if( !IsNull( step ) ) {
+			for( var action in step.getActions() ) {
+				if ( action.getId() == arguments.actionId ) {
+					getWorkflowEngine().doAction(
+						  wfInstance = this
+						, wfAction   = action
+					);
+					return;
+				}
 			}
 		}
 	}
