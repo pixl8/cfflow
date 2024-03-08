@@ -62,4 +62,26 @@ component accessors=true {
 	public struct function getMeta() {
 		return variables.meta ?: {};
 	}
+
+	public struct function getMemento() {
+		var memento = {
+			  id                 = getId()
+			, isAutomatic        = getIsAutomatic()
+			, meta               = getMeta()
+			, conditionalResults = []
+		};
+
+		if ( !IsNull( getCondition() ) ) {
+			memento.condition = getCondition().getMemento();
+		}
+		if ( !IsNull( getDefaultResult() ) ) {
+			memento.defaultResult = getDefaultResult().getMemento();
+		}
+
+		for( var cr in getConditionalResults() ) {
+			ArrayAppend( memento.conditionalResults, cr.getMemento() );
+		}
+
+		return memento;
+	}
 }

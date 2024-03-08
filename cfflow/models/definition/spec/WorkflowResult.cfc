@@ -102,4 +102,31 @@ component accessors=true {
 	public struct function getMeta() {
 		return variables.meta ?: {};
 	}
+
+	public struct function getMemento() {
+		var memento = {
+			  id            = getId()
+			, type          = getType()
+			, isDefault     = getIsDefault()
+			, meta          = getMeta()
+			, transitions   = []
+			, functions     = { pre=[], post=[] }
+		};
+
+		if ( !IsNull( getCondition() ) ) {
+			memento.condition = getCondition().getMemento();
+		}
+
+		for( var t in getTransitions() ) {
+			ArrayAppend( memento.transitions, t.getMemento() );
+		}
+		for( var pf in getPreFunctions() ) {
+			ArrayAppend( memento.functions.pre, pf.getMemento() );
+		}
+		for( var pf in getPostFunctions() ) {
+			ArrayAppend( memento.functions.post, pf.getMemento() );
+		}
+
+		return memento;
+	}
 }

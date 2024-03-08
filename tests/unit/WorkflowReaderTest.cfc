@@ -15,10 +15,11 @@ component extends="testbox.system.BaseSpec" {
 			} );
 
 			describe( "read( struct )", function() {
-				var wf = "";
+				var wf  = "";
+				var def = _getWorkflowStructFromYaml();
 
 				beforeEach( function(){
-					wf = reader.read( _getWorkflowStructFromYaml() );
+					wf = reader.read( def );
 				} );
 
 				it( "should raise an error when the incoming workflow definition is invalid", function(){
@@ -190,6 +191,16 @@ component extends="testbox.system.BaseSpec" {
 					expect( postFunctions[2].getMeta() ).toBe( {title="Function 2"} );
 					expect( postFunctions[2].getPreOrPost() ).toBe( "post" );
 					expect( postFunctions[2].getCondition().getRef() ).toBe( "function2conditionid" );
+				} );
+
+				it( "should return a workflow object that deserializes to the original spec", function() {
+					var memento = wf.getMemento();
+
+					expect( memento ).toBe( DeserializeJson( FileRead( "/tests/resources/yaml/expectedSerialized.json" ) ) );
+
+					var newwf = reader.read( { version="1.0.0", workflow=memento }, false );
+
+					expect( newwf.getmemento() ).toBe( memento );
 				} );
 			} );
 		} );

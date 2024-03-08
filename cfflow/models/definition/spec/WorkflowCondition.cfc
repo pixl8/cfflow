@@ -76,4 +76,24 @@ component accessors=true {
 
 		return variables.orConditions;
 	}
+
+	public struct function getMemento() {
+		var memento = {
+			  ref   = getRef()
+			, args  = getArgs()
+			, meta  = getMeta()
+			, "not" = getNot()
+			, "and" = []
+			, "or"  = []
+		};
+
+		for( var c in getAndConditions() ) {
+			ArrayAppend( memento[ "and" ], c.getMemento() );
+		}
+		for( var c in getOrConditions() ) {
+			ArrayAppend( memento[ "or" ], c.getMemento() );
+		}
+
+		return memento;
+	}
 }

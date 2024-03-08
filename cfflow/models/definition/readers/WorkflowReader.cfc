@@ -20,8 +20,8 @@ component singleton {
 	}
 
 // PUBLIC API METHODS
-	public any function read( required struct workflow ) {
-		_getSchemaValidator().validate( arguments.workflow );
+	public any function read( required struct workflow, boolean validate=true ) {
+		arguments.validate && _getSchemaValidator().validate( arguments.workflow );
 
 		var wf    = arguments.workflow.workflow ?: {};
 		var wfObj = _getWorkflowFactory().getWorkflow(

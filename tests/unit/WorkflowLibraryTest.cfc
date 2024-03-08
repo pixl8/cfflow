@@ -5,7 +5,13 @@ component extends="testbox.system.BaseSpec" {
 			var _library = "";
 
 			beforeEach( function(){
-				_library = CreateMock( object=new cfflow.models.definition.WorkflowLibrary() );
+				factory = CreateMock( object=new cfflow.models.definition.WorkflowFactory() );
+				reader = CreateMock( object=new cfflow.models.definition.readers.WorkflowReader(
+					  workflowFactory = factory
+					, schemaValidator = new cfflow.models.definition.validation.WorkflowSchemaValidator()
+					, schemaUtil      = new cfflow.models.util.WorkflowSchemaUtil()
+				) );
+				_library = CreateMock( object=new cfflow.models.definition.WorkflowLibrary( reader ) );
 			} );
 
 			describe( "workflowExists()", function(){

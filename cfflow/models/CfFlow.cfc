@@ -6,18 +6,18 @@
 component singleton {
 
 	public any function init() {
-		_setWorkflowLibrary( new definition.WorkflowLibrary() );
+		_setWorkflowReader( new definition.readers.WorkflowReader(
+			  workflowFactory = new definition.WorkflowFactory()
+			, schemaValidator = new definition.validation.WorkflowSchemaValidator()
+			, schemaUtil      = new util.WorkflowSchemaUtil()
+		) );
+		_setWorkflowLibrary( new definition.WorkflowLibrary( workflowReader = getWorkflowReader() ) );
 		_setWorkflowArgSubstitutor( new substitution.workflowArgSubstitutor() );
 		_setImplementationFactory( new implementation.WorkflowImplementationFactory() );
 		_setWorkflowEngine( new engine.WorkflowEngine(
 			  implementationFactory  = getImplementationFactory()
 			, workflowLibrary        = getWorkflowLibrary()
 			, workflowArgSubstitutor = getWorkflowArgSubstitutor()
-		) );
-		_setWorkflowReader( new definition.readers.WorkflowReader(
-			  workflowFactory = new definition.WorkflowFactory()
-			, schemaValidator = new definition.validation.WorkflowSchemaValidator()
-			, schemaUtil      = new util.WorkflowSchemaUtil()
 		) );
 		_setYamlWorkflowReader( new definition.readers.WorkflowYamlReader(
 			  workflowFactory = new definition.WorkflowFactory()

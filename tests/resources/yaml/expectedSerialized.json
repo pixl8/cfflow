@@ -1,0 +1,365 @@
+{
+  "id": "test-workflow",
+  "class": "pixl8.webflow",
+  "meta": {
+    "title": "Test workflow"
+  },
+  "initialActions": [
+    {
+      "meta": {
+        "title": "Action 1"
+      },
+      "isAutomatic": true,
+      "id": "action-1",
+      "conditionalResults": [],
+      "defaultResult": {
+        "meta": {
+          "title": "Start"
+        },
+        "transitions": [
+          {
+            "status": "active",
+            "step": "step-1"
+          }
+        ],
+        "id": "start",
+        "type": "step",
+        "isDefault": true,
+        "functions": {
+          "pre": [],
+          "post": []
+        }
+      }
+    }
+  ],
+  "steps": [
+    {
+      "meta": {
+        "title": "Step 1",
+        "description": "Step 1 description"
+      },
+      "actions": [
+        {
+          "meta": {
+            "title": "Action 1"
+          },
+          "condition": {
+            "meta": {},
+            "ref": "action1.condition.handler",
+            "or": [
+              {
+                "meta": {},
+                "ref": "action1.condition.handler.4",
+                "or": [],
+                "not": false,
+                "args": {},
+                "and": []
+              }
+            ],
+            "not": true,
+            "args": {
+              "val2": "$state_var_2",
+              "val1": "$state_var_1"
+            },
+            "and": [
+              {
+                "meta": {},
+                "ref": "action1.condition.handler.2",
+                "or": [
+                  {
+                    "meta": {},
+                    "ref": "action.condition.handler.3",
+                    "or": [],
+                    "not": false,
+                    "args": {},
+                    "and": []
+                  }
+                ],
+                "not": false,
+                "args": {},
+                "and": []
+              }
+            ]
+          },
+          "isAutomatic": true,
+          "id": "action-1",
+          "conditionalResults": [
+            {
+              "meta": {
+                "title": "Result 2"
+              },
+              "condition": {
+                "meta": {},
+                "ref": "result2.condition.handler",
+                "or": [],
+                "not": false,
+                "args": {},
+                "and": []
+              },
+              "transitions": [
+                {
+                  "status": "complete",
+                  "step": "step-1"
+                },
+                {
+                  "status": "skipped",
+                  "step": "step-2"
+                }
+              ],
+              "id": "result-2",
+              "type": "split",
+              "isDefault": false,
+              "functions": {
+                "pre": [
+                  {
+                    "meta": {
+                      "title": "Function 1"
+                    },
+                    "ref": "function-1",
+                    "condition": {
+                      "meta": {},
+                      "ref": "function1.condition.handler",
+                      "or": [],
+                      "not": false,
+                      "args": {},
+                      "and": []
+                    },
+                    "preOrPost": "pre",
+                    "args": {}
+                  },
+                  {
+                    "meta": {
+                      "title": "Function 2"
+                    },
+                    "ref": "function-2",
+                    "condition": {
+                      "meta": {},
+                      "ref": "function2conditionid",
+                      "or": [],
+                      "not": false,
+                      "args": {},
+                      "and": []
+                    },
+                    "preOrPost": "pre",
+                    "args": {}
+                  }
+                ],
+                "post": []
+              }
+            },
+            {
+              "meta": {
+                "title": "Result 3"
+              },
+              "condition": {
+                "meta": {},
+                "ref": "result3ConditionId",
+                "or": [],
+                "not": false,
+                "args": {},
+                "and": []
+              },
+              "transitions": [
+                {
+                  "status": "complete",
+                  "step": "step-1"
+                },
+                {
+                  "status": "active",
+                  "step": "step-2"
+                }
+              ],
+              "id": "result-3",
+              "type": "step",
+              "isDefault": false,
+              "functions": {
+                "pre": [],
+                "post": [
+                  {
+                    "meta": {
+                      "title": "Function 1"
+                    },
+                    "ref": "function-1",
+                    "condition": {
+                      "meta": {},
+                      "ref": "function1.condition.handler",
+                      "or": [],
+                      "not": false,
+                      "args": {},
+                      "and": []
+                    },
+                    "preOrPost": "post",
+                    "args": {}
+                  },
+                  {
+                    "meta": {
+                      "title": "Function 2"
+                    },
+                    "ref": "function-2",
+                    "condition": {
+                      "meta": {},
+                      "ref": "function2conditionid",
+                      "or": [],
+                      "not": false,
+                      "args": {},
+                      "and": []
+                    },
+                    "preOrPost": "post",
+                    "args": {}
+                  }
+                ]
+              }
+            }
+          ],
+          "defaultResult": {
+            "meta": {
+              "title": "Result 1"
+            },
+            "transitions": [
+              {
+                "status": "complete",
+                "step": "step-1"
+              },
+              {
+                "status": "active",
+                "step": "step-2"
+              }
+            ],
+            "id": "result-1",
+            "type": "step",
+            "isDefault": true,
+            "functions": {
+              "pre": [
+                {
+                  "meta": {
+                    "title": "Function 1"
+                  },
+                  "ref": "function-1",
+                  "condition": {
+                    "meta": {},
+                    "ref": "function1.condition.handler",
+                    "or": [],
+                    "not": false,
+                    "args": {
+                      "test": "blah"
+                    },
+                    "and": []
+                  },
+                  "preOrPost": "pre",
+                  "args": {
+                    "test": true,
+                    "cool": "really"
+                  }
+                },
+                {
+                  "meta": {
+                    "title": "Function 2"
+                  },
+                  "ref": "function-2",
+                  "condition": {
+                    "meta": {},
+                    "ref": "function2conditionid",
+                    "or": [],
+                    "not": false,
+                    "args": {},
+                    "and": []
+                  },
+                  "preOrPost": "pre",
+                  "args": {}
+                }
+              ],
+              "post": [
+                {
+                  "meta": {
+                    "title": "Function 1"
+                  },
+                  "ref": "function-1",
+                  "condition": {
+                    "meta": {},
+                    "ref": "function1.condition.handler",
+                    "or": [],
+                    "not": false,
+                    "args": {},
+                    "and": []
+                  },
+                  "preOrPost": "post",
+                  "args": {}
+                },
+                {
+                  "meta": {
+                    "title": "Function 2"
+                  },
+                  "ref": "function-2",
+                  "condition": {
+                    "meta": {},
+                    "ref": "function2conditionid",
+                    "or": [],
+                    "not": false,
+                    "args": {},
+                    "and": []
+                  },
+                  "preOrPost": "post",
+                  "args": {}
+                }
+              ]
+            }
+          }
+        },
+        {
+          "meta": {
+            "title": "Action 2"
+          },
+          "condition": {
+            "meta": {},
+            "ref": "action2.condition",
+            "or": [],
+            "not": false,
+            "args": {},
+            "and": []
+          },
+          "isAutomatic": false,
+          "id": "action-2",
+          "conditionalResults": [],
+          "defaultResult": {
+            "meta": {
+              "title": "Result 1"
+            },
+            "transitions": [
+              {
+                "status": "complete",
+                "step": "step-1"
+              },
+              {
+                "status": "active",
+                "step": "step-2"
+              }
+            ],
+            "id": "result-1",
+            "type": "step",
+            "isDefault": true,
+            "functions": {
+              "pre": [],
+              "post": []
+            }
+          }
+        }
+      ],
+      "autoActionTimers": [
+        {
+          "COUNT": 100,
+          "INTERVAL": "600s"
+        }
+      ],
+      "id": "step-1"
+    },
+    {
+      "meta": {
+        "title": "Step 2",
+        "description": "Step 2 description"
+      },
+      "actions": [],
+      "autoActionTimers": [],
+      "id": "step-2"
+    }
+  ]
+}

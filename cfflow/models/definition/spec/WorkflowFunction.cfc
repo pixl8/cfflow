@@ -26,4 +26,18 @@ component accessors=true {
 	public struct function getMeta() {
 		return variables.meta ?: {};
 	}
+
+	public struct function getMemento() {
+		var memento = {
+			  ref       = getRef()
+			, preOrPost = getPreOrPost()
+			, meta      = getMeta()
+			, args      = getArgs()
+		};
+		if ( !IsNull( getCondition() ) ) {
+			memento.condition = getCondition().getMemento();
+		}
+
+		return memento;
+	}
 }

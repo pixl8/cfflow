@@ -6,6 +6,6 @@
         "http":{
             "port":"6543"
         },
-        "webroot":"/"
+        "webroot":"./"
     }
 }

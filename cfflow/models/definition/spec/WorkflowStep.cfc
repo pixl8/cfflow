@@ -76,4 +76,22 @@ component accessors=true {
 	public struct function getMeta() {
 		return variables.meta ?: {};
 	}
+
+	public struct function getMemento() {
+		var memento = {
+			  id               = getId()
+			, meta             = getMeta()
+			, autoActionTimers = []
+			, actions          = []
+		};
+
+		for( var t in getAutoActionTimers() ) {
+			ArrayAppend( memento.autoActionTimers, t.getMemento() );
+		}
+		for( var a in getActions() ) {
+			ArrayAppend( memento.actions, a.getMemento() );
+		}
+
+		return memento;
+	}
 }

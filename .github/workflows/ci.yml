@@ -42,7 +42,7 @@ jobs:
       - name: Generate release version number
         if: "env.PUBLISH == 'true'"
         id: versiongen
-        uses: pixl8/github-action-twgit-release-version-generator@v1
+        uses: pixl8/github-action-twgit-release-version-generator@v2
 
       - name: Inject version into box json
         uses: dominicwatson/github-action-envsubst@v1

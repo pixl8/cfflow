@@ -17,4 +17,11 @@ component accessors=true {
 
 		throw( type="workflow.stepchange.invalid.status", message="Invalid value, [#arguments.status#], for status field for the workflow step change object. Valid values are either 'pending', 'active', 'complete' or 'skipped'." );
 	}
+
+	public struct function getMemento() {
+		return {
+			  step   = getStep()
+			, status = getStatus()
+		};
+	}
 }

@@ -5,6 +5,7 @@ component accessors=true {
 	property name="meta"           type="struct";
 	property name="initialActions" type="array";
 	property name="steps"          type="array";
+	property name="raw"            type="struct";
 
 	public string function getSignature() {
 		var rawInput = getId() & getClass();
@@ -36,6 +37,33 @@ component accessors=true {
 		return variables.steps ?: _initSteps();
 	}
 
+	public struct function getRaw() {
+		if ( IsNull( variables.raw ) ) {
+			return getMemento();
+		}
+
+		return variables.raw;
+	}
+
+	public struct function getMemento() {
+		var memento = {
+			  id             = getId()
+			, class          = getClass()
+			, meta           = getMeta()
+			, initialActions = []
+			, steps          = []
+		};
+
+		for( var s in getSteps() ) {
+			ArrayAppend( memento.steps, s.getMemento() );
+		}
+		for( var a in getInitialActions() ) {
+			ArrayAppend( memento.initialActions, a.getMemento() );
+		}
+
+		return memento;
+	}
+
 	private array function _initSteps() {
 		variables.steps = [];
 
@@ -60,4 +88,6 @@ component accessors=true {
 
 		return variables.initialActions;
 	}
+
+
 }
