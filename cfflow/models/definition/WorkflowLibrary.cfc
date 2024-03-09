@@ -11,29 +11,23 @@ component singleton {
 
 
 	public void function registerWorkflow( required Workflow wf ) {
-		var full = StructNew( "weak" ); // a simple cache
-
-		full.flow = arguments.wf;
-
 		variables._library[ arguments.wf.getId() ] = {
 			  raw = arguments.wf.getRaw() // much cheaper memory use to store in raw structs
-			, full = full
+			, full = CreateObject( "java", "java.lang.ref.WeakReference" ).init( arguments.wf )
 		}
 	}
 
 	public any function getWorkflow( required string id ) {
-		if ( !StructKeyExists( variables._library, arguments.id ) ) {
-			throw(
-				  "The workflow [#arguments.id#] has not been registered with the cfflow library."
-				, "cfflow.workflow.does.not.exist"
-			);
+		var flow = variables._library[ arguments.id ] ?: throw(
+			  "The workflow [#arguments.id#] has not been registered with the cfflow library."
+			, "cfflow.workflow.does.not.exist"
+		);
+
+		if ( !StructKeyExists( flow, "full" ) || IsNull( flow.full ) || IsNull( flow.full.get() ) ) {
+			flow.full = _reanimate( flow );
 		}
 
-		if ( !StructKeyExists( variables._library[ arguments.id ].full, "flow" ) || IsNull( variables._library[ arguments.id ].full.flow ) ) {
-			variables._library[ arguments.id ].full.flow = _getWorkflowReader().read( { workflow=variables._library[ arguments.id ].raw }, false )
-		}
-
-		return variables._library[ arguments.id ].full.flow;
+		return flow.full.get();
 	}
 
 	public boolean function workflowExists( required string id ) {
@@ -47,5 +41,10 @@ component singleton {
 		return variables._workflowReader;
 	}
 
+	private any function _reanimate( flow ) {
+		var wf = _getWorkflowReader().read( { workflow=arguments.flow.raw }, false );
+
+		return CreateObject( "java", "java.lang.ref.WeakReference" ).init( wf )
+	}
 
 }
