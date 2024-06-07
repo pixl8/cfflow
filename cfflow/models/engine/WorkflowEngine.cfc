@@ -58,9 +58,10 @@ component singleton {
 		throw( "The workflow [#wf.getId()#] could not be initialized. No initial actions met their conditional criteria.", "cfflow.no.initial.actions.runnable" );
 	}
 
-	public void function doAction( required WorkflowInstance wfInstance, required WorkflowAction wfAction ) {
-		var wfResult = getResultToExecute( arguments.wfInstance, arguments.wfAction );
-		var impl = arguments.wfInstance.getWorkflowImplementation();
+	public void function doAction( required WorkflowInstance wfInstance, required WorkflowAction wfAction, WorkflowStep wfStep ) {
+		var wfResult     = getResultToExecute( arguments.wfInstance, arguments.wfAction );
+		var impl         = arguments.wfInstance.getWorkflowImplementation();
+		var stepStatuses = arguments.wfInstance.getAllStepStatuses();
 
 		doResult(
 			  wfInstance = arguments.wfInstance
@@ -68,12 +69,14 @@ component singleton {
 		);
 
 		impl.recordAction(
-			  workflowId   = arguments.wfInstance.getWorkflowId()
-			, instanceArgs = arguments.wfInstance.getInstanceArgs()
-			, state        = arguments.wfInstance.getState()
-			, actionId     = arguments.wfAction.getId()
-			, resultId     = wfResult.getId()
-			, transitions  = wfResult.getTransitions()
+			  workflowId        = arguments.wfInstance.getWorkflowId()
+			, instanceArgs      = arguments.wfInstance.getInstanceArgs()
+			, state             = arguments.wfInstance.getState()
+			, actionId          = arguments.wfAction.getId()
+			, stepId            = arguments.wfStep?.getId()
+			, resultId          = wfResult.getId()
+			, transitions       = wfResult.getTransitions()
+			, priorStepStatuses = stepStatuses
 		);
 
 		if ( arguments.wfInstance.isComplete() ) {
@@ -254,7 +257,7 @@ component singleton {
 			for( var action in arguments.wfStep.getActions() ) {
 				if ( action.getIsAutomatic() ) {
 					if ( !action.hasCondition() || evaluateCondition( wfInstance=arguments.wfInstance, wfCondition=action.getCondition() ) ) {
-						doAction( wfInstance=arguments.wfInstance, wfAction=action );
+						doAction( wfInstance=arguments.wfInstance, wfAction=action, wfStep=arguments.wfStep );
 						return true;
 					}
 				}

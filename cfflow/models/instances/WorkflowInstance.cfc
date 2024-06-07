@@ -162,6 +162,7 @@ component accessors=true {
 					getWorkflowEngine().doAction(
 						  wfInstance = this
 						, wfAction   = action
+						, wfStep     = step
 					);
 					return;
 				}
