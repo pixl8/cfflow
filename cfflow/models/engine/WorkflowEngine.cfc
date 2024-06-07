@@ -75,8 +75,7 @@ component singleton {
 			, actionId          = arguments.wfAction.getId()
 			, stepId            = arguments.wfStep?.getId()
 			, resultId          = wfResult.getId()
-			, transitions       = wfResult.getTransitions()
-			, priorStepStatuses = stepStatuses
+			, transitions       = _prepareTransitionHistoryForAction( transitionDefinitions=wfResult.getTransitions(), priorStepStatuses=stepStatuses )
 		);
 
 		if ( arguments.wfInstance.isComplete() ) {
@@ -273,6 +272,29 @@ component singleton {
 // PRIVATE HELPERS
 	private any function _getWorkflowDefinition( required string workflowId ) {
 		return _getWorkflowLibrary().getWorkflow( arguments.workflowId );
+	}
+
+	private any function _prepareTransitionHistoryForAction( transitionDefinitions, priorStepStatuses ) {
+		var full = [];
+
+		for( var transition in transitionDefinitions ) {
+			var t = {
+				  step       = transition.getStep()
+				, newStatus  = transition.getStatus()
+				, oldStatus  = "pending"
+			};
+
+			for ( var ss in arguments.priorStepStatuses ) {
+				if ( ss.step == t.step ) {
+					t.oldStatus = ss.status;
+					break;
+				}
+			}
+
+			ArrayAppend( full, new cfflow.models.definition.spec.WorkflowTransitionHistory( argumentCollection=t ) );
+		}
+
+		return full;
 	}
 
 // GETTERS AND SETTERS
