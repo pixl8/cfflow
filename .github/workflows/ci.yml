@@ -12,14 +12,14 @@ jobs:
           branch=${GITHUB_REF##*/}
           publish=false
           if [[ "{{ env.event.name }}" != "pull_request" ]] ; then
-            if [[ $branch == v* ]] ; then
+            if [[ $branch == release-* ]] || [[ $branch == v* ]] ; then
               publish=true
             fi
           fi
           echo "PUBLISH=$publish" >> $GITHUB_ENV
 
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -42,7 +42,7 @@ jobs:
       - name: Generate release version number
         if: "env.PUBLISH == 'true'"
         id: versiongen
-        uses: pixl8/github-action-twgit-release-version-generator@v2
+        uses: pixl8/github-action-twgit-release-version-generator@v3
 
       - name: Inject version into box json
         uses: dominicwatson/github-action-envsubst@v1
@@ -71,7 +71,8 @@ jobs:
 
       - name: Publish to forgebox
         if: "env.PUBLISH == 'true'"
-        uses: pixl8/github-action-box-publish@v3
+        uses: pixl8/github-action-box-publish@v5
         with:
           forgebox_user: pixl8
           forgebox_pass: ${{ secrets.FORGEBOX_PASS }}
+          ignore_timeouts: "true"
