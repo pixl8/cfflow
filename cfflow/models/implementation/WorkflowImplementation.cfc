@@ -33,7 +33,7 @@ component accessors=true {
 		return getStorageClass().setComplete( argumentCollection=arguments );
 	}
 
-	public void function recordAction( required string workflowId, required struct instanceArgs, required struct state, required string actionId, required string resultId, required array transitions ){
+	public void function recordAction( required string workflowId, required struct instanceArgs, required struct state, required string actionId, required string resultId, required array transitions, string stepId="" ){
 		return getStorageClass().recordAction( argumentCollection=arguments );
 	}
 

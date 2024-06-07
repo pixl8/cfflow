@@ -42,7 +42,7 @@ component extends="testbox.system.BaseSpec" {
 
 			} );
 
-			describe( "doAction( wfInstance, wfAction )", function() {
+			describe( "doAction( wfInstance, wfAction, wfStep )", function() {
 				it( "should fetch the result of the action to execute and then run doResult() using the fetched result and passed instance", function(){
 					var result   = CreateMock( "cfflow.models.definition.spec.WorkflowResult" );
 					var action   = CreateMock( "cfflow.models.definition.spec.WorkflowAction" );
@@ -54,6 +54,7 @@ component extends="testbox.system.BaseSpec" {
 
 					_instance.$( "isComplete", false );
 					_instance.$( "getState", state );
+					_instance.$( "getAllStepStatuses", [] );
 					_impl.$( "setComplete" );
 					_impl.$( "recordAction" );
 
@@ -80,6 +81,7 @@ component extends="testbox.system.BaseSpec" {
 
 					_instance.$( "isComplete", true );
 					_instance.$( "getState", state );
+					_instance.$( "getAllStepStatuses", [] );
 					_impl.$( "setComplete" );
 					_impl.$( "recordAction" );
 
@@ -97,6 +99,8 @@ component extends="testbox.system.BaseSpec" {
 				it( "should call recordAction() on the workflow implementation", function(){
 					var result   = CreateMock( "cfflow.models.definition.spec.WorkflowResult" );
 					var action   = CreateMock( "cfflow.models.definition.spec.WorkflowAction" );
+					var transition1 = new cfflow.models.definition.spec.WorkflowTransition( step="step1", status="complete" );
+					var transition2 = new cfflow.models.definition.spec.WorkflowTransition( step="step2", status="active" );
 					var actionId = CreateUUId();
 					var resultId = CreateUUId();
 					var transitions = [ CreateUUId() ];
@@ -107,9 +111,10 @@ component extends="testbox.system.BaseSpec" {
 
 					_instance.$( "isComplete", false );
 					_instance.$( "getState", state );
+					_instance.$( "getAllStepStatuses", [{ step="step0", status="skipped"}, { step="step1", status="active"}, { step="step2", status="pending"}] );
 					_impl.$( "setComplete" );
 					_impl.$( "recordAction" );
-					result.$( "getTransitions", transitions );
+					result.$( "getTransitions", [ transition1, transition2 ] );
 
 					_engine.$( "getResultToExecute" ).$args( _instance, action ).$results( result );
 					_engine.$( "doResult" );
@@ -126,7 +131,9 @@ component extends="testbox.system.BaseSpec" {
 					expect( callLog[ 1 ].actionId ).toBe( actionId );
 					expect( callLog[ 1 ].resultId ).toBe( resultId );
 					expect( callLog[ 1 ].state ).toBe( state );
-					expect( callLog[ 1 ].transitions ).toBe( transitions );
+					expect( ArrayLen( callLog[ 1 ].transitions ) ).toBe( 2 );
+					expect( callLog[ 1 ].transitions[ 1 ].getMemento() ).toBe( { step="step1", newStatus="complete", oldStatus="active"  } );
+					expect( callLog[ 1 ].transitions[ 2 ].getMemento() ).toBe( { step="step2", newStatus="active"   , oldStatus="pending" } );
 				} );
 			} );
 
