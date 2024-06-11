@@ -39,12 +39,118 @@ The `state.Exists` condition allows you to check for the existance a variable wi
 #### Example
 {: .no_toc }
 
-
 ```yaml
 condition:
   ref: state.Exists
   args:
     key: product_id
+```
+
+## Step conditions
+
+### steps.Active
+
+The `steps.Active` condition allows you to check that the array of given stepIDs are all in an `active` status.
+
+#### Args
+{: .no_toc }
+
+| Name    | Description |
+|---------|--------|
+| `steps` | Required. Array of step IDs to check. |
+
+#### Example
+{: .no_toc }
+
+```yaml
+condition:
+  ref: steps.Active
+  args:
+    steps: [ "step1", "step2" ]
+```
+
+### steps.Completed
+
+The `steps.Completed` condition allows you to check that the array of given stepIDs are all in a `completed` status.
+
+#### Args
+{: .no_toc }
+
+| Name    | Description |
+|---------|--------|
+| `steps` | Required. Array of step IDs to check. |
+
+#### Example
+{: .no_toc }
+
+```yaml
+condition:
+  ref: steps.Completed
+  args:
+    steps: [ "step1", "step2" ]
+```
+
+### steps.CompletedOrSkipped
+
+The `steps.CompletedOrSkipped` condition allows you to check that the array of given stepIDs are all in either a `completed` or `skipped` status.
+
+#### Args
+{: .no_toc }
+
+| Name    | Description |
+|---------|--------|
+| `steps` | Required. Array of step IDs to check. |
+
+#### Example
+{: .no_toc }
+
+```yaml
+condition:
+  ref: steps.CompletedOrSkipped
+  args:
+    steps: [ "step1", "step2" ]
+```
+
+### steps.Pending
+
+The `steps.Pending` condition allows you to check that the array of given stepIDs are all in a 'Pending' status.
+
+#### Args
+{: .no_toc }
+
+| Name    | Description |
+|---------|--------|
+| `steps` | Required. Array of step IDs to check. |
+
+#### Example
+{: .no_toc }
+
+```yaml
+condition:
+  ref: steps.Pending
+  args:
+    steps: [ "step1", "step2" ]
+```
+
+### steps.Skipped
+
+The `steps.Skipped` condition allows you to check that the array of given stepIDs are all in a 'Skipped' status.
+
+#### Args
+{: .no_toc }
+
+| Name    | Description |
+|---------|--------|
+| `steps` | Required. Array of step IDs to check. |
+
+#### Example
+{: .no_toc }
+
+```yaml
+condition:
+  ref: steps.Skipped
+  args:
+    steps: [ "step1", "step2" ]
 ```
 
 ## String conditions
