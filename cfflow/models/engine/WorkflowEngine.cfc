@@ -205,7 +205,7 @@ component singleton {
 		return filtered;
 	}
 
-	public WorkflowStep function getStepForInstance( required WorkflowInstance wfInstance, required string stepId ) {
+	public any function getStepForInstance( required WorkflowInstance wfInstance, required string stepId ) {
 		var steps = _getWorkflowDefinition( arguments.wfInstance.getWorkflowId() ).getSteps();
 
 		for( var step in steps ) {
