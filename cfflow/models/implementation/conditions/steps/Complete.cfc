@@ -12,7 +12,7 @@ component implements="cfflow.models.implementation.interfaces.IWorkflowCondition
 
 		if ( IsArray( steps ) && ArrayLen( steps ) ) {
 			for( var ss in stepStatuses ) {
-				if ( ss.status == "completed" ) {
+				if ( ss.status == "complete" ) {
 					ArrayAppend( completedSteps, ss.step );
 				}
 			}
