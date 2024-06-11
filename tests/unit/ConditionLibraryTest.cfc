@@ -10,8 +10,8 @@ component extends="testbox.system.BaseSpec" {
 
 				variables._instance.$( "getState", _state );
 				variables._instance.$( "getAllStepStatuses", [
-					  { step="step1", status="completed" }
-					, { step="step2", status="completed" }
+					  { step="step1", status="complete" }
+					, { step="step2", status="complete" }
 					, { step="step3", status="skipped" }
 					, { step="step4", status="skipped" }
 					, { step="step5", status="skipped" }
@@ -69,30 +69,30 @@ component extends="testbox.system.BaseSpec" {
 					} );
 				} );
 
-				describe( "steps.Completed", function(){
+				describe( "steps.Complete", function(){
 					it( "should return true when all the given steps are completed in the current instance", function(){
-						var condition = new cfflow.models.implementation.conditions.steps.Completed();
+						var condition = new cfflow.models.implementation.conditions.steps.Complete();
 						var args = { steps=[ "step1", "step2" ] };
 
 						expect( condition.evaluate( _instance, args ) ).toBeTrue();
 					} );
 					it( "should return false when any of the given steps are not completed in the current instance", function(){
-						var condition = new cfflow.models.implementation.conditions.steps.Completed();
+						var condition = new cfflow.models.implementation.conditions.steps.Complete();
 						var args = { steps=[ "step2", "step3", "step5", "step1" ] };
 
 						expect( condition.evaluate( _instance, args ) ).toBeFalse();
 					} );
 				} );
 
-				describe( "steps.CompletedOrSkipped", function(){
+				describe( "steps.CompleteOrSkipped", function(){
 					it( "should return true when all the given steps are either completed or skipped in the current instance", function(){
-						var condition = new cfflow.models.implementation.conditions.steps.CompletedOrSkipped();
+						var condition = new cfflow.models.implementation.conditions.steps.CompleteOrSkipped();
 						var args = { steps=[ "step1", "step4", "step5" ] };
 
 						expect( condition.evaluate( _instance, args ) ).toBeTrue();
 					} );
 					it( "should return false when any of the given steps are not completed or skipped in the current instance", function(){
-						var condition = new cfflow.models.implementation.conditions.steps.CompletedOrSkipped();
+						var condition = new cfflow.models.implementation.conditions.steps.CompleteOrSkipped();
 						var args = { steps=[ "step1", "step4", "step5", "step7" ] };
 
 						expect( condition.evaluate( _instance, args ) ).toBeFalse();
