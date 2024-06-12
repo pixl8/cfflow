@@ -22,6 +22,9 @@ workflow:
   steps:
   - # {step}
   - # {step}
+  joins:
+  - # {join}
+  - # {join}
 ```
 
 ## Properties
@@ -35,6 +38,7 @@ workflow:
 | `workflow.class` | `true` | `string` | ID of a registered class that defines the storage interface and scheduler for the workflow. See [Creating a workflow class](../guides/extending/workflowclass.html). |
 | `workflow.initialActions` | `true` | `array` | Array of [initialAction](schema/initialAction.html) objects. Must have one or more initial actions. |
 | `workflow.steps` | `true` | `array` | Array of [step](schema/step.html) objects. Must have two or more steps. |
+| `workflow.joins` | `false` | `array` | Array of [join](schema/join.html) objects. |
 
 ## JSON Schema
 
@@ -81,6 +85,13 @@ workflow:
                     "description": "The steps of the flow. Any workflow must have at least two steps.",
                     "items": {
                         "$ref": "step.schema.json"
+                    }
+                },
+                "joins": {
+                    "type": "array",
+                    "description": "An array of join definitions for the flow",
+                    "items": {
+                        "$ref": "join.schema.json"
                     }
                 }
             }

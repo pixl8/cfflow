@@ -17,6 +17,7 @@ The concepts for **CfFlow** map to those of the OSWorfklow project. Understandin
 * conditions
 * functions
 * workflow instance
+* joins
 
 ## Steps and statuses
 
@@ -54,3 +55,7 @@ Only one result will be chosen and acted upon.
 ## Functions
 
 **Results** can have zero or more **pre/post functions**. These functions are code that runs that can effect the payload and/or state, or just perform some other action like "send email".
+
+## Joins
+
+**Joins** are a special kind of **action** that will exectute their results when all related steps are in either a "complete" or "skipped" state. Joins are defined globally in the flow and referenced in results. When a result run with one or more joins, each join will be checked and run if ready.

@@ -48,9 +48,10 @@ workflow:
       id: start
       meta:
         title: Start
-      type: step
       transitions:
       - step: step-1
+        status: active
+      - step: step-2
         status: active
   steps:
   - id: "step-1"
@@ -65,63 +66,61 @@ workflow:
       meta:
         title: Action 1
       condition:
-        id: action1.condition.handler
+        ref: action1.condition.handler
         not: true
         args:
           val1: $state_var_1
           val2: $state_var_2
         and:
-        - id: action1.condition.handler.2
+        - ref: action1.condition.handler.2
           or:
-          - id: action.condition.handler.3
+          - ref: action.condition.handler.3
         or:
-        - id: action1.condition.handler.4
+        - ref: action1.condition.handler.4
       isAutomatic: true
       defaultResult:
         id: result-1
         meta:
           title: Result 1
-        type: step
+        joins: simple-join
         transitions:
         - step: step-1
           status: complete
-        - step: step-2
-          status: active
         functions:
           pre:
-          - id: function-1
+          - ref: function-1
             meta:
               title: Function 1
             args:
               test: true
               cool: really
             condition:
-              id: function1.condition.handler
+              ref: function1.condition.handler
               args:
                 test: blah
-          - id: function-2
+          - ref: function-2
             meta:
               title: Function 2
             condition:
-              id: function2conditionid
+              ref: function2conditionid
           post:
-          - id: function-1
+          - ref: function-1
             meta:
               title: Function 1
             condition:
-              id: function1.condition.handler
-          - id: function-2
+              ref: function1.condition.handler
+          - ref: function-2
             meta:
               title: Function 2
             condition:
-              id: function2conditionid
+              ref: function2conditionid
       conditionalResults:
       - id: result-2
         meta:
           title: Result 2
-        type: split
         condition:
-          id: result2.condition.handler
+          ref: result2.condition.handler
+        joins: simple-join
         transitions:
         - step: step-1
           status: complete
@@ -129,49 +128,51 @@ workflow:
           status: skipped
         functions:
           pre:
-          - id: function-1
+          - ref: function-1
             meta:
               title: Function 1
             condition:
-              id: function1.condition.handler
-          - id: function-2
+              ref: function1.condition.handler
+          - ref: function-2
             meta:
               title: Function 2
             condition:
-              id: function2conditionid
+              ref: function2conditionid
       - id: result-3
         meta:
           title: Result 3
-        type: step
         condition:
-          id: result3ConditionId
+          ref: result3ConditionId
+        joins:
+        - simple-join
         transitions:
         - step: step-1
           status: complete
         - step: step-2
-          status: active
+          status: complete
         functions:
           post:
-          - id: function-1
+          - ref: function-1
             meta:
               title: Function 1
             condition:
-              id: function1.condition.handler
-          - id: function-2
+              ref: function1.condition.handler
+          - ref: function-2
             meta:
               title: Function 2
             condition:
-              id: function2conditionid
+              ref: function2conditionid
     - id: action-2
       meta:
         title: Action 2
       condition:
-        id: action2.condition
+        ref: action2.condition
       defaultResult:
         id: result-1
         meta:
           title: Result 1
-        type: step
+        joins:
+        - simple-join
         transitions:
         - step: step-1
           status: complete
@@ -181,4 +182,37 @@ workflow:
     meta:
       title: "Step 2"
       description: "Step 2 description"
+    actions:
+    - id: action-1
+      meta:
+        title: Action 1
+      isAutomatic: false
+      defaultResult:
+        id: result-1
+        meta:
+          title: Result 1
+        joins: simple-join
+        transitions:
+        - step: step-2
+          status: complete
+
+  - id: "step-3"
+    meta:
+      title: "Step 3"
+      description: "Step 3 description"
+
+  joins:
+  - id: simple-join
+    meta:
+      anything: really
+    steps:
+    - "step-1"
+    - "step-2"
+    defaultResult:
+      id: result-1
+      meta:
+        title: Result 1
+      transitions:
+      - step: step-3
+        status: active
 ```
