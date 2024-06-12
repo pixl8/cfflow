@@ -41,6 +41,13 @@
                     "items": {
                         "$ref": "step.schema.json"
                     }
+                },
+                "joins": {
+                    "type": "array",
+                    "description": "An array of join definitions for the flow",
+                    "items": {
+                        "$ref": "join.schema.json"
+                    }
                 }
             }
         }

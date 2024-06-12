@@ -16,14 +16,18 @@
         "meta": {
           "title": "Start"
         },
+        "joins":[],
         "transitions": [
           {
             "status": "active",
             "step": "step-1"
+          },
+          {
+            "status": "active",
+            "step": "step-2"
           }
         ],
         "id": "start",
-        "type": "step",
         "isDefault": true,
         "functions": {
           "pre": [],
@@ -32,6 +36,23 @@
       }
     }
   ],
+  "joins": [{
+    "id":"simple-join",
+    "meta":{"anything":"really"},
+    "steps":[ "step-1", "step-2" ],
+    "defaultResult":{
+      "id":"result-1",
+      "meta":{ "title":"Result 1"},
+      "isDefault":true,
+      "joins":[],
+      "functions":{"pre":[],"post":[] },
+      "transitions":[{
+        "step": "step-3",
+        "status": "active"
+      }]
+    },
+    "conditionalResults":[]
+  }],
   "steps": [
     {
       "meta": {
@@ -96,6 +117,7 @@
                 "args": {},
                 "and": []
               },
+              "joins":["simple-join"],
               "transitions": [
                 {
                   "status": "complete",
@@ -107,7 +129,6 @@
                 }
               ],
               "id": "result-2",
-              "type": "split",
               "isDefault": false,
               "functions": {
                 "pre": [
@@ -159,18 +180,18 @@
                 "args": {},
                 "and": []
               },
+              "joins":["simple-join"],
               "transitions": [
                 {
                   "status": "complete",
                   "step": "step-1"
                 },
                 {
-                  "status": "active",
+                  "status": "complete",
                   "step": "step-2"
                 }
               ],
               "id": "result-3",
-              "type": "step",
               "isDefault": false,
               "functions": {
                 "pre": [],
@@ -215,18 +236,14 @@
             "meta": {
               "title": "Result 1"
             },
+            "joins":["simple-join"],
             "transitions": [
               {
                 "status": "complete",
                 "step": "step-1"
-              },
-              {
-                "status": "active",
-                "step": "step-2"
               }
             ],
             "id": "result-1",
-            "type": "step",
             "isDefault": true,
             "functions": {
               "pre": [
@@ -324,6 +341,7 @@
             "meta": {
               "title": "Result 1"
             },
+            "joins":["simple-join"],
             "transitions": [
               {
                 "status": "complete",
@@ -335,7 +353,6 @@
               }
             ],
             "id": "result-1",
-            "type": "step",
             "isDefault": true,
             "functions": {
               "pre": [],
@@ -351,15 +368,39 @@
         }
       ],
       "id": "step-1"
-    },
-    {
+    },{
       "meta": {
         "title": "Step 2",
         "description": "Step 2 description"
       },
-      "actions": [],
+      "actions": [{
+        "id": "action-1",
+        "meta":{ "title": "Action 1" },
+        "isAutomatic": false,
+        "conditionalResults":[],
+        "defaultResult":{
+          "id": "result-1",
+          "meta":{ "title":"Result 1"},
+          "joins": [ "simple-join" ],
+          "isDefault":true,
+          "transitions":[{
+            "step":"step-2",
+            "status":"complete"
+          }],
+          "functions":{"pre":[],"post":[]}
+        }
+      }],
       "autoActionTimers": [],
       "id": "step-2"
+    },
+    {
+      "meta": {
+        "title": "Step 3",
+        "description": "Step 3 description"
+      },
+      "actions": [],
+      "autoActionTimers": [],
+      "id": "step-3"
     }
   ]
 }
