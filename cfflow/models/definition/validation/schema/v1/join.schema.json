@@ -1,0 +1,28 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "join.schema.json",
+    "type": "object",
+    "title": "Workflow join",
+    "description": "A join within a workflow, defines steps to listen to for completion and perform the first matching action",
+    "required":[ "id", "steps", "defaultResult" ],
+    "additionalProperties": false,
+    "properties":{
+        "id":{ "type":"string", "description":"Unique identifier for the join definition within this workflow" },
+        "meta":{ "type":"object", "description": "Abitrary metadata that you may use to describe the join." },
+        "steps":{ "type":"array", "description": "Array of step IDs. Join results will be triggered when a step transition triggers the join and all steps are in either a skipped or complete status.", "items":{ "type":"string" } },
+        "defaultResult":{
+            "type":"object",
+            "description":"The default result for this join. If no conditional results are defined or evaluate true, this result will be executed.",
+            "$ref":"defaultResult.schema.json"
+        },
+        "conditionalResults":{
+            "type":"array",
+            "minItems":0,
+            "description":"Array of conditional results that are only chosen if their condition evaluates true.",
+            "items":{
+                "type":"object",
+                "$ref":"conditionalResult.schema.json"
+            }
+        }
+    }
+}

@@ -328,7 +328,6 @@ component extends="testbox.system.BaseSpec" {
 					expect( _workflowAction.getConditionalResults() ).toBe( [ newResult ] );
 					expect( newResult.getId() ).toBe( "test-id" );
 					expect( newResult.getMeta() ).toBe( { title="test-title" } );
-					expect( newResult.getType() ).toBe( "join" );
 					expect( newResult.getIsDefault() ).toBe( false );
 					expect( newResult.getCondition().getRef() ).toBe( conditionId );
 				} );
@@ -345,7 +344,6 @@ component extends="testbox.system.BaseSpec" {
 
 					expect( newResult.getId() ).toBe( "test-id" );
 					expect( newResult.getMeta() ).toBe( { title="test-title" } );
-					expect( newResult.getType() ).toBe( "split" );
 					expect( newResult.getIsDefault() ).toBe( true );
 					expect( newResult.hasCondition() ).toBeFalse();
 					expect( newResult.getCondition() ).toBeNull();
@@ -442,11 +440,6 @@ component extends="testbox.system.BaseSpec" {
 				} );
 			} );
 
-			describe( "getType()", function(){
-				it( "should return the result type", function(){
-					expect( _workflowResult.getType() ).toBe( resultType );
-				} );
-			} );
 			describe( "getIsDefault()", function(){
 				it( "should return the result isDefault", function(){
 					expect( _workflowResult.getIsDefault() ).toBe( resultIsDefault );
@@ -538,23 +531,6 @@ component extends="testbox.system.BaseSpec" {
 				} );
 			} );
 
-			describe( "setType()", function(){
-				it( "should raise an informative error when value is neither 'step', 'split' or 'join'", function(){
-					_workflowResult.setType( "step" );
-					_workflowResult.setType( "split" );
-					_workflowResult.setType( "join" );
-
-					var raised = false;
-					try {
-						_workflowResult.setType( "somethingelse" );
-					} catch( "workflow.result.invalid.type" e ) {
-						raised = true;
-					}
-
-					expect( raised ).toBeTrue();
-				} );
-			} );
-
 			describe( "getSignature()", function(){
 				it( "should return a hash checksum of the non-trivial elements of the result", function(){
 					var transitions = [];
@@ -573,7 +549,6 @@ component extends="testbox.system.BaseSpec" {
 
 					expect( _workflowResult.getSignature() ).toBe( LCase( Hash(
 						_workflowResult.getId() &
-						_workflowResult.getType() &
 						_workflowResult.getIsDefault() &
 						_workflowResult.getCondition() &
 						transitionSigs[ 1 ] &

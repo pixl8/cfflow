@@ -58,6 +58,28 @@ component singleton {
 		throw( "The workflow [#wf.getId()#] could not be initialized. No initial actions met their conditional criteria.", "cfflow.no.initial.actions.runnable" );
 	}
 
+	public void function doJoin( required WorkflowInstance wfInstance, required WorkflowJoin wfJoin ) {
+		var joinSteps = wfJoin.getSteps();
+		var stepStatuses = wfInstance.getAllStepStatuses();
+		var readySteps = [];
+
+		for( var ss in stepStatuses ) {
+			if ( ss.status == "complete" || ss.status == "skipped" ) {
+				ArrayAppend( readySteps, ss.step );
+			}
+		}
+		for( var step in joinSteps ) {
+			if ( !ArrayFindNoCase( readySteps, step ) ) {
+				return;
+			}
+		}
+
+		doResult(
+			  wfInstance = arguments.wfInstance
+			, wfResult   = getResultToExecute( wfInstance=arguments.wfInstance, wfAction=arguments.wfJoin )
+		);
+	}
+
 	public void function doAction( required WorkflowInstance wfInstance, required WorkflowAction wfAction, WorkflowStep wfStep ) {
 		var wfResult     = getResultToExecute( arguments.wfInstance, arguments.wfAction );
 		var impl         = arguments.wfInstance.getWorkflowImplementation();
@@ -94,6 +116,7 @@ component singleton {
 		var preFunctions  = filterFunctionsToExecute( arguments.wfInstance, arguments.wfResult.getPreFunctions() );
 		var postFunctions = filterFunctionsToExecute( arguments.wfInstance, arguments.wfResult.getPostFunctions() );
 		var transitions   = arguments.wfResult.getTransitions();
+		var joins         = arguments.wfResult.getJoins();
 
 		for( var fn in preFunctions ) {
 			doFunction( wfInstance=arguments.wfInstance, wfFunction=fn );
@@ -105,6 +128,10 @@ component singleton {
 
 		for( var fn in postFunctions ) {
 			doFunction( wfInstance=arguments.wfInstance, wfFunction=fn );
+		}
+
+		for( var join in joins ) {
+			doJoin( wfInstance=arguments.wfInstance, wfJoin=_getJoin( arguments.wfInstance, join ) );
 		}
 	}
 
@@ -134,7 +161,7 @@ component singleton {
 		}
 	}
 
-	public WorkflowResult function getResultToExecute( required WorkflowInstance wfInstance, required WorkflowAction wfAction ) {
+	public WorkflowResult function getResultToExecute( required WorkflowInstance wfInstance, required any wfAction ) {
 		var conditionalResults = arguments.wfAction.getConditionalResults();
 
 		for( var result in conditionalResults ) {
@@ -272,6 +299,16 @@ component singleton {
 // PRIVATE HELPERS
 	private any function _getWorkflowDefinition( required string workflowId ) {
 		return _getWorkflowLibrary().getWorkflow( arguments.workflowId );
+	}
+
+	private function _getJoin( wfInstance, joinId ) {
+		var definition = wfinstance.getWorkflowDefinition();
+
+		for( var join in definition.getJoins() ) {
+			if ( join.getId() == arguments.joinId ) {
+				return join;
+			}
+		}
 	}
 
 	private any function _prepareTransitionHistoryForAction( transitionDefinitions, priorStepStatuses ) {

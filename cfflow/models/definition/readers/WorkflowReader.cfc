@@ -40,6 +40,11 @@ component singleton {
 			_addStep( wfObj, step );
 		}
 
+		var joins = wf.joins ?: [];
+		for( var join in joins ) {
+			_addJoin( wfObj, join );
+		}
+
 
 		return wfObj;
 	}
@@ -80,6 +85,21 @@ component singleton {
 		}
 	}
 
+	private void function _addJoin( wf, join ) {
+		var wfJoin = wf.addJoin(
+			  id    = arguments.join.id
+			, meta  = arguments.join.meta ?: {}
+			, steps = arguments.join.steps
+		);
+
+		_addDefaultResult( wfJoin, arguments.join.defaultResult );
+
+		var results = arguments.join.conditionalResults ?: [];
+		for( var result in results ) {
+			_addConditionalResult( wfJoin, result );
+		}
+	}
+
 	private void function _addAction( wfstep, action ) {
 		var wfAction = wfstep.addAction(
 			  id          = arguments.action.id    ?: "unknown"
@@ -98,9 +118,10 @@ component singleton {
 
 	private void function _addDefaultResult( wfAction, result ) {
 		wfAction.setDefaultResult(
-			  id   = arguments.result.id   ?: "unknown"
-			, meta = arguments.result.meta ?: {}
-			, type = arguments.result.type ?: ""
+			  id    = arguments.result.id   ?: "unknown"
+			, meta  = arguments.result.meta ?: {}
+			, type  = arguments.result.type ?: ""
+			, joins = IsSimpleValue( aguments.result.joins ?: [] ) ? [ arguments.result.joins ] : ( arguments.result.joins ?: [] )
 		);
 
 		var wfResult = wfAction.getDefaultResult();
@@ -113,6 +134,7 @@ component singleton {
 			, meta      = arguments.result.meta ?: {}
 			, type      = arguments.result.type ?: ""
 			, condition = _createCondition( arguments.result.condition ?: "" )
+			, joins     = IsSimpleValue( aguments.result.joins ?: [] ) ? [ arguments.result.joins ] : ( arguments.result.joins ?: [] )
 		);
 		_addResultTransitionsAndFunctions( wfResult, result );
 	}
