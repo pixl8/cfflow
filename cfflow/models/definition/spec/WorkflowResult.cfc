@@ -1,16 +1,16 @@
 component accessors=true {
 
 	property name="id"            type="string"  required=true;
-	property name="type"          type="string"  required=true;
 	property name="isDefault"     type="boolean" required=true;
 	property name="meta"          type="struct";
 	property name="condition"     type="WorkflowCondition";
+	property name="joins"         type="any"; // array or string
 	property name="transitions"   type="array";
 	property name="preFunctions"  type="array";
 	property name="postFunctions" type="array";
 
 	public string function getSignature() {
-		var rawInput = getId() & getType() & getIsDefault() & getCondition();
+		var rawInput = getId() & getIsDefault() & getCondition() & ArrayToList( getJoins() );
 
 		for( var transition in getTransitions() ) {
 			rawInput &= transition.getSignature();
@@ -34,6 +34,19 @@ component accessors=true {
 		variables.transitions = [];
 
 		return variables.transitions;
+	}
+
+	public array function getJoins() {
+		var joins = variables.joins ?: _initJoins();
+		if ( IsSimpleValue( variables.joins ) ) {
+			variables.joins = [ variables.joins ];
+		}
+		return variables.joins;
+	}
+	private array function _initJoins() {
+		variables.joins = [];
+
+		return variables.joins;
 	}
 
 	public any function addPreFunction(
@@ -84,17 +97,6 @@ component accessors=true {
 		return variables.postFunctions;
 	}
 
-	public any function setType( required string resultType ) {
-		var validTypes = [ "step", "split", "join" ];
-
-		if ( ArrayFindNoCase( validTypes, arguments.resultType ) ) {
-			variables.type = arguments.resultType;
-			return;
-		}
-
-		throw( type="workflow.result.invalid.type", message="Invalid value, [#arguments.resultType#], for type field for the workflow result object. Valid values are either 'step', 'split' or 'join'." );
-	}
-
 	public boolean function hasCondition() {
 		return !IsNull( variables.condition );
 	}
@@ -106,9 +108,9 @@ component accessors=true {
 	public struct function getMemento() {
 		var memento = {
 			  id            = getId()
-			, type          = getType()
 			, isDefault     = getIsDefault()
 			, meta          = getMeta()
+			, joins         = getJoins()
 			, transitions   = []
 			, functions     = { pre=[], post=[] }
 		};

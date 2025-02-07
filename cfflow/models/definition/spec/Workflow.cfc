@@ -5,6 +5,7 @@ component accessors=true {
 	property name="meta"           type="struct";
 	property name="initialActions" type="array";
 	property name="steps"          type="array";
+	property name="joins"          type="array";
 	property name="raw"            type="struct";
 
 	public string function getSignature() {
@@ -12,6 +13,9 @@ component accessors=true {
 
 		for( var step in getSteps() ) {
 			rawInput &= step.getSignature();
+		}
+		for( var join in getJoins() ) {
+			rawInput &= join.getSignature();
 		}
 
 		return LCase( Hash( rawInput ) );
@@ -29,12 +33,28 @@ component accessors=true {
 		return newStep;
 	}
 
+	public any function addJoin(
+		  required string id
+		,          struct meta = {}
+	) {
+		var joins   = getJoins();
+		var newJoin = new WorkflowJoin( argumentCollection=arguments );
+
+		ArrayAppend( joins, newJoin );
+
+		return newJoin;
+	}
+
 	public struct function getMeta() {
 		return variables.meta ?: {};
 	}
 
 	public array function getSteps() {
 		return variables.steps ?: _initSteps();
+	}
+
+	public array function getJoins() {
+		return variables.joins ?: _initJoins();
 	}
 
 	public struct function getRaw() {
@@ -52,10 +72,14 @@ component accessors=true {
 			, meta           = getMeta()
 			, initialActions = []
 			, steps          = []
+			, joins          = []
 		};
 
 		for( var s in getSteps() ) {
 			ArrayAppend( memento.steps, s.getMemento() );
+		}
+		for( var j in getJoins() ) {
+			ArrayAppend( memento.joins, j.getMemento() );
 		}
 		for( var a in getInitialActions() ) {
 			ArrayAppend( memento.initialActions, a.getMemento() );
@@ -68,6 +92,12 @@ component accessors=true {
 		variables.steps = [];
 
 		return variables.steps;
+	}
+
+	private array function _initJoins() {
+		variables.joins = [];
+
+		return variables.joins;
 	}
 
 	public any function addInitialAction() {

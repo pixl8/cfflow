@@ -4,19 +4,19 @@
     "type": "object",
     "title": "Workflow result (default)",
     "additionalProperties": false,
-    "required":[ "id", "type", "transitions" ],
+    "required":[ "id", "transitions" ],
     "properties":{
         "id"    : { "type":"string", "description":"Unique identifier for the result within the action" },
         "meta" : { "type":"object", "description":"Abitrary metadata that you may use to describe the result."},
-        "type":{
-            "type":"string",
-            "description":"Describes the type of this result. Either 'step', 'join' or 'split'",
-            "enum":[ "step", "join", "split" ]
-        },
         "functions":{
             "type":"object",
             "description":"Pre and post functions that execute before and after this result is executed.",
             "$ref":"functions.schema.json"
+        },
+        "joins":{
+            "type":["array", "string"],
+            "description":"Array of join IDs. These joins will be checked after all transitions are completed.",
+            "items":{ "type":"string" }
         },
         "transitions":{
             "type":"array",

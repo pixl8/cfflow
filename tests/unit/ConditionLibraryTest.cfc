@@ -9,6 +9,18 @@ component extends="testbox.system.BaseSpec" {
 				variables._instance = CreateMock( object=new cfflow.models.instances.WorkflowInstance( workflowId=_wfId, instanceArgs=_instanceArgs ) );
 
 				variables._instance.$( "getState", _state );
+				variables._instance.$( "getAllStepStatuses", [
+					  { step="step1", status="complete" }
+					, { step="step2", status="complete" }
+					, { step="step3", status="skipped" }
+					, { step="step4", status="skipped" }
+					, { step="step5", status="skipped" }
+					, { step="step6", status="active" }
+					, { step="step7", status="active" }
+					, { step="step8", status="pending" }
+					, { step="step9", status="pending" }
+				] );
+				variables._instance.$( "getActiveSteps", [ "step6", "step7" ] );
 			} );
 
 			describe( "State", function(){
@@ -40,6 +52,84 @@ component extends="testbox.system.BaseSpec" {
 
 				} );
 			} );
+
+			describe( "Steps", function(){
+				describe( "steps.Active", function(){
+					it( "should return true when all the given steps are active in the current instance", function(){
+						var condition = new cfflow.models.implementation.conditions.steps.Active();
+						var args = { steps=[ "step6", "step7" ] };
+
+						expect( condition.evaluate( _instance, args ) ).toBeTrue();
+					} );
+					it( "should return false when any of the given steps are not active in the current instance", function(){
+						var condition = new cfflow.models.implementation.conditions.steps.Active();
+						var args = { steps=[ "step6", "step3", "step5", "step6" ] };
+
+						expect( condition.evaluate( _instance, args ) ).toBeFalse();
+					} );
+				} );
+
+				describe( "steps.Complete", function(){
+					it( "should return true when all the given steps are completed in the current instance", function(){
+						var condition = new cfflow.models.implementation.conditions.steps.Complete();
+						var args = { steps=[ "step1", "step2" ] };
+
+						expect( condition.evaluate( _instance, args ) ).toBeTrue();
+					} );
+					it( "should return false when any of the given steps are not completed in the current instance", function(){
+						var condition = new cfflow.models.implementation.conditions.steps.Complete();
+						var args = { steps=[ "step2", "step3", "step5", "step1" ] };
+
+						expect( condition.evaluate( _instance, args ) ).toBeFalse();
+					} );
+				} );
+
+				describe( "steps.CompleteOrSkipped", function(){
+					it( "should return true when all the given steps are either completed or skipped in the current instance", function(){
+						var condition = new cfflow.models.implementation.conditions.steps.CompleteOrSkipped();
+						var args = { steps=[ "step1", "step4", "step5" ] };
+
+						expect( condition.evaluate( _instance, args ) ).toBeTrue();
+					} );
+					it( "should return false when any of the given steps are not completed or skipped in the current instance", function(){
+						var condition = new cfflow.models.implementation.conditions.steps.CompleteOrSkipped();
+						var args = { steps=[ "step1", "step4", "step5", "step7" ] };
+
+						expect( condition.evaluate( _instance, args ) ).toBeFalse();
+					} );
+				} );
+
+				describe( "steps.Pending", function(){
+					it( "should return true when all the given steps are pending in the current instance", function(){
+						var condition = new cfflow.models.implementation.conditions.steps.Pending();
+						var args = { steps=[ "step8", "step9" ] };
+
+						expect( condition.evaluate( _instance, args ) ).toBeTrue();
+					} );
+					it( "should return false when any of the given steps are not pending in the current instance", function(){
+						var condition = new cfflow.models.implementation.conditions.steps.Pending();
+						var args = { steps=[ "step8", "step9", "step7" ] };
+
+						expect( condition.evaluate( _instance, args ) ).toBeFalse();
+					} );
+				} );
+
+				describe( "steps.Skipped", function(){
+					it( "should return true when all the given steps are skipped in the current instance", function(){
+						var condition = new cfflow.models.implementation.conditions.steps.Skipped();
+						var args = { steps=[ "step3", "step5" ] };
+
+						expect( condition.evaluate( _instance, args ) ).toBeTrue();
+					} );
+					it( "should return false when any of the given steps are not skipped in the current instance", function(){
+						var condition = new cfflow.models.implementation.conditions.steps.Skipped();
+						var args = { steps=[ "step4", "step5", "step7" ] };
+
+						expect( condition.evaluate( _instance, args ) ).toBeFalse();
+					} );
+				} );
+			} );
+
 
 			describe( "String", function(){
 				describe( "isEqual", function(){

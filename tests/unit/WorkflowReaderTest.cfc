@@ -46,7 +46,7 @@ component extends="testbox.system.BaseSpec" {
 				it( "should read all steps in the flow", function(){
 					var steps = wf.getSteps();
 
-					expect( steps.len() ).toBe( 2 );
+					expect( steps.len() ).toBe( 3 );
 					expect( steps[1].getId() ).toBe( "step-1" );
 					expect( steps[1].getMeta() ).toBe( { title="Step 1", description="Step 1 description" } );
 					expect( steps[1].getAutoActionTimers()[1].getInterval() ).toBe( 600 );
@@ -54,15 +54,18 @@ component extends="testbox.system.BaseSpec" {
 					expect( steps[2].getId() ).toBe( "step-2" );
 					expect( steps[2].getAutoActionTimers() ).toBe( [] );
 					expect( steps[2].getMeta() ).toBe( { title="Step 2", description="Step 2 description" } );
+					expect( steps[3].getId() ).toBe( "step-3" );
 				} );
 
 				it( "should read all step actions in the flow", function(){
 					var steps = wf.getSteps();
 					var step1Actions = steps[1].getActions();
 					var step2Actions = steps[2].getActions();
+					var step3Actions = steps[3].getActions();
 
 					expect( step1Actions.len() ).toBe( 2 );
-					expect( step2Actions.len() ).toBe( 0 );
+					expect( step2Actions.len() ).toBe( 1 );
+					expect( step3Actions.len() ).toBe( 0 );
 
 					expect( step1Actions[1].getId() ).toBe( "action-1" );
 					expect( step1Actions[1].getMeta() ).toBe( {title="Action 1"} );
@@ -73,6 +76,9 @@ component extends="testbox.system.BaseSpec" {
 					expect( step1Actions[2].getMeta() ).toBe( {title="Action 2"} );
 					expect( step1Actions[2].getCondition().getRef() ).toBe( "action2.condition" );
 					expect( step1Actions[2].getIsAutomatic() ).toBe( false );
+					expect( step2Actions[1].getId() ).toBe( "action-1" );
+					expect( step2Actions[1].getMeta() ).toBe( {title="Action 1"} );
+					expect( step2Actions[1].getIsAutomatic() ).toBe( false );
 				} );
 
 				it( "should read the action default results", function(){
@@ -80,7 +86,6 @@ component extends="testbox.system.BaseSpec" {
 
 					expect( result.getId() ).toBe( "result-1" );
 					expect( result.getMeta() ).toBe( {title="Result 1"} );
-					expect( result.getType() ).toBe( "step" );
 					expect( result.getIsDefault() ).toBe( true );
 					expect( result.getCondition() ).toBeNull();
 				} );
@@ -92,13 +97,11 @@ component extends="testbox.system.BaseSpec" {
 
 					expect( results[1].getId() ).toBe( "result-2" );
 					expect( results[1].getMeta() ).toBe( {title="Result 2"} );
-					expect( results[1].getType() ).toBe( "split" );
 					expect( results[1].getIsDefault() ).toBe( false );
 					expect( results[1].getCondition().getRef() ).toBe( "result2.condition.handler" );
 
 					expect( results[2].getId() ).toBe( "result-3" );
 					expect( results[2].getMeta() ).toBe( {title="Result 3"} );
-					expect( results[2].getType() ).toBe( "step" );
 					expect( results[2].getIsDefault() ).toBe( false );
 					expect( results[2].getCondition().getRef() ).toBe( "result3ConditionId" );
 				} );
@@ -106,12 +109,10 @@ component extends="testbox.system.BaseSpec" {
 				it( "should read all transitions from default results", function(){
 					var transitions = wf.getSteps()[1].getActions()[1].getDefaultResult().getTransitions();
 
-					expect( transitions.len() ).toBe( 2 );
+					expect( transitions.len() ).toBe( 1 );
 
 					expect( transitions[1].getStep() ).toBe( "step-1" );
 					expect( transitions[1].getStatus() ).toBe( "complete" );
-					expect( transitions[2].getStep() ).toBe( "step-2" );
-					expect( transitions[2].getStatus() ).toBe( "active" );
 
 				} );
 
@@ -195,8 +196,10 @@ component extends="testbox.system.BaseSpec" {
 
 				it( "should return a workflow object that deserializes to the original spec", function() {
 					var memento = wf.getMemento();
+					var expected = DeserializeJson( FileRead( "/tests/resources/yaml/expectedSerialized.json" ) );
 
-					expect( memento ).toBe( DeserializeJson( FileRead( "/tests/resources/yaml/expectedSerialized.json" ) ) );
+					// debug( memento.initialActions );debug( expected.initialActions );
+					expect( memento ).toBe( expected );
 
 					var newwf = reader.read( { version="1.0.0", workflow=memento }, false );
 

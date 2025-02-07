@@ -42,7 +42,55 @@ component extends="testbox.system.BaseSpec" {
 
 			} );
 
-			describe( "doAction( wfInstance, wfAction )", function() {
+			describe( "doJoin( wfInstance, wfJoin )", function(){
+				it( "should do nothing if the join's steps are not all complete or skipped", function(){
+					var join   = CreateMock( "cfflow.models.definition.spec.WorkflowJoin" );
+					var joinId = CreateUUId();
+					var steps  = [ "step1", "step2", "step3" ];
+					join.setId( joinId );
+					join.setSteps( steps );
+
+					_instance.$( "getAllStepStatuses", [{ step="step1", status="complete"}, { step="step2", status="skipped"}, { step="step3",status="pending"}, { step="step4", status="pending"}] );
+
+					_engine.$( "doResult" );
+
+					_engine.doJoin( _instance, join );
+
+					var callLog = _engine.$callLog().doResult;
+					expect( callLog.len()  ).toBe( 0 );
+				} );
+
+				it( "should execute the join result when the join's steps are all complete or skipped", function() {
+					var result = CreateMock( "cfflow.models.definition.spec.WorkflowResult" );
+					var join   = CreateMock( "cfflow.models.definition.spec.WorkflowJoin" );
+					var joinId = CreateUUId();
+					var resultId = CreateUUId();
+					var steps  = [ "step1", "step2", "step3" ];
+
+					join.setId( joinId );
+					join.setSteps( steps );
+					result.setId( resultId );
+
+					_instance.$( "getAllStepStatuses", [{ step="step1", status="complete"}, { step="step2", status="skipped"}, { step="step3",status="complete"}, { step="step4", status="pending"}] );
+					_engine.$( "doResult" );
+					_engine.$( "getResultToExecute", result );
+
+					_engine.doJoin( _instance, join );
+
+					var callLog = _engine.$callLog().getResultToExecute;
+					expect( callLog.len()  ).toBe( 1 );
+					expect( callLog[ 1 ].wfInstance.getWorkflowId() ).toBe( _instance.getWorkflowId() );
+					expect( callLog[ 1 ].wfAction.getId() ).toBe( joinId );
+
+					var callLog = _engine.$callLog().doResult;
+					expect( callLog.len()  ).toBe( 1 );
+
+					expect( callLog[ 1 ].wfInstance.getWorkflowId() ).toBe( _instance.getWorkflowId() );
+					expect( callLog[ 1 ].wfResult.getId() ).toBe( result.getId() );
+				} );
+			} );
+
+			describe( "doAction( wfInstance, wfAction, wfStep )", function() {
 				it( "should fetch the result of the action to execute and then run doResult() using the fetched result and passed instance", function(){
 					var result   = CreateMock( "cfflow.models.definition.spec.WorkflowResult" );
 					var action   = CreateMock( "cfflow.models.definition.spec.WorkflowAction" );
@@ -54,6 +102,7 @@ component extends="testbox.system.BaseSpec" {
 
 					_instance.$( "isComplete", false );
 					_instance.$( "getState", state );
+					_instance.$( "getAllStepStatuses", [] );
 					_impl.$( "setComplete" );
 					_impl.$( "recordAction" );
 
@@ -80,6 +129,7 @@ component extends="testbox.system.BaseSpec" {
 
 					_instance.$( "isComplete", true );
 					_instance.$( "getState", state );
+					_instance.$( "getAllStepStatuses", [] );
 					_impl.$( "setComplete" );
 					_impl.$( "recordAction" );
 
@@ -97,6 +147,8 @@ component extends="testbox.system.BaseSpec" {
 				it( "should call recordAction() on the workflow implementation", function(){
 					var result   = CreateMock( "cfflow.models.definition.spec.WorkflowResult" );
 					var action   = CreateMock( "cfflow.models.definition.spec.WorkflowAction" );
+					var transition1 = new cfflow.models.definition.spec.WorkflowTransition( step="step1", status="complete" );
+					var transition2 = new cfflow.models.definition.spec.WorkflowTransition( step="step2", status="active" );
 					var actionId = CreateUUId();
 					var resultId = CreateUUId();
 					var transitions = [ CreateUUId() ];
@@ -107,9 +159,10 @@ component extends="testbox.system.BaseSpec" {
 
 					_instance.$( "isComplete", false );
 					_instance.$( "getState", state );
+					_instance.$( "getAllStepStatuses", [{ step="step0", status="skipped"}, { step="step1", status="active"}, { step="step2", status="pending"}] );
 					_impl.$( "setComplete" );
 					_impl.$( "recordAction" );
-					result.$( "getTransitions", transitions );
+					result.$( "getTransitions", [ transition1, transition2 ] );
 
 					_engine.$( "getResultToExecute" ).$args( _instance, action ).$results( result );
 					_engine.$( "doResult" );
@@ -126,7 +179,9 @@ component extends="testbox.system.BaseSpec" {
 					expect( callLog[ 1 ].actionId ).toBe( actionId );
 					expect( callLog[ 1 ].resultId ).toBe( resultId );
 					expect( callLog[ 1 ].state ).toBe( state );
-					expect( callLog[ 1 ].transitions ).toBe( transitions );
+					expect( ArrayLen( callLog[ 1 ].transitions ) ).toBe( 2 );
+					expect( callLog[ 1 ].transitions[ 1 ].getMemento() ).toBe( { step="step1", newStatus="complete", oldStatus="active"  } );
+					expect( callLog[ 1 ].transitions[ 2 ].getMemento() ).toBe( { step="step2", newStatus="active"   , oldStatus="pending" } );
 				} );
 			} );
 
@@ -560,8 +615,9 @@ component extends="testbox.system.BaseSpec" {
 			} );
 
 			describe( "doResult( wfInstance, wfResult )", function() {
-				it( "should call result preFunctions, execute transitions and call postFunctions", function(){
+				it( "should call result preFunctions, execute transitions and joins, and call postFunctions", function(){
 					var result                = CreateMock( "cfflow.models.definition.spec.WorkflowResult" );
+					var joinIds               = [ CreateUUId(), CreateUUId() ];
 					var preFunctions          = [ CreateUUId(), CreateUUId() ];
 					var postFunctions         = [ CreateUUId(), CreateUUId() ];
 					var transitions           = [
@@ -577,15 +633,23 @@ component extends="testbox.system.BaseSpec" {
 						  new cfflow.models.definition.spec.WorkflowFunction( id="post-fn-1" )
 						, new cfflow.models.definition.spec.WorkflowFunction( id="post-fn-2" )
 					];
+					var joins = [
+						  new cfflow.models.definition.spec.WorkflowJoin( id=joinIds[ 1 ] )
+						, new cfflow.models.definition.spec.WorkflowJoin( id=joinIds[ 2 ] )
+					];
 
 
 					result.$( "getTransitions", transitions );
 					result.$( "getPreFunctions", preFunctions );
 					result.$( "getPostFunctions", postFunctions );
+					result.$( "getJoins", joinIds );
 					_engine.$( "filterFunctionsToExecute" ).$args( _instance, preFunctions ).$results( filteredPreFunctions );
 					_engine.$( "filterFunctionsToExecute" ).$args( _instance, postFunctions ).$results( filteredPostFunctions );
+					_engine.$( "_getJoin" ).$args( _instance, joinIds[ 1 ] ).$results( joins[ 1 ] );
+					_engine.$( "_getJoin" ).$args( _instance, joinIds[ 2 ] ).$results( joins[ 2 ] );
 					_engine.$( "doFunction" );
 					_engine.$( "doTransition" );
+					_engine.$( "doJoin" );
 
 					_engine.doResult( _instance, result );
 
@@ -608,6 +672,14 @@ component extends="testbox.system.BaseSpec" {
 					expect( functionsLog[3].wfFunction ).toBe( filteredPostFunctions[ 1 ] );
 					expect( functionsLog[4].wfInstance ).toBe( _instance );
 					expect( functionsLog[4].wfFunction ).toBe( filteredPostFunctions[ 2 ] );
+
+					var joinsLog = _engine.$callLog().doJoin;
+					expect( joinsLog.len() ).toBe( 2 );
+					expect( joinsLog[1].wfInstance ).toBe( _instance );
+					expect( joinsLog[2].wfInstance ).toBe( _instance );
+					expect( joinsLog[1].wfJoin.getId() ).toBe( joinIds[ 1 ] );
+					expect( joinsLog[2].wfJoin.getId() ).toBe( joinIds[ 2 ] );
+
 				} );
 			} );
 

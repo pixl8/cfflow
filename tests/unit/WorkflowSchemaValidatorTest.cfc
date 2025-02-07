@@ -98,12 +98,6 @@ component extends="testbox.system.BaseSpec" {
 						validator.validate( workflow );
 					} ).toThrow( "preside.workflow.definition.validation.error" );
 				} );
-				it( "should raise an error when default action result has no type", function(){
-					workflow.workflow.steps[1].actions[1].defaultResult.delete( "type" );
-					expect( function(){
-						validator.validate( workflow );
-					} ).toThrow( "preside.workflow.definition.validation.error" );
-				} );
 				it( "should raise an error when default action result have an invalid type", function(){
 					workflow.workflow.steps[1].actions[1].defaultResult.type = "blah";
 					expect( function(){
@@ -113,12 +107,6 @@ component extends="testbox.system.BaseSpec" {
 
 				it( "should raise an error when one or more condition results has no id", function(){
 					workflow.workflow.steps[1].actions[1].conditionalResults[1].delete( "id" );
-					expect( function(){
-						validator.validate( workflow );
-					} ).toThrow( "preside.workflow.definition.validation.error" );
-				} );
-				it( "should raise an error when one or more conditional results has no type", function(){
-					workflow.workflow.steps[1].actions[1].conditionalResults[1].delete( "type" );
 					expect( function(){
 						validator.validate( workflow );
 					} ).toThrow( "preside.workflow.definition.validation.error" );
@@ -271,7 +259,6 @@ component extends="testbox.system.BaseSpec" {
 					"defaultResult":{
 						"id":"result-1",
 						"meta":{"title":"Result 1"},
-						"type":"step",
 						"transitions":[{
 							"step":"step-1",
 							"status":"active"
@@ -299,7 +286,6 @@ component extends="testbox.system.BaseSpec" {
 						"defaultResult":{
 							"id":"result-1",
 							"meta":{"title":"Result 1"},
-							"type":"step",
 							"transitions":[{
 								"step":"step-1",
 								"status":"complete"
@@ -351,7 +337,6 @@ component extends="testbox.system.BaseSpec" {
 						"conditionalResults":[{
 							"id":"result-2",
 							"meta":{"title":"Result 2"},
-							"type":"join",
 							"condition":{
 								"ref":"test.condition.one",
 								"args":{
@@ -388,7 +373,6 @@ component extends="testbox.system.BaseSpec" {
 						},{
 							"id":"result-3",
 							"meta":{"title":"Result 3"},
-							"type":"split",
 							"condition":{
 								"ref":"test.condition.two",
 								"args":{
@@ -425,7 +409,6 @@ component extends="testbox.system.BaseSpec" {
 						"defaultResult":{
 							"id":"result-1",
 							"meta":{"title":"Result 1"},
-							"type":"step",
 							"transitions":[{
 								"step":"step-2",
 								"status":"complete"

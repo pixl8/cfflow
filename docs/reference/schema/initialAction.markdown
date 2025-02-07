@@ -14,7 +14,7 @@ id: string
 meta: object
 condition: # {condition}
 defaultResult: # {defaultResult}
-conditionResults:
+conditionalResults:
 - # {conditionalResult}
 - # {conditionalResult}
 ```
