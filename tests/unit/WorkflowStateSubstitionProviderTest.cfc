@@ -11,18 +11,20 @@ component extends="testbox.system.BaseSpec" {
 					var wfInstance = CreateEmptyMock( "cfflow.models.instances.WorkflowInstance" );
 					var state = {
 						  test = "this"
-						, yes = CreateUUId()
-						, no  = { thank="you", yes={ please=true } }
+						, yes  = CreateUUId()
+						, no    = { thank="you", yes={ please=true } }
 						, _not = "passed.in"
+						, something = NullValue()
 					};
 
 					wfInstance.$( "getState", state );
 
-					expect( _subs.getTokens( [ "$test", "$yes", "$no.thank", "$no.yes.please" ], wfInstance ) ).toBe( {
+					expect( _subs.getTokens( [ "$test", "$yes", "$no.thank", "$no.yes.please", "$something" ], wfInstance ) ).toBe( {
 						  "$test"          = "this"
 						, "$yes"           = state.yes
 						, "$no.thank"      = "you"
 						, "$no.yes.please" = true
+						, "$something"     = ""
 					} );
 				} );
 			} );

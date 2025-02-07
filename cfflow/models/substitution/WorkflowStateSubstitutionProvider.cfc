@@ -18,10 +18,10 @@ component implements="IWorkflowArgSubstitutionProvider" {
 
 // HELPERS
 	private struct function _getTokensWithRecursion( required string key, required struct state ) {
-		var value = state[ key ];
+		var value = arguments.state[ arguments.key ] ?: "";
 
 		if ( IsSimpleValue( value ) ) {
-			return { "$#key#" = value };
+			return { "$#arguments.key#" = value };
 		}
 
 		if ( IsStruct( value ) ) {
@@ -32,7 +32,7 @@ component implements="IWorkflowArgSubstitutionProvider" {
 			}
 
 			for( var subToken in subTokens ) {
-				tokens[ ReReplace( subToken, "^\$", "$#key#." ) ] = subTokens[ subToken ];
+				tokens[ ReReplace( subToken, "^\$", "$#arguments.key#." ) ] = subTokens[ subToken ];
 			}
 
 			return tokens;
